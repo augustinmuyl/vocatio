@@ -4,4 +4,5 @@ sqlmodel
 alembic
 python-dotenv
 psycopg2-binary
+pydantic-settings
 
