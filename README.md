@@ -24,5 +24,15 @@ backend/
 │       └── security.py
 ├── .env
 └── requirements.txt
+frontend/
+├── src/
+│   ├── app/
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   └── components/
+├── public/
+│   └── assets/
+└── .env
 ```
 
