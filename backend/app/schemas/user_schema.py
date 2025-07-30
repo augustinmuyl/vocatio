@@ -18,8 +18,7 @@ class UserRead(BaseModel):
     role: Role
     is_active: bool
 
-    class Config:
-        orm_mode = True
+    model_config = {"from_attributes": True}
 
 
 class UserUpdate(BaseModel):
