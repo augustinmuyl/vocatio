@@ -4,6 +4,16 @@ Voluntier is a full-stack web application that helps students discover, track, a
 
 > This project is under active development. Many features are still being implemented.
 
+## Spec
+
+- User browse opportunities
+  - Filter by:
+    - Location
+    - Theme
+    - Community hours
+- Org sign up / login
+- Org opportunity posting
+
 ## Project Structure
 
 ```text
