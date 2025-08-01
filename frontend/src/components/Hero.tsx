@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { Button } from "./ui/button";
+import Link from 'next/link';
 
 export default function Hero() {
     return (
@@ -8,17 +9,17 @@ export default function Hero() {
                 {/* Text Column */}
                 <div className="w-full lg:w-1/2 text-center lg:text-left">
                     <h2 className="text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight">
-                        Turn Volunteering Into Adventure
+                        Graduate. Earn Scholarships. Track Community Hours.
                     </h2>
                     <p className="mt-4 text-lg text-gray-600">
-                        Connect with local organizations, track your impact, and earn rewards on Voluntier.
+                        The easiest way to discover and complete official community service hours for high school students.
                     </p>
                     <div className="mt-8 flex flex-col sm:flex-row sm:justify-center lg:justify-start gap-4">
-                        <Button size="lg">
-                            Get Started
+                        <Button asChild size="lg">
+                            <Link href="#waitlist">Join the Waitlist</Link>
                         </Button>
-                        <Button variant="outline" size="lg">
-                            See Demo
+                        <Button asChild variant="outline" size="lg">
+                            <Link href="#how-it-works">How It Works</Link>
                         </Button>
                     </div>
                 </div>
@@ -26,9 +27,12 @@ export default function Hero() {
                 {/* Illustration Column */}
                 <div className="w-full lg:w-1/2 mb-12 lg:mb-0 flex justify-center relative">
                     <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-80 h-80 bg-gradient-to-br from-blue-200 to-indigo-200 rounded-full opacity-50 animate-pulse"></div>
+                        <div
+                            className="w-80 h-80 bg-gradient-to-br from-blue-200 to-indigo-200 rounded-full opacity-50 will-change-transform"
+                        ></div>
                     </div>
                     <Image
+                        priority
                         src="/illustrations/dashboard-mockup.png"
                         alt="Dashboard mockup with badges and stats"
                         width={500}
