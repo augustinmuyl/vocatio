@@ -6,6 +6,12 @@ Voluntier is a full-stack web application that helps students discover, track, a
 
 ## Spec
 
+### Pre-MVP
+
+- [ ] Landing page
+- [ ] Interest form / waitlist for orgs & students
+- [ ] Set up analytics
+
 ### MVP (v0.1.0)
 
 - [ ] User browse opportunities
@@ -17,8 +23,6 @@ Voluntier is a full-stack web application that helps students discover, track, a
   - [ ] *Lazy loading and/or pagination ?*
   - [ ] *Search bar ?*
 - [ ] Basic org page
-- [ ] Interest form / waitlist for orgs
-- [ ] Set up analytics
 
 ### v0.2.0
 
