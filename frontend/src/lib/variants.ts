@@ -21,3 +21,24 @@ export const fadeInUp: Variants = {
     },
   },
 };
+
+export const menuVariants: Variants = {
+  hidden: {
+    x: "100%",
+  },
+  visible: {
+    x: 0,
+    transition: {
+      when: "beforeChildren",
+      staggerChildren: 0.1,
+      type: "tween",
+    },
+  },
+  exit: {
+    x: "100%",
+    transition: {
+      when: "afterChildren",
+      type: "tween",
+    },
+  },
+};

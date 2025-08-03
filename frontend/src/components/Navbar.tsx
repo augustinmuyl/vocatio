@@ -5,27 +5,7 @@ import { Button } from "./ui/button";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-
-const menuVariants = {
-    hidden: {
-        x: '100%',
-    },
-    visible: {
-        x: 0,
-        transition: {
-            when: 'beforeChildren',
-            staggerChildren: 0.1,
-            type: "tween"
-        },
-    },
-    exit: {
-        x: '100%',
-        transition: {
-            when: 'afterChildren',
-            type: "tween"
-        },
-    },
-};
+import { menuVariants } from "@/lib/variants";
 
 const itemVariants = {
     hidden: { opacity: 0, y: 20 },
