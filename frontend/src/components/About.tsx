@@ -1,25 +1,41 @@
+"use client"
+
+import { motion, useReducedMotion } from "motion/react";
+import { container, fadeInUp } from "../lib/variants";
+
 const BENEFITS = [
     "Official opportunities only",
     "Track real hours, not guesswork",
     "Instant documentation for schools",
 ];
 
-export default function AboutSection() {
+export default function About() {
+    const shouldReduce = useReducedMotion();
+
     return (
-        <section
-            id="about"
-            className="py-20"
-        >
+        <section id="about" className="py-20">
             <div className="container mx-auto px-6 flex justify-center">
-                <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm p-10 max-w-2xl w-full flex flex-col items-center">
+                <motion.div
+                    className="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm p-10 max-w-2xl w-full flex flex-col items-center"
+                    variants={container}
+                    initial={shouldReduce ? undefined : "hidden"}
+                    whileInView={shouldReduce ? undefined : "show"}
+                    viewport={{ once: true, amount: 0.3 }}
+                >
 
                     {/* Title */}
-                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 text-center">
+                    <motion.h2
+                        className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 text-center"
+                        variants={fadeInUp}
+                    >
                         Why Voluntier?
-                    </h2>
+                    </motion.h2>
 
                     {/* Description */}
-                    <p className="text-lg md:text-xl text-gray-700 text-center mb-6">
+                    <motion.p
+                        className="text-lg md:text-xl text-gray-700 text-center mb-6"
+                        variants={fadeInUp}
+                    >
                         Voluntier is the only platform dedicated to helping
                         high school students—and their parents—find
                         <span className="font-semibold text-indigo-600">
@@ -36,21 +52,25 @@ export default function AboutSection() {
                             or missed deadlines. Everything you need—organized and in one
                             place.
                         </span>
-                    </p>
+                    </motion.p>
 
                     {/* Benefit Chips */}
-                    <div className="flex flex-wrap justify-center gap-4 mt-2">
+                    <motion.div
+                        className="flex flex-wrap justify-center gap-4 mt-2"
+                        variants={container}
+                    >
                         {BENEFITS.map((text) => (
-                            <span
+                            <motion.span
                                 key={text}
                                 className="inline-flex items-center text-base text-gray-700 bg-white rounded-full px-4 py-2 shadow-sm hover:bg-blue-100 transition"
+                                variants={fadeInUp}
                             >
                                 <span className="mr-2 text-green-500">✔</span>
                                 {text}
-                            </span>
+                            </motion.span>
                         ))}
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
             </div>
         </section>
     );
