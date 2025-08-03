@@ -12,7 +12,7 @@ export default function Hero() {
 
     return (
         <motion.section
-            className="relative flex min-h-[80vh] items-center pt-24"
+            className="relative flex min-h-screen items-center"
             variants={container}
             initial={shouldReduce ? undefined : "hidden"}
             animate={shouldReduce ? undefined : "show"}
