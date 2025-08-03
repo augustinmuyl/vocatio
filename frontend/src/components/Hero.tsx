@@ -1,35 +1,71 @@
-import Image from 'next/image'
+"use client"
+
+import Image from "next/image";
+import Link from "next/link";
 import { Button } from "./ui/button";
-import Link from 'next/link';
+import { motion, useReducedMotion } from "framer-motion";
+import { container, fadeInUp } from "../lib/variants";
 
 export default function Hero() {
+    // Respect user’s “reduce motion” setting
+    const shouldReduce = useReducedMotion();
+
     return (
-        <section className="relative flex min-h-[80vh] items-center pt-24">
+        <motion.section
+            className="relative flex min-h-[80vh] items-center pt-24"
+            variants={container}
+            initial={shouldReduce ? undefined : "hidden"}
+            animate={shouldReduce ? undefined : "show"}
+        >
             <div className="container mx-auto flex flex-col-reverse lg:flex-row items-center px-6">
                 {/* Text Column */}
-                <div className="w-full lg:w-1/2 text-center lg:text-left">
-                    <h2 className="text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight">
+                <motion.div
+                    className="w-full lg:w-1/2 text-center lg:text-left"
+                    variants={container}
+                >
+                    <motion.h2
+                        className="text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight"
+                        variants={fadeInUp}
+                    >
                         Graduate. Earn Scholarships. Track Community Hours.
-                    </h2>
-                    <p className="mt-4 text-lg text-gray-600">
-                        The easiest way to discover and complete official community service hours for high school students.
-                    </p>
-                    <div className="mt-8 flex flex-col sm:flex-row sm:justify-center lg:justify-start gap-4">
+                    </motion.h2>
+                    <motion.p
+                        className="mt-4 text-lg text-gray-600"
+                        variants={fadeInUp}
+                    >
+                        The easiest way to discover and complete official community
+                        service hours for high school students.
+                    </motion.p>
+                    <motion.div
+                        className="mt-8 flex flex-col sm:flex-row sm:justify-center lg:justify-start gap-4"
+                        variants={fadeInUp}
+                    >
                         <Button asChild size="lg">
                             <Link href="#waitlist">Join the Waitlist</Link>
                         </Button>
                         <Button asChild variant="outline" size="lg">
                             <Link href="#how-it-works">How It Works</Link>
                         </Button>
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
 
                 {/* Illustration Column */}
-                <div className="w-full lg:w-1/2 mb-12 lg:mb-0 flex justify-center relative">
+                <motion.div
+                    className="w-full lg:w-1/2 mb-12 lg:mb-0 flex justify-center relative"
+                    variants={fadeInUp}
+                >
                     <div className="absolute inset-0 flex items-center justify-center">
-                        <div
+                        <motion.div
                             className="w-80 h-80 bg-gradient-to-br from-blue-200 to-indigo-200 rounded-full opacity-50 will-change-transform"
-                        ></div>
+                            variants={{
+                                hidden: { scale: 0.8, opacity: 0 },
+                                show: {
+                                    scale: 1,
+                                    opacity: 0.5,
+                                    transition: { duration: 0.8, ease: "easeOut" },
+                                },
+                            }}
+                        />
                     </div>
                     <Image
                         priority
@@ -39,8 +75,8 @@ export default function Hero() {
                         height={400}
                         className="relative z-10"
                     />
-                </div>
+                </motion.div>
             </div>
-        </section>
-    )
+        </motion.section>
+    );
 }
