@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+body {
+  @apply bg-gradient-to-br from-blue-50 via-white to-blue-100;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
