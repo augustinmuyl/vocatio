@@ -3,19 +3,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import { container, fadeInUp } from "../lib/variants";
 
 export default function Hero() {
-    // Respect user’s “reduce motion” setting
-    const shouldReduce = useReducedMotion();
-
     return (
         <motion.section
             className="relative flex min-h-screen items-center"
             variants={container}
-            initial={shouldReduce ? undefined : "hidden"}
-            animate={shouldReduce ? undefined : "show"}
+            initial="hidden"
+            animate="visible"
         >
             <div className="container mx-auto flex flex-col-reverse lg:flex-row items-center px-6">
                 {/* Text Column */}

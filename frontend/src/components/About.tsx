@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import { container, fadeInUp } from "../lib/variants";
 
 const BENEFITS = [
@@ -10,16 +10,14 @@ const BENEFITS = [
 ];
 
 export default function About() {
-    const shouldReduce = useReducedMotion();
-
     return (
         <section id="about" className="py-20">
             <div className="container mx-auto px-6 flex justify-center">
                 <motion.div
                     className="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm p-10 max-w-2xl w-full flex flex-col items-center"
                     variants={container}
-                    initial={shouldReduce ? undefined : "hidden"}
-                    whileInView={shouldReduce ? undefined : "show"}
+                    initial="hidden"
+                    whileInView="visible"
                     viewport={{ once: true, amount: 0.3 }}
                 >
 
