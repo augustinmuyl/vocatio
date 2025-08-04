@@ -12,7 +12,7 @@ export default function Hero() {
             className="relative flex min-h-screen items-center"
             variants={container}
             initial="hidden"
-            animate="visible"
+            animate="show"
         >
             <div className="container mx-auto flex flex-col-reverse lg:flex-row items-center px-6">
                 {/* Text Column */}

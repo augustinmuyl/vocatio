@@ -11,13 +11,13 @@ const BENEFITS = [
 
 export default function About() {
     return (
-        <section id="about" className="py-20">
+        <section id="about" className="pb-20">
             <div className="container mx-auto px-6 flex justify-center">
                 <motion.div
                     className="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm p-10 max-w-2xl w-full flex flex-col items-center"
                     variants={container}
                     initial="hidden"
-                    whileInView="visible"
+                    whileInView="show"
                     viewport={{ once: true, amount: 0.3 }}
                 >
 
