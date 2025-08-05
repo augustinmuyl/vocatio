@@ -11,10 +11,10 @@ const BENEFITS = [
 
 export default function About() {
     return (
-        <section id="about" className="pb-20">
+        <section id="about" className="pb-20 pt-20 md:pt-0">
             <div className="container mx-auto px-6 flex justify-center">
                 <motion.div
-                    className="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm p-10 max-w-2xl w-full flex flex-col items-center"
+                    className="bg-bg rounded-2xl shadow-custom p-10 max-w-2xl w-full flex flex-col items-center"
                     variants={container}
                     initial="hidden"
                     whileInView="show"
@@ -23,7 +23,7 @@ export default function About() {
 
                     {/* Title */}
                     <motion.h2
-                        className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 text-center"
+                        className="text-3xl md:text-4xl font-bold text-text mb-6 text-center"
                         variants={fadeInUp}
                     >
                         Why Voluntier?
@@ -31,7 +31,7 @@ export default function About() {
 
                     {/* Description */}
                     <motion.p
-                        className="text-lg md:text-xl text-gray-700 text-center mb-6"
+                        className="text-lg md:text-xl text-text-mute text-left mb-6"
                         variants={fadeInUp}
                     >
                         Voluntier is the only platform dedicated to helping
@@ -60,7 +60,7 @@ export default function About() {
                         {BENEFITS.map((text) => (
                             <motion.span
                                 key={text}
-                                className="inline-flex items-center text-base text-gray-700 bg-white rounded-full px-4 py-2 shadow-sm hover:bg-blue-100 transition"
+                                className="inline-flex items-center text-base text-text bg-light rounded-full px-4 py-2 shadow-sm hover:bg-primary/70 transition"
                                 variants={fadeInUp}
                             >
                                 <span className="mr-2 text-green-500">✔</span>

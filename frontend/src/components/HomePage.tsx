@@ -4,7 +4,7 @@ import About from './About'
 
 export default function HomePage() {
     return (
-        <div className="min-h-screen scroll-smooth">
+        <div className="min-h-screen">
             <Navbar />
             <Hero />
             <About />

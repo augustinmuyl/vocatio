@@ -21,13 +21,13 @@ export default function Hero() {
                     variants={container}
                 >
                     <motion.h2
-                        className="text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight"
+                        className="text-4xl lg:text-5xl font-extrabold text-text leading-tight"
                         variants={fadeInUp}
                     >
                         Graduate. Earn Scholarships. Track Community Hours.
                     </motion.h2>
                     <motion.p
-                        className="mt-4 text-lg text-gray-600"
+                        className="mt-4 text-lg text-text-mute"
                         variants={fadeInUp}
                     >
                         The easiest way to discover and complete official community
