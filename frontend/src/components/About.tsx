@@ -36,7 +36,7 @@ export default function About() {
                     >
                         Voluntier is the only platform dedicated to helping
                         high school students—and their parents—find
-                        <span className="font-semibold text-indigo-600">
+                        <span className="font-semibold text-secondary">
                             {" official, verified "}
                         </span>
                         community service opportunities that{" "}
@@ -44,7 +44,7 @@ export default function About() {
                         state scholarships, and college applications.
                         <br className="hidden sm:block" />
                         <span className="block mt-4">
-                            <span className="font-semibold text-blue-500">
+                            <span className="font-semibold text-primary">
                                 No more spreadsheet chaos, confusing paperwork,
                             </span>{" "}
                             or missed deadlines. Everything you need—organized and in one
