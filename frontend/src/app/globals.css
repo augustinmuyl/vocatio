@@ -187,7 +187,8 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-light text-foreground;
-    /*@apply bg-gradient-to-br from-blue-50 via-light to-blue-100;*/
+    @apply text-foreground;
+    @apply bg-gradient-to-br from-gray-50 via-light to-gray-100;
+    @apply dark:bg-gradient-to-br dark:from-gray-950 dark:via-light dark:to-gray-900;
   }
 }
