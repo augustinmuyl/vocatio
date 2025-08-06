@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import { motion } from "motion/react";
 import { container, fadeInUp } from "../lib/variants";
+import DashboardMockup from "../../public/dashboard-mockup-translucent.png"
 
 export default function Hero() {
     return (
@@ -53,22 +54,27 @@ export default function Hero() {
                 >
                     <div className="absolute inset-0 flex items-center justify-center">
                         <motion.div
-                            className="w-80 h-80 bg-gradient-to-br from-blue-200 to-indigo-200 rounded-full opacity-50 will-change-transform"
+                            className="w-104 h-104 bg-gradient-to-br from-blue-200 to-indigo-200 rounded-full opacity-50 will-change-transform"
                             variants={{
                                 hidden: { scale: 0.8, opacity: 0 },
                                 show: {
                                     scale: 1,
-                                    opacity: 0.5,
+                                    opacity: 0.7,
                                     transition: { duration: 0.8, ease: "easeOut" },
                                 },
                             }}
                         />
                     </div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <motion.div
+                            className="w-98 h-70 bg-white opacity-100 rounded-lg will-change-transform"
+                        />
+                    </div>
                     <Image
                         priority
-                        src="/illustrations/dashboard-mockup.png"
+                        src={DashboardMockup}
                         alt="Dashboard mockup with badges and stats"
-                        width={500}
+                        width={450}
                         height={400}
                         className="relative z-10"
                     />

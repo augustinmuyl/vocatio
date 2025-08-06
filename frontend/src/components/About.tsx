@@ -14,7 +14,7 @@ export default function About() {
         <section id="about" className="pb-20 pt-20 md:pt-0">
             <div className="container mx-auto px-6 flex justify-center">
                 <motion.div
-                    className="bg-bg rounded-2xl shadow-custom p-10 max-w-2xl w-full flex flex-col items-center"
+                    className="bg-light rounded-2xl shadow-custom p-10 max-w-4xl w-full flex flex-col items-center"
                     variants={container}
                     initial="hidden"
                     whileInView="show"
