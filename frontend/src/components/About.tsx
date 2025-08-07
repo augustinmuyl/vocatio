@@ -11,7 +11,7 @@ const BENEFITS = [
 
 export default function About() {
     return (
-        <section id="about" className="py-20">
+        <section id="about" className="scroll-mt-20">
             <div className="container mx-auto px-6 flex justify-center">
                 <motion.div
                     className="p-10 max-w-4xl w-full flex flex-col items-center"

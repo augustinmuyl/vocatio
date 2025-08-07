@@ -23,7 +23,7 @@ const features = [
     {
         icon: Award,
         description: (
-            <>Track your hours and automatically see progress toward major milestones: <span className="text-secondary font-semibold">Graduation (X hours)</span>, Bright Futures (100h), Honor Cords (250/500/1000h)</>
+            <>Track your hours and automatically see progress toward major milestones</>
         ),
     },
     {
@@ -35,26 +35,26 @@ const features = [
     {
         icon: Users,
         description: (
-            <>For parents: Find <span className="text-secondary font-semibold">approved</span> opportunities and track required family hours</>
+            <>Parents: Find <span className="text-secondary font-semibold">approved</span> opportunities and track required family hours</>
         ),
     },
     {
         icon: Handshake,
         description: (
-            <>For organizations: Easily list your <span className="text-secondary font-semibold">approved</span> hours and reach local students</>
+            <>Organizations: Easily list your <span className="text-secondary font-semibold">approved</span> hours and reach local students</>
         ),
     },
 ];
 
 const HowItWorks = () => {
     return (
-        <section id='how-it-works' className="py-20 text-text">
+        <section id='how-it-works' className="scroll-mt-20">
             <motion.div
                 className="max-w-7xl mx-auto px-4 p-10"
                 variants={container}
                 initial="hidden"
                 whileInView="show"
-                viewport={{ once: true, amount: 0.65 }}
+                viewport={{ once: true, amount: 0.3 }}
 
             >
                 <motion.h2
