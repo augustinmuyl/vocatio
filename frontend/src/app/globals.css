@@ -12,6 +12,7 @@
   --color-highlight: var(--highlight);
   --color-border: var(--border);
   --color-border-mute: var(--border-muted);
+  --color-border-card: var(--border-card);
   --color-primary: var(--primary);
   --color-secondary: var(--secondary);
   --color-danger: var(--danger);
@@ -30,6 +31,14 @@
   box-shadow:
     0px 2px 4px hsla(0, 0%, 0%, 0.25),
     0px 4px 8px hsla(0, 0%, 0%, 0.2);
+}
+
+.bg-gradient {
+  background-image: var(--gradient);
+  transition: background-image 0.3s;
+}
+.bg-gradient:hover {
+  background-image: var(--gradient-hover);
 }
 
 @theme inline {
@@ -98,12 +107,15 @@
   --highlight: oklch(1 0.01 264);
   --border: oklch(0.6 0.01 264);
   --border-muted: oklch(0.7 0.01 264);
+  --border-card: var(--bg);
   --primary: oklch(0.4 0.1 264);
   --secondary: oklch(0.4 0.1 84);
   --danger: oklch(0.5 0.05 30);
   --warning: oklch(0.5 0.05 100);
   --success: oklch(0.5 0.05 160);
   --info: oklch(0.5 0.05 260);
+  --gradient: linear-gradient(0deg, var(--bg) 95%, var(--bg-light));
+  --gradient-hover: linear-gradient(0deg, var(--bg), var(--bg-light));
 
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -145,12 +157,15 @@
   --highlight: oklch(0.5 0.01 264);
   --border: oklch(0.4 0.01 264);
   --border-muted: oklch(0.3 0.01 264);
+  --border-card: var(--border);
   --primary: oklch(0.76 0.1 264);
   --secondary: oklch(0.76 0.1 84);
   --danger: oklch(0.7 0.05 30);
   --warning: oklch(0.7 0.05 100);
   --success: oklch(0.7 0.05 160);
   --info: oklch(0.7 0.05 260);
+  --gradient: linear-gradient(0deg, var(--bg) 95%, var(--bg-light));
+  --gradient-hover: linear-gradient(0deg, var(--bg), var(--bg-light));
 
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);

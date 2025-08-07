@@ -22,6 +22,19 @@ export const fadeInUp: Variants = {
   },
 };
 
+export const fadeInSide: Variants = {
+  hidden: { opacity: 0, x: -20 },
+  show: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      ease: [0.42, 0, 0.58, 1],
+      duration: 0.6,
+      type: "spring",
+    },
+  },
+};
+
 export const menuVariants: Variants = {
   hidden: {
     x: "100%",

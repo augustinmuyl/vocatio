@@ -11,7 +11,7 @@ const BENEFITS = [
 
 export default function About() {
     return (
-        <section id="about" className="pb-20 pt-20">
+        <section id="about" className="py-20">
             <div className="container mx-auto px-6 flex justify-center">
                 <motion.div
                     className="p-10 max-w-4xl w-full flex flex-col items-center"
@@ -60,7 +60,7 @@ export default function About() {
                         {BENEFITS.map((text) => (
                             <motion.span
                                 key={text}
-                                className="inline-flex items-center text-base text-text bg-light rounded-full px-4 py-2 shadow-sm hover:bg-primary/70 transition"
+                                className="inline-flex items-center text-base text-text bg-light rounded-full px-4 py-2 shadow-custom hover:bg-primary/70 transition"
                                 variants={fadeInUp}
                             >
                                 <span className="mr-2 text-green-500">✔</span>
