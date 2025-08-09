@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { container, fadeInSide, fadeInUp } from '@/lib/variants';
 import { motion } from 'motion/react';
+import { Card } from '@/components/ui/card';
 
 const features = [
     {
@@ -47,6 +48,7 @@ const features = [
 ];
 
 const HowItWorks = () => {
+    const MotionCard = motion(Card);
     return (
         <section id='how-it-works' className="scroll-mt-20">
             <motion.div
@@ -70,16 +72,12 @@ const HowItWorks = () => {
                     {features.map((feature, idx) => {
                         const Icon = feature.icon;
                         return (
-                            <motion.div
-                                key={idx}
-                                className="flex items-start p-6 bg-gradient border border-border-card border-t-highlight rounded-2xl shadow-custom"
-                                variants={fadeInSide}
-                            >
+                            <MotionCard key={idx} variants={fadeInSide}>
                                 <Icon className="w-6 h-6 text-primary flex-shrink-0 mr-4 mt-1" />
                                 <p className="text-base text-text-mute leading-relaxed">
                                     {feature.description}
                                 </p>
-                            </motion.div>
+                            </MotionCard>
                         );
                     })}
                 </motion.div>
