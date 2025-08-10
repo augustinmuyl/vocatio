@@ -1,6 +1,6 @@
-# Voluntier
+# Vocatio
 
-Voluntier is a full-stack web application that helps students discover, track, and engage with community service opportunities (mostly with high school community-hours requirements in mind).
+Vocatio is a full-stack web application that helps students discover, track, and engage with community service opportunities (mostly with high school community-hours requirements in mind).
 
 > This project is under active development. Many features are still being implemented.
 
@@ -8,7 +8,7 @@ Voluntier is a full-stack web application that helps students discover, track, a
 
 ### Pre-MVP
 
-- [ ] Landing page
+- [x] Landing page
 - [ ] Interest form / waitlist for orgs & students
 - [ ] Set up analytics
 
@@ -60,7 +60,7 @@ Voluntier is a full-stack web application that helps students discover, track, a
         └── app
 ```
 
-## [Logo] VOLUNTIER
+## [Logo] VOCATIO
 
 ---
 
@@ -88,10 +88,10 @@ The easiest way for students and families to discover, track, and complete *offi
 ### ABOUT / VALUE PROP
 
 [Section Title]
-Why Voluntier?
+Why Vocatio?
 
 [Short Description]
-Voluntier is the only platform focused on helping high school students—and their parents—find *verified* community service opportunities that count towards graduation, state scholarships, and college applications.  
+Vocatio is the only platform focused on helping high school students—and their parents—find *verified* community service opportunities that count towards graduation, state scholarships, and college applications.  
 No more spreadsheet chaos, confusing paperwork, or missing out on your diploma or Bright Futures. Everything you need, in one place.
 
 ---
@@ -99,7 +99,7 @@ No more spreadsheet chaos, confusing paperwork, or missing out on your diploma o
 ### HOW IT WORKS / FEATURES
 
 [Section Title]
-How Voluntier Works
+How Vocatio Works
 
 [Feature Cards/Stack]
 ---------------------------------------------------
@@ -176,13 +176,13 @@ Get Early Access
 - [Submit Button]
 
 [Small privacy note]
-“We’ll only contact you about early access and your interest in Voluntier. No spam, ever.”
+“We’ll only contact you about early access and your interest in Vocatio. No spam, ever.”
 
 ---
 
 ### FOOTER
 
 [Links: Contact Email] | [Privacy Policy] | [Socials (optional)]
-© 2025 Voluntier. All rights reserved.
+© 2025 Vocatio. All rights reserved.
 
 ---

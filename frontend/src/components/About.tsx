@@ -26,7 +26,7 @@ export default function About() {
                         className="text-3xl md:text-4xl font-bold text-text mb-6 text-center"
                         variants={fadeInUp}
                     >
-                        Why Voluntier?
+                        Why Vocatio?
                     </motion.h2>
 
                     {/* Description */}
@@ -34,7 +34,7 @@ export default function About() {
                         className="text-lg md:text-xl text-text-mute text-left mb-6"
                         variants={fadeInUp}
                     >
-                        Voluntier is the only platform dedicated to helping
+                        Vocatio is the only platform dedicated to helping
                         high school students—and their parents—find
                         <span className="font-semibold text-secondary">
                             {" official, verified "}

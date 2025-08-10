@@ -330,7 +330,7 @@ export default function Waitlist() {
                     </Form>
                     <p className="mt-4 text-sm text-center text-text-mute">
                         We’ll only contact you about early access and your interest in
-                        Voluntier. No spam, ever.
+                        Vocatio. No spam, ever.
                     </p>
                 </div>
             </div>

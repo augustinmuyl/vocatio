@@ -22,19 +22,19 @@ export default function Footer() {
                 </div>
                 {/* Social Icons */}
                 <div className="flex items-center space-x-4">
-                    <Link href="/" aria-label="Voluntier on Facebook" className="text-text hover:text-primary">
+                    <Link href="/" aria-label="Vocatio on Facebook" className="text-text hover:text-primary">
                         <Facebook className="w-5 h-5" />
                     </Link>
-                    <Link href="/" aria-label="Voluntier on Twitter" className="text-text hover:text-primary">
+                    <Link href="/" aria-label="Vocatio on Twitter" className="text-text hover:text-primary">
                         <Twitter className="w-5 h-5" />
                     </Link>
-                    <Link href="/" aria-label="Voluntier on Instagram" className="text-text hover:text-primary">
+                    <Link href="/" aria-label="Vocatio on Instagram" className="text-text hover:text-primary">
                         <Instagram className="w-5 h-5" />
                     </Link>
                 </div>
             </div>
             <div className="bg-light text-text-mute text-center py-3">
-                © 2025 Voluntier. All rights reserved.
+                © 2025 Vocatio. All rights reserved.
             </div>
         </footer>
     );

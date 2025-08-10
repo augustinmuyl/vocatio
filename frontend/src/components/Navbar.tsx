@@ -25,8 +25,8 @@ export default function Navbar() {
     return (
         <header className="fixed top-0 z-50 w-full bg-light border-b-border shadow-custom">
             <div className="container mx-auto flex items-center justify-between py-4 px-6">
-                <Link href="/" className="text-2xl font-bold text-text">
-                    Volun<span className="text-secondary">Tier</span>
+                <Link href="/" className="text-2xl font-bold text-secondary">
+                    Vocatio
                 </Link>
 
                 {/* Desktop */}

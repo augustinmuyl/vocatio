@@ -63,7 +63,7 @@ const HowItWorks = () => {
                     className="text-3xl md:text-4xl text-center font-bold mb-12"
                     variants={fadeInUp}
                 >
-                    How Voluntier Works
+                    How Vocatio Works
                 </motion.h2>
                 <motion.div
                     className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8"
