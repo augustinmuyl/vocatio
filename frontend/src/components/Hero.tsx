@@ -68,7 +68,7 @@ export default function Hero() {
                     </div>
                     <div className="absolute inset-0 flex items-center justify-center">
                         <motion.div
-                            className="w-full max-w-64 sm:max-w-80 md:max-w-[24.5rem] aspect-[1.4] m-4 sm:m-6 bg-white opacity-100 rounded-lg will-change-transform"
+                            className="w-full max-w-[17.5rem] sm:max-w-[21rem] md:max-w-[24.5rem] aspect-[1.4] m-4 sm:m-6 bg-white opacity-100 rounded-lg will-change-transform"
                         />
                     </div>
                     <Image
