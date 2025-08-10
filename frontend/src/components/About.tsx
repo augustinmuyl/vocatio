@@ -11,10 +11,10 @@ const BENEFITS = [
 
 export default function About() {
     return (
-        <section id="about" className="scroll-mt-20">
-            <div className="container mx-auto px-6 flex justify-center">
+        <section id="about" className="scroll-mt-24 py-20 md:py-28">
+            <div className="container mx-auto px-4 sm:px-6 flex justify-center">
                 <motion.div
-                    className="p-10 max-w-4xl w-full flex flex-col items-center"
+                    className="max-w-4xl w-full flex flex-col items-center text-center"
                     variants={container}
                     initial="hidden"
                     whileInView="show"
@@ -23,7 +23,7 @@ export default function About() {
 
                     {/* Title */}
                     <motion.h2
-                        className="text-3xl md:text-4xl font-bold text-text mb-6 text-center"
+                        className="text-3xl sm:text-4xl md:text-5xl font-bold text-text mb-8"
                         variants={fadeInUp}
                     >
                         Why Vocatio?
@@ -31,7 +31,7 @@ export default function About() {
 
                     {/* Description */}
                     <motion.p
-                        className="text-lg md:text-xl text-text-mute text-left mb-6"
+                        className="text-lg sm:text-xl text-text-mute mb-8"
                         variants={fadeInUp}
                     >
                         Vocatio is the only platform dedicated to helping
@@ -54,13 +54,13 @@ export default function About() {
 
                     {/* Benefit Chips */}
                     <motion.div
-                        className="flex flex-wrap justify-center gap-4 mt-2"
+                        className="flex flex-wrap justify-center gap-3 sm:gap-4 mt-4"
                         variants={container}
                     >
                         {BENEFITS.map((text) => (
                             <motion.span
                                 key={text}
-                                className="inline-flex items-center text-base text-text bg-light rounded-full px-4 py-2 shadow-custom hover:bg-primary/70 transition"
+                                className="inline-flex items-center text-base text-text bg-bg rounded-full px-4 py-2 shadow-custom hover:bg-primary/70 transition-colors"
                                 variants={fadeInUp}
                             >
                                 <span className="mr-2 text-green-500">✔</span>

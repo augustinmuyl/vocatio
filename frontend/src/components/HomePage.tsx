@@ -7,7 +7,7 @@ import Waitlist from './Waitlist'
 
 export default function HomePage() {
     return (
-        <div className="min-h-screen flex flex-col gap-20">
+        <div className="flex flex-col">
             <Navbar />
             <Hero />
             <About />
