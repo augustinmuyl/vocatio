@@ -3,6 +3,7 @@ import Hero from './Hero'
 import About from './About'
 import Footer from './Footer'
 import HowItWorks from './HowItWorks'
+import Waitlist from './Waitlist'
 
 export default function HomePage() {
     return (
@@ -11,6 +12,7 @@ export default function HomePage() {
             <Hero />
             <About />
             <HowItWorks />
+            <Waitlist />
             <Footer />
         </div>
     )
