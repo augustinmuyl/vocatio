@@ -4,8 +4,8 @@ import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
-  title: "VolunTier",
-  description: "Voluntier is a full-stack web application that helps students discover, track, and engage with community service opportunities.",
+  title: "Vocatio",
+  description: "Vocatio is a full-stack web application that helps students discover, track, and engage with community service opportunities.",
 };
 
 const inter = Inter({
