@@ -10,7 +10,8 @@ import DashboardMockup from "../../public/dashboard-mockup-translucent.png"
 export default function Hero() {
     return (
         <motion.section
-            className="relative flex min-h-screen items-center pt-24 pb-16 md:pt-32 md:pb-24 bg-gradient-to-br from-bg via-light to-bg"
+            className="relative flex min-h-screen items-center pt-24 pb-16 md:pt-32 md:pb-24 bg-gradient-to-br from-gray-50 via-light to-gray-100
+            dark:bg-gradient-to-br dark:from-gray-950 dark:via-light dark:to-gray-900"
             variants={container}
             initial="hidden"
             animate="show"
