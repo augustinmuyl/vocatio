@@ -3,6 +3,8 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { motion } from "motion/react";
+import { container, fadeInUp } from "@/lib/variants";
 
 import {
     Form,
@@ -75,12 +77,19 @@ export default function Waitlist() {
     }
 
     return (
-        <section id="waitlist" className="scroll-mt-20">
-            <div className="container mx-auto px-6 flex justify-center">
-                <div className="w-full max-w-2xl">
-                    <h2 className="text-3xl md:text-4xl font-bold text-center text-text mb-6">
+        <section id="waitlist" className="scroll-mt-24 py-20 md:py-32 bg-light">
+            <motion.div
+                className="container mx-auto px-4 sm:px-6 flex justify-center"
+                variants={container}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.3 }}
+            >
+                <motion.div className="w-full max-w-2xl" variants={fadeInUp}>
+                    <motion.h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-text mb-8" variants={fadeInUp}>
                         Get Early Access
-                    </h2>
+                    </motion.h2>
+                    <motion.div variants={fadeInUp}>
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
@@ -328,12 +337,13 @@ export default function Waitlist() {
                             </div>
                         </form>
                     </Form>
-                    <p className="mt-4 text-sm text-center text-text-mute">
+                    </motion.div>
+                    <motion.p className="mt-6 text-sm text-center text-text-mute" variants={fadeInUp}>
                         We’ll only contact you about early access and your interest in
                         Vocatio. No spam, ever.
-                    </p>
-                </div>
-            </div>
+                    </motion.p>
+                </motion.div>
+            </motion.div>
         </section>
     );
 }

@@ -10,26 +10,25 @@ import DashboardMockup from "../../public/dashboard-mockup-translucent.png"
 export default function Hero() {
     return (
         <motion.section
-            className="relative flex min-h-screen items-center bg-gradient-to-br from-gray-50 via-light to-gray-100
-            dark:bg-gradient-to-br dark:from-gray-950 dark:via-light dark:to-gray-900"
+            className="relative flex min-h-screen items-center pt-24 pb-16 md:pt-32 md:pb-24 bg-gradient-to-br from-bg via-light to-bg"
             variants={container}
             initial="hidden"
             animate="show"
         >
-            <div className="container mx-auto flex flex-col-reverse lg:flex-row items-center px-6">
+            <div className="container mx-auto flex flex-col-reverse lg:flex-row items-center px-4 sm:px-6">
                 {/* Text Column */}
                 <motion.div
                     className="w-full lg:w-1/2 text-center lg:text-left"
                     variants={container}
                 >
                     <motion.h2
-                        className="text-4xl lg:text-5xl font-extrabold text-text leading-tight"
+                        className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-text leading-tight"
                         variants={fadeInUp}
                     >
                         Graduate. Earn Scholarships. Track Community Hours.
                     </motion.h2>
                     <motion.p
-                        className="mt-4 text-lg text-text-mute"
+                        className="mt-6 text-lg sm:text-xl text-text-mute"
                         variants={fadeInUp}
                     >
                         The easiest way to discover and complete official community
@@ -55,7 +54,7 @@ export default function Hero() {
                 >
                     <div className="absolute inset-0 flex items-center justify-center">
                         <motion.div
-                            className="w-104 aspect-square bg-gradient-to-br from-blue-200 to-indigo-200 rounded-full opacity-50 will-change-transform"
+                            className="w-72 sm:w-96 md:w-[26rem] aspect-square bg-gradient-to-br from-blue-200 to-indigo-200 rounded-full opacity-50 will-change-transform"
                             variants={{
                                 hidden: { scale: 0.8, opacity: 0 },
                                 show: {
@@ -68,7 +67,7 @@ export default function Hero() {
                     </div>
                     <div className="absolute inset-0 flex items-center justify-center">
                         <motion.div
-                            className="w-full max-w-98 aspect-[1.4] m-5 min-[374px]:m-6 bg-white opacity-100 rounded-lg will-change-transform"
+                            className="w-full max-w-64 sm:max-w-80 md:max-w-[24.5rem] aspect-[1.4] m-4 sm:m-6 bg-white opacity-100 rounded-lg will-change-transform"
                         />
                     </div>
                     <Image
@@ -77,7 +76,7 @@ export default function Hero() {
                         alt="Dashboard mockup with badges and stats"
                         width={450}
                         height={400}
-                        className="relative z-10"
+                        className="relative z-10 w-full max-w-xs sm:max-w-sm md:max-w-md"
                     />
                 </motion.div>
             </div>
