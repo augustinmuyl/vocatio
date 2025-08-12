@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "./ui/button";
 import Link from "next/link";
-import { Menu, X, Moon, Sun } from "lucide-react";
+import { Menu, X, Moon, Sun, CircleCheckBig } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { menuVariants } from "@/lib/variants";
 import { useTheme } from "next-themes";
@@ -25,8 +25,11 @@ export default function Navbar() {
     return (
         <header className="fixed top-0 z-50 w-full bg-light border-b-border shadow-custom">
             <div className="container mx-auto flex items-center justify-between py-4 px-6">
-                <Link href="/" className="text-2xl font-bold text-secondary">
-                    Vocatio
+                <Link href="/" className="flex items-center gap-3">
+                    <CircleCheckBig className="text-primary" />
+                    <h1 className="text-2xl font-bold text-text">
+                        Vocatio
+                    </h1>
                 </Link>
 
                 {/* Desktop */}
