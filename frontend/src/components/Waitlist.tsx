@@ -78,14 +78,14 @@ export default function Waitlist() {
 
     return (
         <section id="waitlist" className="scroll-mt-24 py-20 md:py-32">
-            <motion.div
-                className="container mx-auto px-4 sm:px-6 flex justify-center"
-                variants={container}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, amount: 0.3 }}
-            >
-                <motion.div className="w-full max-w-2xl" variants={fadeInUp}>
+            <div className="container mx-auto px-4 sm:px-6 flex justify-center">
+                <motion.div
+                    className="w-full max-w-2xl"
+                    variants={container}
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={{ once: true, amount: 0.3 }}
+                >
                     <motion.h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-text mb-8" variants={fadeInUp}>
                         Get Early Access
                     </motion.h2>
@@ -347,7 +347,7 @@ export default function Waitlist() {
                         Vocatio. No spam, ever.
                     </motion.p>
                 </motion.div>
-            </motion.div>
+            </div>
         </section>
     );
 }
