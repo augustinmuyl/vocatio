@@ -1,22 +1,26 @@
 from datetime import datetime, timezone
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, SQLModel, Column, DateTime, func
 
 
 class Opportunity(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     org_id: int = Field(foreign_key="user.id")
-    title: str  # limit length in schema
-    description: str  # ^^^
+    title: str = Field(max_length=200)
+    description: str = Field(max_length=1000)
     community_hours: int
     event_date: datetime
 
-    address: str
-    city: str
-    state: str
-    zip_code: str
+    address: str = Field(max_length=200)
+    city: str = Field(max_length=100)
+    state: str = Field(max_length=100)
+    zip_code: str = Field(max_length=10)
 
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        sa_column=Column(DateTime(timezone=True), server_default=func.now()),
+    )
     updated_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc)
+        default_factory=lambda: datetime.now(timezone.utc),
+        sa_column=Column(DateTime(timezone=True), server_default=func.now()),
     )  # remember to update in routes
     is_active: bool = Field(default=True)

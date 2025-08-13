@@ -39,13 +39,13 @@ class OpportunityRead(BaseModel):
 
 class OpportunityUpdate(BaseModel):
     title: Optional[str] = Field(default=None, max_length=200)
-    description: Optional[str] = Field(default=None, max_length=2000)
-    community_hours: Optional[int] = None
+    description: Optional[str] = Field(default=None, max_length=1000)
+    community_hours: Optional[int] = Field(default=None, ge=1, le=1000)
     event_date: Optional[datetime] = None
 
     address: Optional[str] = None
     city: Optional[str] = None
     state: Optional[str] = None
-    zip_code: Optional[str] = None
+    zip_code: Optional[str] = Field(default=None, pattern=r"^\d{5}(-\d{4})?$")
 
     is_active: Optional[bool] = None

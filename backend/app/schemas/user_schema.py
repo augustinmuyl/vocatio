@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, EmailStr, Field
 
@@ -8,7 +9,7 @@ class UserCreate(BaseModel):
     name: str
     email: EmailStr
     password: str = Field(..., min_length=8)  # not hashed
-    role: Role
+    role: Role = Role.STUDENT
 
 
 class UserRead(BaseModel):
@@ -17,6 +18,8 @@ class UserRead(BaseModel):
     email: EmailStr
     role: Role
     is_active: bool
+    created_at = datetime
+    updated_at = datetime
 
     model_config = {"from_attributes": True}
 

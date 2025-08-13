@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from enum import Enum as PYEnum
-from sqlmodel import Column, Enum, SQLModel, Field
+from sqlmodel import Column, Enum, SQLModel, Field, DateTime, func
 
 
 class Role(str, PYEnum):
@@ -10,13 +10,24 @@ class Role(str, PYEnum):
 
 class User(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    name: str  # need to come back to (display_name, differences between org and student names)
-    email: str = Field(..., unique=True, index=True)  # ensure is unique during migrations
-    hashed_password: str
+    name: str = Field(
+        max_length=100
+    )  # need to come back to (display_name, differences between org and student names)
+    email: str = Field(
+        ..., unique=True, index=True, max_length=320
+    )  # ensure is unique during migrations
+    hashed_password: str = Field(max_length=255)
     role: Role = Field(
         default=Role.STUDENT, sa_column=Column(Enum(Role, name="user_role_enum"), nullable=False)
     )
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        sa_column=Column(DateTime(timezone=True), server_default=func.now()),
+    )
+    updated_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        sa_column=Column(DateTime(timezone=True), server_default=func.now()),
+    )  # remember to update in routes
     is_active: bool = Field(default=True)
     # updated_at
     # last_login
