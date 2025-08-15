@@ -18,8 +18,8 @@ class UserRead(BaseModel):
     email: EmailStr
     role: Role
     is_active: bool
-    created_at = datetime
-    updated_at = datetime
+    created_at: datetime
+    updated_at: datetime
 
     model_config = {"from_attributes": True}
 
