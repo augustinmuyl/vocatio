@@ -1,6 +1,7 @@
 from datetime import UTC, datetime
 from enum import Enum as PYEnum
 
+from sqlalchemy import Integer, Sequence
 from sqlmodel import Column, DateTime, Enum, Field, SQLModel, func
 
 
@@ -10,7 +11,10 @@ class Role(str, PYEnum):
 
 
 class User(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+    id: int | None = Field(
+        default=None,
+        sa_column=Column(Integer, Sequence("user_id_seq"), primary_key=True),
+    )
     name: str = Field(
         max_length=100
     )  # need to come back to (display_name, differences between org and student names)
