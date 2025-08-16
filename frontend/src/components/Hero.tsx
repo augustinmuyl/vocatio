@@ -27,6 +27,7 @@ export default function Hero() {
                         variants={fadeInUp}
                     >
                         Graduate. Earn Scholarships. Track Community Hours.
+                        {/*The easiest way to find community service hours*/}
                     </motion.h2>
                     <motion.p
                         className="mt-6 text-lg sm:text-xl text-text-mute"
@@ -34,6 +35,7 @@ export default function Hero() {
                     >
                         The easiest way to discover and complete official community
                         service hours for high school students.
+                        {/*For students, parents, and organizations*/}
                     </motion.p>
                     <motion.div
                         className="mt-8 flex flex-col sm:flex-row sm:justify-center lg:justify-start gap-4"
