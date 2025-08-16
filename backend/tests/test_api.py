@@ -8,7 +8,7 @@ from sqlmodel import SQLModel
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
-os.environ["DATABASE_URL"] = "sqlite:///./test.db"
+os.environ["DATABASE_URL"] = "sqlite:///:memory:"
 
 from app.db.session import engine  # noqa: E402
 from app.main import app  # noqa: E402
