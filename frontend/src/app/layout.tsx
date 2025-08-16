@@ -43,9 +43,6 @@ export const metadata: Metadata = {
       "Discover verified community service opportunities and track hours with Vocatio.",
     images: ["/dashboard-mockup.png"],
   },
-  icons: {
-    icon: "/globe.svg",
-  },
 };
 
 const inter = Inter({
