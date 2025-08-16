@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 
 
 class OpportunityCreate(BaseModel):
+    org_id: int
     title: str = Field(..., max_length=200)
     description: str = Field(..., max_length=1000)
     community_hours: int = Field(..., ge=1, le=1000)
