@@ -39,10 +39,10 @@ The backend currently uses SQLModel with a synchronous `psycopg2` driver and rea
 
 ### 5. Verify models and CRUD operations
 
-1. Create a small script or use existing API routes (`users`, `opportunities`) to:
-   - Create records using `UserCreate` and `Opportunity` schemas.
+1. Use the API routes (`/users`, `/opportunities`) to:
+   - Create records using `UserCreate` and `OpportunityCreate` schemas.
    - Read records back to verify persistence.
-2. Add unit tests or integration tests hitting the API to ensure CRUD operations succeed against Neon.
+2. Automated tests live in `backend/tests/test_api.py`. Run `pytest` to confirm CRUD operations succeed against Neon.
 
 ### 6. CI/CD & Deployment
 
