@@ -1,7 +1,13 @@
-from app.core.config import settings
 from sqlmodel import Session, create_engine
 
-engine = create_engine(settings.database_url, echo=True)
+from app.core.config import settings
+
+engine = create_engine(
+    settings.database_url,
+    echo=settings.database_echo,
+    pool_pre_ping=True,
+    connect_args={"sslmode": "require"},
+)
 
 
 def get_session():
