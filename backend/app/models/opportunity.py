@@ -1,10 +1,14 @@
 from datetime import UTC, datetime
 
+from sqlalchemy import Integer, Sequence
 from sqlmodel import Column, DateTime, Field, SQLModel, func
 
 
 class Opportunity(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+    id: int | None = Field(
+        default=None,
+        sa_column=Column(Integer, Sequence("opportunity_id_seq"), primary_key=True),
+    )
     org_id: int = Field(foreign_key="user.id")
     title: str = Field(max_length=200)
     description: str = Field(max_length=1000)
