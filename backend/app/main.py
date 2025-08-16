@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+
 from app.api.routes import test
 
 app = FastAPI()

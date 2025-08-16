@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+
 from pydantic import BaseModel, Field
 
 
@@ -38,14 +38,14 @@ class OpportunityRead(BaseModel):
 
 
 class OpportunityUpdate(BaseModel):
-    title: Optional[str] = Field(default=None, max_length=200)
-    description: Optional[str] = Field(default=None, max_length=1000)
-    community_hours: Optional[int] = Field(default=None, ge=1, le=1000)
-    event_date: Optional[datetime] = None
+    title: str | None = Field(default=None, max_length=200)
+    description: str | None = Field(default=None, max_length=1000)
+    community_hours: int | None = Field(default=None, ge=1, le=1000)
+    event_date: datetime | None = None
 
-    address: Optional[str] = None
-    city: Optional[str] = None
-    state: Optional[str] = None
-    zip_code: Optional[str] = Field(default=None, pattern=r"^\d{5}(-\d{4})?$")
+    address: str | None = None
+    city: str | None = None
+    state: str | None = None
+    zip_code: str | None = Field(default=None, pattern=r"^\d{5}(-\d{4})?$")
 
-    is_active: Optional[bool] = None
+    is_active: bool | None = None

@@ -1,6 +1,7 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum as PYEnum
-from sqlmodel import Column, Enum, SQLModel, Field, DateTime, func
+
+from sqlmodel import Column, DateTime, Enum, Field, SQLModel, func
 
 
 class Role(str, PYEnum):
@@ -21,11 +22,11 @@ class User(SQLModel, table=True):
         default=Role.STUDENT, sa_column=Column(Enum(Role, name="user_role_enum"), nullable=False)
     )
     created_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
+        default_factory=lambda: datetime.now(UTC),
         sa_column=Column(DateTime(timezone=True), server_default=func.now()),
     )
     updated_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
+        default_factory=lambda: datetime.now(UTC),
         sa_column=Column(DateTime(timezone=True), server_default=func.now()),
     )  # remember to update in routes
     is_active: bool = Field(default=True)

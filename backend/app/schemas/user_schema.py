@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+
 from pydantic import BaseModel, EmailStr, Field
 
 from app.models.user import Role
@@ -25,6 +25,6 @@ class UserRead(BaseModel):
 
 
 class UserUpdate(BaseModel):
-    name: Optional[str] = None
-    email: Optional[EmailStr] = None
-    password: Optional[str] = Field(default=None, min_length=8)
+    name: str | None = None
+    email: EmailStr | None = None
+    password: str | None = Field(default=None, min_length=8)

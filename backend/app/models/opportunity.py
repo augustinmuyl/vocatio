@@ -1,5 +1,6 @@
-from datetime import datetime, timezone
-from sqlmodel import Field, SQLModel, Column, DateTime, func
+from datetime import UTC, datetime
+
+from sqlmodel import Column, DateTime, Field, SQLModel, func
 
 
 class Opportunity(SQLModel, table=True):
@@ -16,11 +17,11 @@ class Opportunity(SQLModel, table=True):
     zip_code: str = Field(max_length=10)
 
     created_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
+        default_factory=lambda: datetime.now(UTC),
         sa_column=Column(DateTime(timezone=True), server_default=func.now()),
     )
     updated_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
+        default_factory=lambda: datetime.now(UTC),
         sa_column=Column(DateTime(timezone=True), server_default=func.now()),
     )  # remember to update in routes
     is_active: bool = Field(default=True)

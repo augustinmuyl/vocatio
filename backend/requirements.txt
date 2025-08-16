@@ -6,3 +6,4 @@ python-dotenv
 psycopg2-binary
 pydantic-settings
 pydantic[email]
+ruff
