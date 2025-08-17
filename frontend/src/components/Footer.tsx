@@ -1,6 +1,6 @@
 import React from 'react';
-import { Mail, ShieldX, Facebook, Twitter, Instagram } from 'lucide-react';
-import Link from 'next/link';
+// import { Mail, ShieldX, Facebook, Twitter, Instagram } from 'lucide-react';
+// import Link from 'next/link';
 
 export default function Footer() {
     return (
