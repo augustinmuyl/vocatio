@@ -12,7 +12,7 @@ class Opportunity(SQLModel, table=True):
         default=None,
         sa_column=Column(Integer, Sequence("opportunity_id_seq"), primary_key=True),
     )
-    org_id: int = Field(foreign_key="user.id")
+    org_id: int = Field(foreign_key="users.id")
     title: str = Field(max_length=200)
     description: str = Field(max_length=1000)
     community_hours: int

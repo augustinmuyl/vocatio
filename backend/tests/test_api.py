@@ -71,3 +71,20 @@ def test_opportunity_crud():
     assert get_resp.status_code == 200
     assert get_resp.json()["title"] == opp_payload["title"]
 
+
+def test_waitlist_signup():
+    payload = {
+        "role": "student",
+        "name": "Bob",
+        "email": "bob@example.com",
+        "school": "Central High",
+        "requirement": "graduation",
+        "hours_needed": 40,
+    }
+    resp = client.post("/waitlist", json=payload)
+    assert resp.status_code == 200
+    assert resp.json()["message"] == "Waitlist entry created"
+
+    resp_dup = client.post("/waitlist", json=payload)
+    assert resp_dup.status_code == 409
+
