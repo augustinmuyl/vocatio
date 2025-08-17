@@ -1,10 +1,13 @@
 from datetime import UTC, datetime
+from typing import ClassVar
 
 from sqlalchemy import Integer, Sequence
 from sqlmodel import Column, DateTime, Field, SQLModel, func
 
 
 class Opportunity(SQLModel, table=True):
+    __tablename__ = "opportunities"  # type: ignore[override]
+
     id: int | None = Field(
         default=None,
         sa_column=Column(Integer, Sequence("opportunity_id_seq"), primary_key=True),

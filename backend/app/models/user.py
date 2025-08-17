@@ -11,6 +11,8 @@ class Role(str, PYEnum):
 
 
 class User(SQLModel, table=True):
+    __tablename__ = "users"  # type: ignore[override]
+
     id: int | None = Field(
         default=None,
         sa_column=Column(Integer, Sequence("user_id_seq"), primary_key=True),
