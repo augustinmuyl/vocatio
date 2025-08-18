@@ -10,13 +10,13 @@ import BrowsingMockup from "../../public/browsing_mockup.png"
 export default function Hero() {
     return (
         <motion.section
-            className="relative flex min-h-screen pt-48 bg-gradient-to-br from-gray-50 via-light to-gray-100
+            className="relative flex min-h-screen lg:pt-48 bg-gradient-to-br from-gray-50 via-light to-gray-100
             dark:bg-gradient-to-br dark:from-gray-950 dark:via-light dark:to-gray-900"
             variants={container}
             initial="hidden"
             animate="show"
         >
-            <div className="container mx-auto flex flex-col-reverse lg:flex-col items-center lg:gap-16 px-4 sm:px-6">
+            <div className="container mx-auto flex flex-col-reverse lg:flex-col items-center justify-center lg:justify-start lg:gap-16 px-4 sm:px-6">
                 {/* Text Column */}
                 <motion.div
                     className="w-full lg:w-2/3 text-center"
@@ -49,14 +49,14 @@ export default function Hero() {
 
                 {/* Illustration Column */}
                 <motion.div
-                    className="w-full mb-4 lg:mb-0 flex justify-center relative overflow-visible"
+                    className="w-full mb-6 lg:mb-0 flex justify-center relative overflow-visible"
                     variants={fadeInUp}
                 >
                     <Image
                         priority
                         src={BrowsingMockup}
                         alt="Browsing approved community service opportunities"
-                        className="absolute z-10 w-full max-w-sm sm:max-w-md md:max-w-5xl rounded-3xl border-4 shadow-custom pointer-events-none"
+                        className="relative lg:absolute z-10 w-full max-w-sm sm:max-w-md md:max-w-xl lg:max-w-4xl xl:max-w-5xl rounded-3xl border-4 shadow-custom pointer-events-none"
                     />
                 </motion.div>
             </div>
