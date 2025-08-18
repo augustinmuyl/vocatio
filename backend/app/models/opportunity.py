@@ -1,5 +1,4 @@
 from datetime import UTC, datetime
-from typing import ClassVar
 
 from sqlalchemy import Integer, Sequence
 from sqlmodel import Column, DateTime, Field, SQLModel, func

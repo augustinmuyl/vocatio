@@ -47,76 +47,26 @@ Vocatio is a full-stack web application that helps students discover, track, and
 ```text
 .
 ├── backend
-│   └── app
-│       ├── api
-│       │   └── routes
-│       ├── core
-│       ├── db
-│       ├── models
-│       └── schemas
+│   ├── app
+│   │   ├── alembic
+│   │   │   └── versions
+│   │   ├── api
+│   │   │   └── routes
+│   │   ├── core
+│   │   ├── db
+│   │   ├── models
+│   │   └── schemas
+│   └── tests
 └── frontend
     ├── public
     └── src
-        └── app
+        ├── app
+        ├── components
+        │   └── ui
+        └── lib
 ```
 
 ## [Logo] VOCATIO
-
----
-
-[Sticky Navbar]
-| Home | How It Works | For Students & Parents | For Organizations | Join Waitlist |
-
----
-
-### HERO SECTION
-
-[Large Headline]
-Graduate. Earn Scholarships. Track Community Hours.
-
-[Subheading]
-The easiest way for students and families to discover, track, and complete *official* community service hours for graduation, Bright Futures, and more.
-
-[Main CTA Button]
-[Join the Waitlist]
-
-[Optional: Small secondary CTA]
-[How It Works] (scrolls down)
-
----
-
-### ABOUT / VALUE PROP
-
-[Section Title]
-Why Vocatio?
-
-[Short Description]
-Vocatio is the only platform focused on helping high school students—and their parents—find *verified* community service opportunities that count towards graduation, state scholarships, and college applications.  
-No more spreadsheet chaos, confusing paperwork, or missing out on your diploma or Bright Futures. Everything you need, in one place.
-
----
-
-### HOW IT WORKS / FEATURES
-
-[Section Title]
-How Vocatio Works
-
-[Feature Cards/Stack]
----------------------------------------------------
-| 🔍  | Search real, approved community service opportunities in your area  |
----------------------------------------------------
-| 📋  | See exactly how many *official* hours are offered per activity      |
----------------------------------------------------
-| 🏅  | Track your hours and automatically see progress toward major milestones: Graduation (X hours), Bright Futures (100h), Honor Cords (250/500/1000h)   |
----------------------------------------------------
-| 📑  | Download reports and documentation for your school                  |
----------------------------------------------------
-| 👨‍👩‍👧  | For parents: Find approved opportunities and track required family hours |
----------------------------------------------------
-| 🤝  | For organizations: Easily list your approved hours and reach local students |
----------------------------------------------------
-
-[Highlight “Official”, “Approved”, “Counts for Graduation” throughout]
 
 ---
 
@@ -153,36 +103,5 @@ Easily connect with local students and families seeking *official* community ser
 - List your opportunities for free
 - Specify how many *approved* hours are offered
 - Help students graduate and win scholarships
-
----
-
-### GENERAL WAITLIST FORM
-
-[Section Title]
-Get Early Access
-
-[Form fields:]
-- Name
-- Email
-- I am a: [Student / Parent / Organization / Other] (radio buttons)
-  - If "Organization" selected:
-    - Organization Name
-    - Role/Position
-    - What type of opportunities/hours do you offer?
-  - If "Student" or "Parent" selected:
-    - School or School District (optional)
-    - Which requirement matters most to you? [Graduation / Bright Futures / Honor Cord / Other]
-    - How many hours do you still need? (optional)
-- [Submit Button]
-
-[Small privacy note]
-“We’ll only contact you about early access and your interest in Vocatio. No spam, ever.”
-
----
-
-### FOOTER
-
-[Links: Contact Email] | [Privacy Policy] | [Socials (optional)]
-© 2025 Vocatio. All rights reserved.
 
 ---
