@@ -6,6 +6,7 @@ import { Button } from "./ui/button";
 import { motion } from "motion/react";
 import { container, fadeInUp } from "../lib/variants";
 import BrowsingMockup from "../../public/browsing_mockup.png"
+import BrowsingMockupLight from "../../public/browsing_mockup_light.png"
 
 export default function Hero() {
     return (
@@ -56,7 +57,13 @@ export default function Hero() {
                         priority
                         src={BrowsingMockup}
                         alt="Browsing approved community service opportunities"
-                        className="relative lg:absolute z-10 w-full max-w-sm sm:max-w-md md:max-w-xl lg:max-w-4xl xl:max-w-5xl rounded-3xl border-4 shadow-custom pointer-events-none"
+                        className="hidden dark:block relative lg:absolute z-10 w-full max-w-sm sm:max-w-md md:max-w-xl lg:max-w-4xl xl:max-w-5xl rounded-3xl border-4 shadow-custom pointer-events-none"
+                    />
+                    <Image
+                        priority
+                        src={BrowsingMockupLight}
+                        alt="Browsing approved community service opportunities"
+                        className="dark:hidden relative lg:absolute z-10 w-full max-w-sm sm:max-w-md md:max-w-xl lg:max-w-4xl xl:max-w-5xl rounded-3xl border-4 shadow-custom pointer-events-none"
                     />
                 </motion.div>
             </div>
