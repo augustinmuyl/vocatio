@@ -11,10 +11,10 @@ const BENEFITS = [
 
 export default function About() {
     return (
-        <section id="about" className="scroll-mt-24 py-20 md:py-28">
+        <section id="about" className="h-[100vh] flex justify-center">
             <div className="container mx-auto px-4 sm:px-6 flex justify-center">
                 <motion.div
-                    className="max-w-4xl w-full flex flex-col items-center text-center"
+                    className="max-w-4xl w-full flex flex-col items-center text-center translate-y-96"
                     variants={container}
                     initial="hidden"
                     whileInView="show"
@@ -23,7 +23,7 @@ export default function About() {
 
                     {/* Title */}
                     <motion.h2
-                        className="text-3xl sm:text-4xl md:text-5xl font-bold text-text mb-8"
+                        className="text-3xl sm:text-4xl md:text-5xl font-bold text-text mb-10"
                         variants={fadeInUp}
                     >
                         Why Vocatio?
@@ -31,7 +31,7 @@ export default function About() {
 
                     {/* Description */}
                     <motion.p
-                        className="text-lg sm:text-xl text-text-mute mb-8"
+                        className="text-lg sm:text-xl/10 text-text-mute mb-8"
                         variants={fadeInUp}
                     >
                         Vocatio is the only platform dedicated to helping
@@ -63,8 +63,8 @@ export default function About() {
                                 className="inline-flex items-center text-base text-text bg-bg rounded-full px-4 py-2 shadow-custom hover:bg-primary/70 transition-colors"
                                 variants={fadeInUp}
                             >
-                                <span className="mr-2 text-green-500">✔</span>
-                                {text}
+                                <span className="mr-2 text-green-500 pointer-events-none">✔</span>
+                                <p className="pointer-events-none">{text}</p>
                             </motion.span>
                         ))}
                     </motion.div>

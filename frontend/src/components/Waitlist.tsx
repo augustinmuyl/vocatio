@@ -77,8 +77,8 @@ export default function Waitlist() {
     }
 
     return (
-        <section id="waitlist" className="scroll-mt-24 py-20 md:py-32">
-            <div className="container mx-auto px-4 sm:px-6 flex justify-center">
+        <section id="waitlist" className="h-[80vh] flex justify-center items-center">
+            <div className="container mx-auto px-6 flex justify-center justify-self-center">
                 <motion.div
                     className="w-full max-w-2xl"
                     variants={container}

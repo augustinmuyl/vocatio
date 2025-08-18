@@ -50,7 +50,7 @@ const features = [
 const HowItWorks = () => {
     const MotionCard = motion(Card);
     return (
-        <section id='how-it-works' className="scroll-mt-24 py-20 md:py-28">
+        <section id='how-it-works' className="h-[80vh] flex justify-center items-center bg-light brightness-90">
             <motion.div
                 className="max-w-7xl mx-auto px-4 sm:px-6"
                 variants={container}
