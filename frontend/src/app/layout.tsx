@@ -19,6 +19,10 @@ export const metadata: Metadata = {
     "education",
   ],
   authors: [{ name: "Vocatio" }],
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+  },
   openGraph: {
     title: "Vocatio",
     description:
@@ -27,10 +31,10 @@ export const metadata: Metadata = {
     siteName: "Vocatio",
     images: [
       {
-        url: "/dashboard-mockup.png",
-        width: 1200,
-        height: 630,
-        alt: "Preview of the Vocatio dashboard",
+        url: "/browsing_mockup.png",
+        width: 3024,
+        height: 1964,
+        alt: "Preview of browsing community service opportunities on Vocatio",
       },
     ],
     locale: "en_US",
@@ -41,7 +45,7 @@ export const metadata: Metadata = {
     title: "Vocatio",
     description:
       "Discover verified community service opportunities and track hours with Vocatio.",
-    images: ["/dashboard-mockup.png"],
+    images: ["/browsing_mockup.png"],
   },
 };
 
