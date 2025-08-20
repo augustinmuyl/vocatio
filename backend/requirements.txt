@@ -6,6 +6,7 @@ python-dotenv
 psycopg2-binary
 pydantic-settings
 pydantic[email]
+jinja2
 ruff
 pytest
 httpx

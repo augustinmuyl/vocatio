@@ -70,6 +70,13 @@ Vocatio is a full-stack web application that helps students discover, track, and
 
 ---
 
+## Backend Email Configuration
+
+Set the following environment variables to enable Postmark-powered confirmation emails:
+
+- `POSTMARK_API_TOKEN`
+- `POSTMARK_FROM_EMAIL`
+
 ### DEMO / PREVIEW SECTION (Optional)
 
 [Section Title]
