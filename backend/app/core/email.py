@@ -28,12 +28,17 @@ def send_confirmation_email(email: str, name: str) -> None:
     template = env.get_template("confirmation_email.html")
     html_body = template.render(name=name)
 
-    headers = {"X-Postmark-Server-Token": settings.postmark_api_token}
+    headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "X-Postmark-Server-Token": settings.postmark_api_token,
+    }
     payload = {
         "From": settings.postmark_from_email,
         "To": email,
         "Subject": "Thanks for joining the Vocatio waitlist!",
         "HtmlBody": html_body,
+        "MessageStream": "outbound",
     }
 
     with suppress(httpx.HTTPError):

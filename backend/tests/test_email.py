@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+from typing import Any
 
 import httpx
 
@@ -19,7 +20,7 @@ def test_send_confirmation_email_with_token(monkeypatch) -> None:
     monkeypatch.setattr(settings, "postmark_api_token", "token")
     monkeypatch.setattr(settings, "postmark_from_email", "from@example.com")
 
-    called: dict[str, object] = {}
+    called: dict[str, Any] = {}
 
     def fake_post(url, json, headers, timeout):  # type: ignore[no-untyped-def]
         called["url"] = url
