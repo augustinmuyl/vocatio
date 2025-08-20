@@ -33,7 +33,11 @@ class WaitlistEntry(SQLModel, table=True):
     )
     role: WaitlistRole = Field(
         sa_column=Column(
-            Enum(WaitlistRole, name="waitlist_role_enum"),
+            Enum(
+                WaitlistRole,
+                name="waitlist_role_enum",
+                values_callable=lambda e: [m.value for m in e],
+            ),
             nullable=False,
         )
     )
@@ -43,7 +47,11 @@ class WaitlistEntry(SQLModel, table=True):
     requirement: Requirement | None = Field(
         default=None,
         sa_column=Column(
-            Enum(Requirement, name="waitlist_requirement_enum"),
+            Enum(
+                Requirement,
+                name="waitlist_requirement_enum",
+                values_callable=lambda e: [m.value for m in e],
+            ),
             nullable=True,
         ),
     )
