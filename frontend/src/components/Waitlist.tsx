@@ -22,15 +22,13 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 const formSchema = z.object({
-  role: z.enum(["student", "parent", "organization", "other"], {
-    required_error: "Role is required",
-  }),
+  role: z.enum(["student", "parent", "organization", "other"], { error: "Please select a role" }),
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email"),
   additionalInfo: z.string().optional(),
   consent: z
     .boolean()
-    .refine((val) => val, { message: "Consent is required" }),
+    .refine((val) => val, { error: "Consent is required" }),
   website: z.string().max(0),
 });
 
