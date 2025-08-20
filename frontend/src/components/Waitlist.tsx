@@ -5,6 +5,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "motion/react";
 import { container, fadeInUp } from "@/lib/variants";
+import { useWaitlist } from "@/hooks/useWaitlist";
 
 import {
     Form,
@@ -71,9 +72,35 @@ export default function Waitlist() {
     });
 
     const role = form.watch("role");
+    const { submit, status, isSubmitted } = useWaitlist();
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values);
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        const payload: Record<string, unknown> = {
+            role: values.role,
+            name: values.name,
+            email: values.email,
+        };
+
+        if ("school" in values && values.school) {
+            payload.school = values.school;
+        }
+        if ("requirement" in values && values.requirement) {
+            payload.requirement = values.requirement;
+        }
+        if ("hoursNeeded" in values && values.hoursNeeded) {
+            payload.hours_needed = parseInt(values.hoursNeeded, 10);
+        }
+        if ("orgName" in values && values.orgName) {
+            payload.org_name = values.orgName;
+        }
+        if ("orgRole" in values && values.orgRole) {
+            payload.org_role = values.orgRole;
+        }
+        if ("orgOpportunities" in values && values.orgOpportunities) {
+            payload.org_opportunities = values.orgOpportunities;
+        }
+
+        await submit(payload);
     }
 
     return (
@@ -91,10 +118,11 @@ export default function Waitlist() {
                     </motion.h2>
                     <motion.div variants={fadeInUp}>
                         <Form {...form}>
-                            <form
-                                onSubmit={form.handleSubmit(onSubmit)}
-                                className="space-y-6"
-                            >
+                            <form onSubmit={form.handleSubmit(onSubmit)}>
+                                <fieldset
+                                    disabled={isSubmitted || form.formState.isSubmitting}
+                                    className="space-y-6"
+                                >
                                 <FormField
                                     control={form.control}
                                     name="name"
@@ -336,13 +364,29 @@ export default function Waitlist() {
 
                                 <div className="pt-4">
                                     <Button type="submit" className="w-full">
-                                        Submit
+                                        {form.formState.isSubmitting
+                                            ? "Submitting..."
+                                            : "Submit"}
                                     </Button>
                                 </div>
+                                </fieldset>
                             </form>
                         </Form>
+                        {status === "success" && (
+                            <p className="mt-4 text-center text-success">
+                                Thanks for joining the waitlist!
+                            </p>
+                        )}
+                        {status === "error" && (
+                            <p className="mt-4 text-center text-danger">
+                                Something went wrong. Please try again.
+                            </p>
+                        )}
                     </motion.div>
-                    <motion.p className="mt-6 text-sm text-center text-text-mute" variants={fadeInUp}>
+                    <motion.p
+                        className="mt-6 text-sm text-center text-text-mute"
+                        variants={fadeInUp}
+                    >
                         We’ll only contact you about early access and your interest in
                         Vocatio. No spam, ever.
                     </motion.p>
