@@ -25,7 +25,7 @@ def create_waitlist_entry(
     except IntegrityError as exc:
         session.rollback()
         raise HTTPException(
-            status_code=409, detail="Email already registered for this role"
+            status_code=409, detail="Email already registered"
         ) from exc
     session.refresh(entry)
     background_tasks.add_task(send_confirmation_email, entry.email, entry.name)

@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -47,6 +48,14 @@ export default function Waitlist() {
 
   const role = form.watch("role");
   const { submit, status } = useWaitlist();
+
+  useEffect(() => {
+    if (status === "success") {
+      toast.success("Thanks for joining the waitlist!", {
+        description: "Check your email for more information",
+      });
+    }
+  }, [status]);
 
   const additionalInfoLabels: Record<string, string> = {
     student: "Tell us about your community service needs",
@@ -262,10 +271,6 @@ export default function Waitlist() {
                 </fieldset>
               </form>
             </Form>
-            {status === "success" &&
-              toast.success("Thanks for joining the waitlist!", {
-                description: "Check your email for more information",
-              })}
             {status === "error" && (
               <p className="mt-4 text-center text-danger">
                 Something went wrong. Please try again.

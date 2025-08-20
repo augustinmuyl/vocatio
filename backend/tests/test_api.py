@@ -9,6 +9,7 @@ from sqlmodel import SQLModel
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 os.environ["DATABASE_URL"] = "sqlite:///:memory:"
+os.environ["FRONTEND_URL"] = "http://testserver"
 
 from app.db.session import engine  # noqa: E402
 from app.main import app  # noqa: E402
@@ -87,6 +88,10 @@ def test_waitlist_signup():
 
     resp_dup = client.post("/waitlist", json=payload)
     assert resp_dup.status_code == 409
+
+    diff_role_payload = {**payload, "role": "parent"}
+    resp_diff_role = client.post("/waitlist", json=diff_role_payload)
+    assert resp_diff_role.status_code == 409
 
     bot_payload = {**payload, "email": "bot@example.com", "website": "spam"}
     resp_bot = client.post("/waitlist", json=bot_payload)
