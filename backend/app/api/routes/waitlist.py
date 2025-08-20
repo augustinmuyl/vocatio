@@ -16,7 +16,9 @@ def create_waitlist_entry(
     background_tasks: BackgroundTasks,
     session: Session = Depends(get_session),
 ):
-    entry = WaitlistEntry(**payload.model_dump())
+    if payload.website:
+        raise HTTPException(status_code=400, detail="Invalid submission")
+    entry = WaitlistEntry(**payload.model_dump(exclude={"website"}))
     session.add(entry)
     try:
         session.commit()
