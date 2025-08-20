@@ -52,15 +52,23 @@ export default function Waitlist() {
 
   const additionalInfoLabels: Record<string, string> = {
     student: "Tell us about your community service needs",
-    parent: "Tell us about your student's community service needs",
+    parent: "Tell us about your community service needs",
     organization: "Describe the opportunities your organization offers",
     other: "How would you like to work with us?",
   };
+  const additionalInfoPlaceholders: Record<string, string> = {
+    student: "E.g., your interests, skills, or availability",
+    parent: "E.g., your interests, skills, or availability",
+    organization: "E.g., tutoring, food drives, or environmental projects",
+    other: "Share extra info or context (if any)"
+  }
 
   const nameLabel = role === "organization" ? "Contact Name" : "Name";
   const additionalInfoLabel = role
     ? additionalInfoLabels[role]
     : "Additional Information";
+
+  const additionalInfoPlaceholder = role ? additionalInfoPlaceholders[role] : "Add any details you’d like us to know"
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (values.website) {
@@ -214,10 +222,10 @@ export default function Waitlist() {
                     name="additionalInfo"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{additionalInfoLabel}</FormLabel>
+                        <FormLabel>{additionalInfoLabel} (optional)</FormLabel>
                         <FormControl>
                           <Textarea
-                            placeholder={additionalInfoLabel}
+                            placeholder={additionalInfoPlaceholder}
                             {...field}
                           />
                         </FormControl>
@@ -234,7 +242,7 @@ export default function Waitlist() {
                         <FormControl>
                           <input
                             type="checkbox"
-                            className="h-4 w-4 rounded border border-border"
+                            className="h-4 w-4 rounded border border-border hover:cursor-pointer"
                             checked={field.value}
                             onChange={field.onChange}
                             ref={field.ref}
