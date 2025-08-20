@@ -9,6 +9,8 @@ class Settings(BaseSettings):
     postmark_api_token: str | None = None
     postmark_from_email: EmailStr | None = None
 
+    frontend_url: str
+
     model_config = SettingsConfigDict(env_file=".env")
 
 

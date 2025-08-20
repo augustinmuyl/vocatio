@@ -116,3 +116,7 @@ All colors are set up for Tailwind CSS.
 Use shadcn/ui components when possible.
 
 New components must be under `frontend/src/components`
+
+## Backend Fetching
+
+Implement a hook under `src/hooks` anytime you fetch / do an API call from the backend.

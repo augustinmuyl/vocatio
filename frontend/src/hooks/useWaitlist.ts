@@ -9,13 +9,16 @@ export function useWaitlist() {
   const submit = useCallback(async (payload: Record<string, unknown>) => {
     try {
       setStatus("idle");
-      const res = await fetch("/api/waitlist", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/waitlist`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
         },
-        body: JSON.stringify(payload),
-      });
+      );
 
       if (!res.ok) {
         throw new Error("Request failed");
@@ -31,4 +34,3 @@ export function useWaitlist() {
 
   return { submit, status, isSubmitted };
 }
-
