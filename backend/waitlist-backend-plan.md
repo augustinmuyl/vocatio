@@ -51,9 +51,9 @@ Create SQLAlchemy model `WaitlistEntry` and corresponding Alembic migration.
 
 ## Email Service
 
-- Choose provider: SendGrid, Mailgun, AWS SES, etc. Configure credentials via `app/core/config.py`.
+- Provider: Postmark via the direct HTTP API (using `httpx`). Configure credentials (`POSTMARK_API_TOKEN`, `POSTMARK_FROM_EMAIL`) via `app/core/config.py`.
 - Implement utility module `core/email.py` with a function `send_confirmation_email`.
-- Use FastAPI's `BackgroundTasks` or Celery for asynchronous sending.
+- Use FastAPI's `BackgroundTasks` for asynchronous sending.
 - Email templates stored in `backend/app/templates/` using Jinja2 for customization.
 
 ## Frontend Integration (`Waitlist.tsx`)
