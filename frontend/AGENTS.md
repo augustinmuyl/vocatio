@@ -110,3 +110,9 @@ If needed, you can use these too:
 ```
 
 All colors are set up for Tailwind CSS.
+
+## Components
+
+Use shadcn/ui components when possible.
+
+New components must be under `frontend/src/components`
