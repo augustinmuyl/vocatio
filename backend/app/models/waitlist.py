@@ -23,7 +23,7 @@ class WaitlistRole(str, PYEnum):
 
 class WaitlistEntry(SQLModel, table=True):
     __tablename__ = "waitlist_entries"  # type: ignore[override]
-    __table_args__ = (UniqueConstraint("email", "role", name="uq_waitlist_email_role"),)
+    __table_args__ = (UniqueConstraint("email", name="uq_waitlist_email"),)
 
     id: int | None = Field(
         default=None,
