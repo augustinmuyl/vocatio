@@ -1,8 +1,12 @@
+import os
 import sys
 from pathlib import Path
 from typing import Any
 
 import httpx
+
+os.environ["DATABASE_URL"] = "sqlite:///:memory:"
+os.environ["FRONTEND_URL"] = "http://testserver"
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 

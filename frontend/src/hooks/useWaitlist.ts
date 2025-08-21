@@ -1,10 +1,9 @@
 import { useState, useCallback } from "react";
 
-export type WaitlistStatus = "idle" | "success" | "error";
+export type WaitlistStatus = "idle" | "success" | "error" | "duplicate";
 
 export function useWaitlist() {
   const [status, setStatus] = useState<WaitlistStatus>("idle");
-  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const submit = useCallback(async (payload: Record<string, unknown>) => {
     try {
@@ -21,16 +20,20 @@ export function useWaitlist() {
       );
 
       if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        if (res.status === 409 && data?.detail === "Email already registered") {
+          setStatus("duplicate");
+          return;
+        }
         throw new Error("Request failed");
       }
 
       setStatus("success");
-      setIsSubmitted(true);
     } catch (err) {
       console.error(err);
       setStatus("error");
     }
   }, []);
 
-  return { submit, status, isSubmitted };
+  return { submit, status };
 }
