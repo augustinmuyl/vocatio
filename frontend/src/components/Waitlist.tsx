@@ -276,6 +276,11 @@ export default function Waitlist() {
                 Something went wrong. Please try again.
               </p>
             )}
+            {status === "duplicate" && (
+              <p className="mt-4 text-center text-danger">
+                This email is already registered.
+              </p>
+            )}
           </motion.div>
           <motion.p
             className="mt-6 text-sm text-center text-text-mute"
