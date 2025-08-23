@@ -9,8 +9,8 @@ Vocatio is a full-stack web application that helps students discover, track, and
 ### Pre-MVP
 
 - [x] Landing page
-- [ ] Interest form / waitlist for orgs & students
-- [ ] Set up analytics
+- [x] Interest form / waitlist for orgs & students
+- [~] Set up analytics
 
 ### MVP (v0.1.0)
 
