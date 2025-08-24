@@ -63,8 +63,8 @@ export default function About() {
                                 className="inline-flex items-center text-base text-text bg-bg rounded-full px-4 py-2 shadow-custom hover:bg-primary/70 transition-colors"
                                 variants={fadeInUp}
                             >
-                                <span className="mr-2 text-green-500">✔</span>
-                                {text}
+                                <span className="mr-2 text-green-500 pointer-events-none">✔</span>
+                                <p className="pointer-events-none">{text}</p>
                             </motion.span>
                         ))}
                     </motion.div>
