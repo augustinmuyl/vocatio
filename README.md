@@ -10,7 +10,7 @@ Vocatio is a full-stack web application that helps students discover, track, and
 
 - [x] Landing page
 - [x] Interest form / waitlist for orgs & students
-- [~] Set up analytics
+- [ ] Set up analytics (kinda done?)
 
 ### MVP (v0.1.0)
 
@@ -66,16 +66,14 @@ Vocatio is a full-stack web application that helps students discover, track, and
         └── lib
 ```
 
-## [Logo] VOCATIO
-
----
-
 ## Backend Email Configuration
 
 Set the following environment variables to enable Postmark-powered confirmation emails:
 
 - `POSTMARK_API_TOKEN`
 - `POSTMARK_FROM_EMAIL`
+
+## Skeleton
 
 ### DEMO / PREVIEW SECTION (Optional)
 
