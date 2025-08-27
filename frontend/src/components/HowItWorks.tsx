@@ -50,7 +50,7 @@ const features = [
 const HowItWorks = () => {
     const MotionCard = motion(Card);
     return (
-        <section id='how-it-works' className="h-[80vh] flex justify-center items-center bg-light brightness-90">
+        <section id='how-it-works' className="h-[80vh] flex justify-center items-center bg-gradient-to-b from-bg/40 via-bg/40 to-light border-t border-t-highlight">
             <motion.div
                 className="max-w-7xl mx-auto px-4 sm:px-6"
                 variants={container}
