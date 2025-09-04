@@ -54,7 +54,7 @@ export default function Navbar() {
           </Button>
 
           <Button asChild size="sm" className="hidden md:inline-flex z-20">
-            <Link href="#waitlist">Join Waitlist</Link>
+            <Link href="/#waitlist">Join Waitlist</Link>
           </Button>
 
           {/* Mobile Hamburger */}
@@ -79,7 +79,7 @@ export default function Navbar() {
           >
             {[
               { href: '/about-us', label: 'About Us' },
-              { href: '#waitlist', label: 'Join Waitlist' },
+              { href: '/#waitlist', label: 'Join Waitlist' },
             ].map((link, idx) => (
               <motion.div key={idx} variants={itemVariants} className="mb-6 last:mb-0">
                 <Link
