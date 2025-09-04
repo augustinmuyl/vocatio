@@ -23,9 +23,9 @@ export default function Navbar() {
     };
 
     return (
-        <header className="fixed top-0 z-50 w-full bg-light border-b-border shadow-custom">
-            <div className="container mx-auto flex items-center justify-between py-4 px-6">
-                <Link href="/" className="flex items-center gap-3">
+        <header className="fixed top-0 z-50 w-full py-3 lg:py-[9px]">
+            <div className="container mx-auto flex items-center justify-between px-5 md:px-8 w-full max-w-7xl relative">
+                <Link href="/" className="flex items-center gap-3 z-20">
                     <CircleCheckBig className="text-primary" />
                     <h1 className="text-2xl font-bold text-text">
                         Vocatio
@@ -33,7 +33,7 @@ export default function Navbar() {
                 </Link>
 
                 {/* Desktop */}
-                <nav className="hidden md:flex space-x-6 text-text-mute">
+                <nav className="hidden md:flex space-x-6 text-text-mute z-20">
                     <Link href="#about" className="hover:text-text">About</Link>
                     <Link href="#how-it-works" className="hover:text-text">How It Works</Link>
                 </nav>
@@ -43,13 +43,13 @@ export default function Navbar() {
                         variant='outline'
                         size="icon"
                         onClick={() => resolvedTheme === "dark" ? setTheme("light") : setTheme("dark")}
-                        className="relative"
+                        className="relative z-20"
                     >
                         <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
                         <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
                     </Button>
 
-                    <Button asChild size="default" className="hidden md:inline-flex">
+                    <Button asChild size="default" className="hidden md:inline-flex z-20">
                         <Link href="#waitlist">Join Waitlist</Link>
                     </Button>
 
@@ -91,7 +91,14 @@ export default function Navbar() {
                     </motion.div>
                 )}
             </AnimatePresence>
+            <div
+                className="
+                pointer-events-none absolute top-0 z-10 h-20
+                w-full bg-[linear-gradient(180deg,bg-light/40_0%,bg-light_100%)]
+                mask-[linear-gradient(to_bottom,black_65%,rgba(0,0,0,0.88)_75%,transparent_100%)]
+                backdrop-blur-2xl"
+            >
+            </div>
         </header>
     );
 }
-
