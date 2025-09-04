@@ -1,9 +1,7 @@
 import React from "react";
-
-/**
- * AboutUs component for Vocatio
- * Team-focused About page with photos of Mihir and Augustin.
- */
+import Image from "next/image";
+import MihirImage from "../../public/mihir-image.jpg"
+import AugustinImage from "../../public/augustin-image.jpeg"
 
 export default function AboutUs() {
   return (
@@ -31,8 +29,8 @@ export default function AboutUs() {
           <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-8 items-start">
             {/* Mihir */}
             <div className="flex flex-col items-center rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-8 shadow-sm">
-              <img
-                src="/team/mihirimage.jpg"  // updated image path
+              <Image
+                src={MihirImage}
                 alt="Mihir Ganesan"
                 className="h-32 w-32 rounded-full object-cover border border-slate-200 dark:border-slate-700"
               />
@@ -43,7 +41,7 @@ export default function AboutUs() {
               <p className="mt-3 text-center text-slate-600 dark:text-slate-300 max-w-sm">
                 Born in Silicon Valley with a passion for technology, Mihir thought of this idea as a means to satisfy high-school mandated volunteering hours.
                 Tired of mundane volunteering opportunities, and the difficulty with finding them, he takes his experience in business and computer science to
-                make volunteering fun and accessible. 
+                make volunteering fun and accessible.
                 <br />
                 <strong>Contact Information:</strong> <br />
                 408-859-0615 <br />
@@ -60,8 +58,8 @@ export default function AboutUs() {
 
             {/* Augustin */}
             <div className="flex flex-col items-center rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-8 shadow-sm">
-              <img
-                src="/team/augustin.jpg"
+              <Image
+                src={AugustinImage}
                 alt="Augustin"
                 className="h-32 w-32 rounded-full object-cover border border-slate-200 dark:border-slate-700"
               />
