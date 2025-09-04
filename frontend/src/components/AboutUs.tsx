@@ -7,14 +7,16 @@ import { container, fadeInUp, fadeInSide } from "../lib/variants";
 import MihirImage from "../../public/mihir-image.jpg";
 import AugustinImage from "../../public/augustin-image.jpeg";
 import { Card } from "./ui/card";
+import { Linkedin, Github, Globe } from "lucide-react";
+
+type LinkType = "linkedin" | "portfolio" | "github";
 
 type Member = {
   name: string;
   title: string;
   image: StaticImageData;
   bio: string;
-  phone?: string;
-  links: { label: string; href: string }[];
+  links: { type: LinkType; href: string }[];
 };
 
 const TEAM: Member[] = [
@@ -24,10 +26,10 @@ const TEAM: Member[] = [
     image: AugustinImage,
     bio:
       "Augustin is focused on design and user experience, ensuring Vocatio is simple, intuitive, and delightful for both volunteers and organizations. He has taken his experience in computer science to completely handle the technical front at Vocatio.",
-    phone: "786-616-2355",
     links: [
-      { label: "LinkedIn", href: "https://www.linkedin.com/in/augustinmuyl/" },
-      { label: "Portfolio", href: "https://www.augustinmuyl.com/" },
+      { type: "linkedin", href: "https://www.linkedin.com/in/augustinmuyl/" },
+      { type: "github", href: "https://github.com/augustinmuyl/" },
+      { type: "portfolio", href: "https://www.augustinmuyl.com/" },
     ],
   },
   {
@@ -36,8 +38,7 @@ const TEAM: Member[] = [
     image: MihirImage,
     bio:
       "Born in Silicon Valley with a passion for technology, Mihir thought of this idea as a means to satisfy high-school mandated volunteering hours. Tired of mundane volunteering opportunities, and the difficulty with finding them, he takes his experience in business and computer science to make volunteering fun and accessible.",
-    phone: "408-859-0615",
-    links: [{ label: "LinkedIn", href: "https://www.linkedin.com/in/mihir-ganesan/" }],
+    links: [{ type: "linkedin", href: "https://www.linkedin.com/in/mihir-ganesan/" }],
   },
 
 ];
@@ -86,14 +87,18 @@ export default function AboutUs() {
       <section className="px-6 sm:px-8 lg:px-12 pb-16">
         <div className="mx-auto max-w-[964px]">
           <motion.div
-            className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-8 items-stretch justify-items-center [direction:rtl]"
+            className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-8 items-stretch sm:justify-items-center"
             variants={cardsContainer}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.2 }}
           >
-            {TEAM.map((member) => (
-              <motion.div key={member.name} variants={fadeInSide} className="w-full flex justify-center">
+            {TEAM.map((member, idx) => (
+              <motion.div
+                key={member.name}
+                variants={fadeInSide}
+                className={`w-full flex justify-center ${idx === 0 ? "sm:order-2" : "sm:order-1"}`}
+              >
                 <Card className="w-full max-w-md h-full p-8 flex flex-col items-center text-text">
                   <Image
                     src={member.image}
@@ -102,27 +107,32 @@ export default function AboutUs() {
                   />
                   <h3 className="mt-4 text-xl font-semibold text-text">{member.name}</h3>
                   <p className="text-sm text-text-mute">{member.title}</p>
-                  <p className="mt-3 text-center text-text-mute">
-                    {member.bio}
-                    <br />
-                    <strong className="text-text">Contact Information</strong>
-                    <br />
-                    {member.phone}
-                    <br />
-                    {member.links.map((l, i) => (
-                      <span key={l.href}>
-                        <a
-                          href={l.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-primary underline"
-                        >
-                          {l.label}
-                        </a>
-                        {i < member.links.length - 1 ? <span className="text-text-mute"> {" | "} </span> : null}
-                      </span>
-                    ))}
-                  </p>
+                  <p className="mt-3 text-center text-text-mute">{member.bio}</p>
+                  {member.links?.length ? (
+                    <div className="mt-auto pt-4 flex items-center gap-4">
+                      {member.links.map((l) => {
+                        const Icon = l.type === "linkedin" ? Linkedin : l.type === "github" ? Github : Globe;
+                        const label =
+                          l.type === "linkedin"
+                            ? "LinkedIn"
+                            : l.type === "github"
+                              ? "GitHub"
+                              : "Portfolio";
+                        return (
+                          <a
+                            key={l.href}
+                            href={l.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${member.name} ${label}`}
+                            className="text-text hover:text-primary transition-colors"
+                          >
+                            <Icon className="h-5 w-5" />
+                          </a>
+                        );
+                      })}
+                    </div>
+                  ) : null}
                 </Card>
               </motion.div>
             ))}
