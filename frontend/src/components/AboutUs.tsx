@@ -22,10 +22,10 @@ type Member = {
 const TEAM: Member[] = [
   {
     name: "Augustin Muyl",
-    title: "Co-Founder",
+    title: "Co-Founder, Technical Lead",
     image: AugustinImage,
     bio:
-      "Augustin is focused on design and user experience, ensuring Vocatio is simple, intuitive, and delightful for both volunteers and organizations. He has taken his experience in computer science to completely handle the technical front at Vocatio.",
+      "Augustin grew up across cultures and brings a pragmatic, full‑stack mindset to building Vocatio. He ships fast, reliable features and keeps the platform simple so students and orgs can connect without friction.",
     links: [
       { type: "linkedin", href: "https://www.linkedin.com/in/augustinmuyl/" },
       { type: "github", href: "https://github.com/augustinmuyl/" },
@@ -34,10 +34,10 @@ const TEAM: Member[] = [
   },
   {
     name: "Mihir Ganesan",
-    title: "Co-Founder",
+    title: "Co-Founder, Product Lead",
     image: MihirImage,
     bio:
-      "Born in Silicon Valley with a passion for technology, Mihir thought of this idea as a means to satisfy high-school mandated volunteering hours. Tired of mundane volunteering opportunities, and the difficulty with finding them, he takes his experience in business and computer science to make volunteering fun and accessible.",
+      "Mihir thought of this idea after seeing how hard it is to find verified service that actually counts. He focuses on simple, credible pathways from interest to impact by working closely with students, parents, and schools.",
     links: [{ type: "linkedin", href: "https://www.linkedin.com/in/mihir-ganesan/" }],
   },
 
@@ -103,11 +103,11 @@ export default function AboutUs() {
                   <Image
                     src={member.image}
                     alt={member.name}
-                    className="h-32 w-32 rounded-full object-cover border border-border"
+                    className="h-32 w-32 rounded-full object-cover object-top border border-border"
                   />
                   <h3 className="mt-4 text-xl font-semibold text-text">{member.name}</h3>
                   <p className="text-sm text-text-mute">{member.title}</p>
-                  <p className="mt-3 text-center text-text-mute">{member.bio}</p>
+                  <p className="mt-3 text-center text-text-mute leading-relaxed">{member.bio}</p>
                   {member.links?.length ? (
                     <div className="mt-auto pt-4 flex items-center gap-4">
                       {member.links.map((l) => {
