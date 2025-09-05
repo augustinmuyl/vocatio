@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "motion/react";
-import { container, fadeInUp } from "../lib/variants";
+import { container, fadeInUp } from "@/lib/variants";
 
 const BENEFITS = [
     "Official opportunities only",
@@ -73,3 +73,4 @@ export default function About() {
         </section>
     );
 }
+

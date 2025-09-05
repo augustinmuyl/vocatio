@@ -1,9 +1,13 @@
-import AboutUsPage from "@/components/AboutUsPage";
+import Navbar from "@/components/Navbar";
+import AboutUs from "@/app/about-us/_components/AboutUs";
+import Footer from "@/components/Footer";
 
-export default function Home() {
+export default function AboutUsPage() {
   return (
-    <div>
-      <AboutUsPage />
+    <div className="flex flex-col">
+      <Navbar />
+      <AboutUs />
+      <Footer />
     </div>
-  )
+  );
 }

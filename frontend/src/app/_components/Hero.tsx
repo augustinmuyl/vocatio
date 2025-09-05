@@ -2,11 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { motion } from "motion/react";
-import { container, fadeInUp } from "../lib/variants";
-import BrowsingMockup from "../../public/browsing_mockup.png"
-import BrowsingMockupLight from "../../public/browsing_mockup_light.png"
+import { container, fadeInUp } from "@/lib/variants";
+import BrowsingMockup from "../../../public/browsing_mockup.png";
+import BrowsingMockupLight from "../../../public/browsing_mockup_light.png";
 
 export default function Hero() {
     return (
@@ -70,3 +70,4 @@ export default function Hero() {
         </motion.section>
     );
 }
+
