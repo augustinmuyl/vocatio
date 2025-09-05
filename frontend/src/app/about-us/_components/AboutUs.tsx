@@ -3,10 +3,10 @@
 import React from "react";
 import Image, { StaticImageData } from "next/image";
 import { motion } from "motion/react";
-import { container, fadeInUp, fadeInSide } from "../lib/variants";
-import MihirImage from "../../public/mihir-image.jpg";
-import AugustinImage from "../../public/augustin-image.jpeg";
-import { Card } from "./ui/card";
+import { container, fadeInUp, fadeInSide } from "@/lib/variants";
+import MihirImage from "../../../../public/mihir-image.jpg";
+import AugustinImage from "../../../../public/augustin-image.jpeg";
+import { Card } from "@/components/ui/card";
 import { Linkedin, Github, Globe } from "lucide-react";
 
 type LinkType = "linkedin" | "portfolio" | "github";
@@ -142,3 +142,4 @@ export default function AboutUs() {
     </main>
   );
 }
+

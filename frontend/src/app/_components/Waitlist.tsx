@@ -126,8 +126,8 @@ export default function Waitlist() {
                     control={form.control}
                     name="role"
                     render={({ field }) => (
-                      <FormItem className="space-y-3">
-                        <FormLabel>I am a:</FormLabel>
+                      <FormItem>
+                        <FormLabel>Who are you?</FormLabel>
                         <FormControl>
                           <RadioGroup
                             onValueChange={field.onChange}
