@@ -16,16 +16,17 @@ def create_waitlist_entry(
     background_tasks: BackgroundTasks,
     session: Session = Depends(get_session),
 ):
-    entry = WaitlistEntry(**payload.model_dump())
+    if payload.website:
+        raise HTTPException(status_code=400, detail="Invalid submission")
+    entry = WaitlistEntry(**payload.model_dump(exclude={"website"}))
     session.add(entry)
     try:
         session.commit()
-    except IntegrityError:
+    except IntegrityError as exc:
         session.rollback()
         raise HTTPException(
-            status_code=409, detail="Email already registered for this role"
-        )
+            status_code=409, detail="Email already registered"
+        ) from exc
     session.refresh(entry)
-    # Placeholder for confirmation email sending; to be implemented in Email Service
-    background_tasks.add_task(send_confirmation_email, entry.email)
+    background_tasks.add_task(send_confirmation_email, entry.email, entry.name)
     return {"message": "Waitlist entry created"}

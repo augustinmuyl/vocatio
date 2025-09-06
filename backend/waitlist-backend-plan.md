@@ -23,12 +23,8 @@ Create SQLAlchemy model `WaitlistEntry` and corresponding Alembic migration.
 | `role` | Enum(`student`, `parent`, `organization`, `other`) | copied from form |
 | `name` | String | required |
 | `email` | String | required, unique per role (prevent duplicates) |
-| `school` | String | optional |
-| `requirement` | Enum(`graduation`, `bright_futures`, `honor_cord`, `other`) | optional except for student/parent |
-| `hours_needed` | Integer | optional |
-| `org_name` | String | required for organizations |
-| `org_role` | String | required for organizations |
-| `org_opportunities` | Text | required for organizations |
+| `additional_info` | Text | optional |
+| `consent` | Boolean | must be true |
 | `created_at` | DateTime | auto timestamp |
 
 ### Tasks
@@ -51,9 +47,9 @@ Create SQLAlchemy model `WaitlistEntry` and corresponding Alembic migration.
 
 ## Email Service
 
-- Choose provider: SendGrid, Mailgun, AWS SES, etc. Configure credentials via `app/core/config.py`.
+- Provider: Postmark via the direct HTTP API (using `httpx`). Configure credentials (`POSTMARK_API_TOKEN`, `POSTMARK_FROM_EMAIL`) via `app/core/config.py`.
 - Implement utility module `core/email.py` with a function `send_confirmation_email`.
-- Use FastAPI's `BackgroundTasks` or Celery for asynchronous sending.
+- Use FastAPI's `BackgroundTasks` for asynchronous sending.
 - Email templates stored in `backend/app/templates/` using Jinja2 for customization.
 
 ## Frontend Integration (`Waitlist.tsx`)

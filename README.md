@@ -4,6 +4,31 @@ Vocatio is a full-stack web application that helps students discover, track, and
 
 > This project is under active development. Many features are still being implemented.
 
+## Getting Started
+
+Set up the project locally to contribute:
+
+### Backend
+
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The frontend runs at `http://localhost:3000` and the API at `http://127.0.0.1:8000`.
+Run backend tests with `pytest` and frontend tests with `npm test`.
+
 ## Spec
 
 ### Pre-MVP
@@ -66,9 +91,14 @@ Vocatio is a full-stack web application that helps students discover, track, and
         └── lib
 ```
 
-## [Logo] VOCATIO
+## Backend Email Configuration
 
----
+Set the following environment variables to enable Postmark-powered confirmation emails:
+
+- `POSTMARK_API_TOKEN`
+- `POSTMARK_FROM_EMAIL`
+
+## Skeleton
 
 ### DEMO / PREVIEW SECTION (Optional)
 
