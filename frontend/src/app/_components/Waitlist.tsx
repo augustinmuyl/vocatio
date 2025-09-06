@@ -7,6 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "motion/react";
 import { container, fadeInUp } from "@/lib/variants";
 import { useWaitlist } from "@/hooks/useWaitlist";
+import { Card } from "@/components/ui/card";
+import { CheckCircle2, Shield, Lock, Clock, Mail } from "lucide-react";
 
 import {
   Form,
@@ -92,206 +94,250 @@ export default function Waitlist() {
   }
 
   return (
-    <section id="waitlist" className="scroll-mt-24 py-20 md:py-32">
-      <div className="container mx-auto px-4 sm:px-6 flex justify-center">
+    <section id="waitlist" className="scroll-mt-24 py-24 md:py-32">
+      <div className="container mx-auto px-4 sm:px-6">
         <motion.div
-          className="w-full max-w-2xl"
+          className="max-w-7xl mx-auto"
           variants={container}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.3 }}
         >
           <motion.h2
-            className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-text mb-8"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-text"
             variants={fadeInUp}
           >
             Get Early Access
           </motion.h2>
-          <motion.div variants={fadeInUp}>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)}>
-                <fieldset
-                  disabled={status === "success" || form.formState.isSubmitting}
-                  className="space-y-6"
-                >
-                  <input
-                    type="text"
-                    className="hidden"
-                    tabIndex={-1}
-                    autoComplete="off"
-                    {...form.register("website")}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="role"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Who are you?</FormLabel>
-                        <FormControl>
-                          <RadioGroup
-                            onValueChange={field.onChange}
-                            value={field.value}
-                            className="flex flex-wrap gap-4"
-                          >
-                            <FormItem className="flex items-center space-x-2 space-y-0">
-                              <FormControl>
-                                <RadioGroupItem
-                                  value="student"
-                                  id="student"
-                                  className="border border-primary"
-                                />
-                              </FormControl>
-                              <FormLabel htmlFor="student" className="font-normal">
-                                Student
-                              </FormLabel>
-                            </FormItem>
-                            <FormItem className="flex items-center space-x-2 space-y-0">
-                              <FormControl>
-                                <RadioGroupItem
-                                  value="parent"
-                                  id="parent"
-                                  className="border border-primary"
-                                />
-                              </FormControl>
-                              <FormLabel htmlFor="parent" className="font-normal">
-                                Parent
-                              </FormLabel>
-                            </FormItem>
-                            <FormItem className="flex items-center space-x-2 space-y-0">
-                              <FormControl>
-                                <RadioGroupItem
-                                  value="organization"
-                                  id="organization"
-                                  className="border border-primary"
-                                />
-                              </FormControl>
-                              <FormLabel
-                                htmlFor="organization"
-                                className="font-normal"
-                              >
-                                Organization
-                              </FormLabel>
-                            </FormItem>
-                            <FormItem className="flex items-center space-x-2 space-y-0">
-                              <FormControl>
-                                <RadioGroupItem
-                                  value="other"
-                                  id="other"
-                                  className="border border-primary"
-                                />
-                              </FormControl>
-                              <FormLabel htmlFor="other" className="font-normal">
-                                Other
-                              </FormLabel>
-                            </FormItem>
-                          </RadioGroup>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{nameLabel}</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Your name" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="email"
-                            placeholder="name@example.com"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="additionalInfo"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{additionalInfoLabel} (optional)</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            placeholder={additionalInfoPlaceholder}
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="consent"
-                    render={({ field }) => (
-                      <FormItem className="flex items-center space-x-2">
-                        <FormControl>
-                          <input
-                            type="checkbox"
-                            className="h-4 w-4 rounded border border-border hover:cursor-pointer"
-                            checked={field.value}
-                            onChange={field.onChange}
-                            ref={field.ref}
-                          />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          I consent to be contacted about Vocatio
-                        </FormLabel>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div className="pt-4">
-                    <Button type="submit" className="w-full">
-                      {form.formState.isSubmitting ? "Submitting..." : "Submit"}
-                    </Button>
-                  </div>
-                </fieldset>
-              </form>
-            </Form>
-            {status === "error" && (
-              <p className="mt-4 text-center text-danger">
-                Something went wrong. Please try again.
-              </p>
-            )}
-            {status === "duplicate" && (
-              <p className="mt-4 text-center text-danger">
-                This email is already registered.
-              </p>
-            )}
-          </motion.div>
           <motion.p
-            className="mt-6 text-sm text-center text-text-mute"
+            className="mt-3 text-center text-text-mute max-w-2xl mx-auto"
             variants={fadeInUp}
           >
-            We’ll only contact you about early access and your interest in Vocatio.
-            No spam, ever.
+            Be first to try Vocatio. We’ll notify you when invites roll out.
           </motion.p>
+
+          <div className="mt-10 lg:mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+            {/* Left: Info / Why Join */}
+            <motion.div className="lg:col-span-5" variants={fadeInUp}>
+              <div className="space-y-6">
+                <div className="space-y-4">
+                  {[
+                    { icon: CheckCircle2, text: "Find approved opportunities faster" },
+                    { icon: CheckCircle2, text: "Track hours and requirements clearly" },
+                    { icon: CheckCircle2, text: "Export school-ready reports" },
+                  ].map(({ icon: Icon, text }, i) => (
+                    <div key={i} className="flex items-start gap-3">
+                      <div className="mt-0.5 h-8 w-8 rounded-full bg-primary/15 text-primary flex items-center justify-center">
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <p className="text-base text-text">{text}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="rounded-2xl border border-border bg-muted/40 p-4 sm:p-5 shadow-custom">
+                  <div className="flex items-center gap-2 text-text font-medium">
+                    <Shield className="w-5 h-5 text-primary" /> Privacy matters
+                  </div>
+                  <ul className="mt-2 space-y-1 text-sm text-text-mute">
+                    <li className="flex items-center gap-2"><Lock className="w-4 h-4 text-primary" /> We only send early‑access updates</li>
+                    <li className="flex items-center gap-2"><Lock className="w-4 h-4 text-primary" /> Your info is never shared</li>
+                  </ul>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Right: Form */}
+            <motion.div className="lg:col-span-7" variants={fadeInUp}>
+              <Card className="p-6 sm:p-8">
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <fieldset
+                      disabled={status === "success" || form.formState.isSubmitting}
+                      className="space-y-6"
+                    >
+                      <input
+                        type="text"
+                        className="hidden"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        {...form.register("website")}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="role"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Who are you?</FormLabel>
+                            <FormControl>
+                              <RadioGroup
+                                onValueChange={field.onChange}
+                                value={field.value}
+                                className="flex flex-wrap gap-4"
+                              >
+                                <FormItem className="flex items-center space-x-2 space-y-0">
+                                  <FormControl>
+                                    <RadioGroupItem
+                                      value="student"
+                                      id="student"
+                                      className="border border-primary"
+                                    />
+                                  </FormControl>
+                                  <FormLabel htmlFor="student" className="font-normal">
+                                    Student
+                                  </FormLabel>
+                                </FormItem>
+                                <FormItem className="flex items-center space-x-2 space-y-0">
+                                  <FormControl>
+                                    <RadioGroupItem
+                                      value="parent"
+                                      id="parent"
+                                      className="border border-primary"
+                                    />
+                                  </FormControl>
+                                  <FormLabel htmlFor="parent" className="font-normal">
+                                    Parent
+                                  </FormLabel>
+                                </FormItem>
+                                <FormItem className="flex items-center space-x-2 space-y-0">
+                                  <FormControl>
+                                    <RadioGroupItem
+                                      value="organization"
+                                      id="organization"
+                                      className="border border-primary"
+                                    />
+                                  </FormControl>
+                                  <FormLabel
+                                    htmlFor="organization"
+                                    className="font-normal"
+                                  >
+                                    Organization
+                                  </FormLabel>
+                                </FormItem>
+                                <FormItem className="flex items-center space-x-2 space-y-0">
+                                  <FormControl>
+                                    <RadioGroupItem
+                                      value="other"
+                                      id="other"
+                                      className="border border-primary"
+                                    />
+                                  </FormControl>
+                                  <FormLabel htmlFor="other" className="font-normal">
+                                    Other
+                                  </FormLabel>
+                                </FormItem>
+                              </RadioGroup>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{nameLabel}</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Your name" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="email"
+                                placeholder="name@example.com"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="additionalInfo"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{additionalInfoLabel} (optional)</FormLabel>
+                            <FormControl>
+                              <Textarea
+                                placeholder={additionalInfoPlaceholder}
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="consent"
+                        render={({ field }) => (
+                          <FormItem className="flex items-center space-x-2">
+                            <FormControl>
+                              <input
+                                type="checkbox"
+                                className="h-4 w-4 rounded border border-border hover:cursor-pointer"
+                                checked={field.value}
+                                onChange={field.onChange}
+                                ref={field.ref}
+                              />
+                            </FormControl>
+                            <FormLabel className="font-normal">
+                              I consent to be contacted about Vocatio
+                            </FormLabel>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <div className="pt-4">
+                        <Button type="submit" className="w-full">
+                          {form.formState.isSubmitting ? "Submitting..." : "Submit"}
+                        </Button>
+                        <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-text-mute">
+                          <div className="flex items-center justify-center sm:justify-start gap-2">
+                            <Clock className="w-4 h-4 text-primary" />
+                            We’ll email you when invites open
+                          </div>
+                          <div className="flex items-center justify-center sm:justify-start gap-2">
+                            <Mail className="w-4 h-4 text-primary" />
+                            Unsubscribe anytime
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </form>
+                </Form>
+                {status === "error" && (
+                  <p className="mt-4 text-center text-danger">
+                    Something went wrong. Please try again.
+                  </p>
+                )}
+                {status === "duplicate" && (
+                  <p className="mt-4 text-center text-danger">
+                    This email is already registered.
+                  </p>
+                )}
+              </Card>
+            </motion.div>
+          </div>
         </motion.div>
       </div>
     </section>
   );
 }
-
