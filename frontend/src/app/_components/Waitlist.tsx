@@ -7,7 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "motion/react";
 import { container, fadeInUp } from "@/lib/variants";
 import { useWaitlist } from "@/hooks/useWaitlist";
-import { Card } from "@/components/ui/card";
 import { CheckCircle2, Shield, Lock, Clock, Mail } from "lucide-react";
 
 import {
@@ -130,7 +129,7 @@ export default function Waitlist() {
                       <div className="mt-0.5 h-8 w-8 rounded-full bg-primary/15 text-primary flex items-center justify-center">
                         <Icon className="w-5 h-5" />
                       </div>
-                      <p className="text-base text-text">{text}</p>
+                      <p className="text-base text-text leading-9">{text}</p>
                     </div>
                   ))}
                 </div>
@@ -149,7 +148,7 @@ export default function Waitlist() {
 
             {/* Right: Form */}
             <motion.div className="lg:col-span-7" variants={fadeInUp}>
-              <Card className="p-6 sm:p-8">
+              <div className="rounded-2xl border border-border bg-muted/40 p-6 sm:p-8 shadow-custom">
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                     <fieldset
@@ -333,7 +332,7 @@ export default function Waitlist() {
                     This email is already registered.
                   </p>
                 )}
-              </Card>
+              </div>
             </motion.div>
           </div>
         </motion.div>
