@@ -18,7 +18,7 @@ const STATS = [
 
 export default function About() {
     return (
-        <section id="about" className="scroll-mt-24 py-24 md:py-32 lg:mt-52">
+        <section id="about" className="scroll-mt-24 py-24 md:py-32 lg:mt-32">
             <div className="container mx-auto px-4 sm:px-6">
                 <motion.div
                     className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center"

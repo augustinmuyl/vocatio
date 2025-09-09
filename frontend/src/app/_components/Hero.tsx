@@ -11,8 +11,7 @@ import BrowsingMockupLight from "../../../public/browsing_mockup_light.png";
 export default function Hero() {
     return (
         <motion.section
-            className="relative flex min-h-screen lg:pt-48 bg-gradient-to-br from-gray-50 via-light to-gray-100
-            dark:bg-gradient-to-br dark:from-gray-950 dark:via-light dark:to-gray-900"
+            className="relative flex min-h-screen lg:pt-48"
             variants={container}
             initial="hidden"
             animate="show"
@@ -57,16 +56,18 @@ export default function Hero() {
                         priority
                         src={BrowsingMockup}
                         alt="Browsing approved community service opportunities"
-                        className="hidden dark:block relative lg:absolute z-10 w-full max-w-sm sm:max-w-md md:max-w-xl lg:max-w-4xl xl:max-w-5xl rounded-2xl md:rounded-3xl border-4 shadow-custom pointer-events-none"
+                        className="hidden dark:block relative z-10 w-full max-w-sm sm:max-w-md md:max-w-xl lg:max-w-4xl xl:max-w-5xl rounded-2xl md:rounded-3xl border-4 shadow-custom pointer-events-none"
                     />
                     <Image
                         priority
                         src={BrowsingMockupLight}
                         alt="Browsing approved community service opportunities"
-                        className="dark:hidden relative lg:absolute z-10 w-full max-w-sm sm:max-w-md md:max-w-xl lg:max-w-4xl xl:max-w-5xl rounded-2xl md:rounded-3xl border-4 shadow-custom pointer-events-none"
+                        className="dark:hidden relative z-10 w-full max-w-sm sm:max-w-md md:max-w-xl lg:max-w-4xl xl:max-w-5xl rounded-2xl md:rounded-3xl border-4 shadow-custom pointer-events-none"
                     />
                 </motion.div>
             </div>
+            <div className="min-h-screen w-full absolute top-0 z-[-10] bg-gradient-to-br from-gray-50 via-light to-gray-100
+            dark:bg-gradient-to-br dark:from-gray-950 dark:via-light dark:to-gray-900"/>
         </motion.section>
     );
 }
