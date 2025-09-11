@@ -3,6 +3,8 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BadgeCheck as BadgeCheckIcon } from "lucide-react";
+import { motion } from "motion/react";
+import { container, fadeInSide } from "@/lib/variants";
 
 type Opportunity = {
   id: string;
@@ -45,34 +47,42 @@ const MOCK_DATA: Opportunity[] = [
 
 export default function Results() {
   return (
-    <main className="min-h-screen w-full px-6 sm:px-8 lg:px-12 pt-28 pb-16">
+    <main className="w-full px-6 sm:px-8 lg:px-12 pb-16">
       <div className="mx-auto max-w-6xl">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 items-stretch gap-6 lg:gap-8"
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           {MOCK_DATA.map((opportunity) => (
-            <Card key={opportunity.id} className="relative flex flex-col p-6 text-text">
-              {opportunity.approved ? (
-                <Badge
-                  className="absolute top-4 right-4 rounded-lg border-transparent bg-success/45 text-text"
-                  aria-label="Approved opportunity"
-                >
-                  <BadgeCheckIcon />
-                  Approved
-                </Badge>
-              ) : null}
+            <motion.div key={opportunity.id} variants={fadeInSide} className="h-full">
+              <Card className="relative flex h-full min-h-[200px] flex-col p-6 text-text">
+                {opportunity.approved ? (
+                  <Badge
+                    className="absolute top-4 right-4 rounded-lg border-transparent bg-success/45 text-text"
+                    aria-label="Approved opportunity"
+                  >
+                    <BadgeCheckIcon />
+                    Approved
+                  </Badge>
+                ) : null}
 
-              <div>
-                <h3 className="text-xl font-semibold leading-snug">{opportunity.title}</h3>
-                <p className="mt-2 text-text-mute">
-                  {opportunity.description}
+                <div>
+                  <h3 className="text-xl font-semibold leading-snug">{opportunity.title}</h3>
+                  <p className="mt-2 text-text-mute">
+                    {opportunity.description}
+                  </p>
+                </div>
+
+                <p className="mt-6 text-text-mute">
+                  {opportunity.hours} hours · Counts for Graduation
                 </p>
-              </div>
-
-              <p className="mt-6 text-text-mute">
-                {opportunity.hours} hours · Counts for Graduation
-              </p>
-            </Card>
+              </Card>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </main>
   );
