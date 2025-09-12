@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BadgeCheck as BadgeCheckIcon } from "lucide-react";
 import { motion } from "motion/react";
-import { container, fadeInSide } from "@/lib/variants";
+import { fadeInSide } from "@/lib/variants";
 
 type Opportunity = {
   id: string;
@@ -43,14 +43,56 @@ const MOCK_DATA: Opportunity[] = [
     hours: 5,
     approved: true,
   },
+  {
+    id: "library-book-drive",
+    title: "Library Book Drive Sorting",
+    description: "Sort donated books and prepare for distribution.",
+    hours: 3,
+    approved: true,
+  },
+  {
+    id: "beach-cleanup",
+    title: "Beach Cleanup Day",
+    description: "Collect litter and log findings for conservation data.",
+    hours: 4,
+    approved: true,
+  },
+  {
+    id: "senior-tech-help",
+    title: "Senior Center Tech Help",
+    description: "Teach basic smartphone and email skills.",
+    hours: 2,
+    approved: true,
+  },
+  {
+    id: "food-bank-pack",
+    title: "Food Bank Packing",
+    description: "Assemble food boxes for families in need.",
+    hours: 3,
+    approved: true,
+  },
+  {
+    id: "animal-shelter-social",
+    title: "Animal Shelter Socialization",
+    description: "Spend time walking dogs and socializing cats.",
+    hours: 2,
+    approved: true,
+  },
+  {
+    id: "town-fundraiser",
+    title: "Town Fundraiser Setup",
+    description: "Set up booths and assist with event logistics.",
+    hours: 5,
+    approved: true,
+  },
 ];
 const cardsContainer = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.3,
-      delayChildren: 0.6,
+      staggerChildren: 0.2,
+      delayChildren: 0.7,
     },
   },
 };
