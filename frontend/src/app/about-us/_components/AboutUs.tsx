@@ -57,11 +57,11 @@ const cardsContainer = {
 
 export default function AboutUs() {
   return (
-    <main className="min-h-screen w-full flex flex-col">
+    <main className="w-full flex flex-col">
       {/* Hero */}
-      <section className="px-6 sm:px-8 lg:px-12 py-16 sm:py-20">
+      <section className="px-6 sm:px-8 lg:px-12 pt-28 pb-8">
         <motion.div
-          className="pt-16 mx-auto max-w-6xl text-center"
+          className="mx-auto max-w-6xl text-center"
           variants={container}
           initial="hidden"
           whileInView="show"
@@ -142,4 +142,3 @@ export default function AboutUs() {
     </main>
   );
 }
-
