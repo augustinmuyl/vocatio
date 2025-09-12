@@ -18,8 +18,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer"
-import { useMediaQuery } from "@/hooks/useMediaQuery"
+import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer"
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 export type ComboboxOption = {
   value: string
@@ -51,11 +51,14 @@ export function Combobox({
   contentClassName,
   buttonWidthClassName = "w-[200px]",
 }: ComboboxProps) {
-  const [open, setOpen] = React.useState(false)
+  // Separate open states to avoid cross-opening the hidden variant
+  const [openPopover, setOpenPopover] = React.useState(false)
+  const [openDrawer, setOpenDrawer] = React.useState(false)
   const [uncontrolledValue, setUncontrolledValue] = React.useState<string | null>(
     defaultValue ?? null
   )
-  const isDesktop = useMediaQuery("(min-width: 768px)")
+  // Avoid SSR/client markup mismatch by not branching on media query during render.
+  // We render both desktop (Popover) and mobile (Drawer) variants and hide/show via CSS.
 
   const isControlled = controlledValue !== undefined
   const value = isControlled ? controlledValue ?? null : uncontrolledValue
@@ -72,7 +75,8 @@ export function Combobox({
       nextValue,
       nextValue != null ? options.find((o) => o.value === nextValue) : undefined
     )
-    setOpen(false)
+    setOpenPopover(false)
+    setOpenDrawer(false)
   }
 
   const list = (
@@ -101,55 +105,61 @@ export function Combobox({
     </Command>
   )
 
-  if (isDesktop) {
-    return (
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className={cn(
-              buttonWidthClassName,
-              "justify-between",
-              buttonClassName
-            )}
-          >
-            {selected ? selected.label : placeholder}
-            <ChevronsUpDown className="opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent
-          className={cn("p-0", buttonWidthClassName, contentClassName)}
-          align="start"
-        >
-          {list}
-        </PopoverContent>
-      </Popover>
-    )
-  }
-
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className={cn(
-            buttonWidthClassName,
-            "justify-between",
-            buttonClassName
-          )}
-        >
-          {selected ? selected.label : placeholder}
-          <ChevronsUpDown className="opacity-50" />
-        </Button>
-      </DrawerTrigger>
-      <DrawerContent>
-        <div className="mt-4 border-t">{list}</div>
-      </DrawerContent>
-    </Drawer>
+    <>
+      <div className="hidden md:block">
+        <Popover open={openPopover} onOpenChange={setOpenPopover}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={openPopover}
+              className={cn(
+                buttonWidthClassName,
+                "justify-between",
+                buttonClassName
+              )}
+            >
+              {selected ? selected.label : placeholder}
+              <ChevronsUpDown className="opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent
+            className={cn("p-0", buttonWidthClassName, contentClassName)}
+            align="start"
+          >
+            {list}
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      <div className="md:hidden">
+        <Drawer open={openDrawer} onOpenChange={setOpenDrawer}>
+          <DrawerTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={openDrawer}
+              className={cn(
+                buttonWidthClassName,
+                "justify-between",
+                buttonClassName
+              )}
+            >
+              {selected ? selected.label : placeholder}
+              <ChevronsUpDown className="opacity-50" />
+            </Button>
+          </DrawerTrigger>
+          <DrawerContent aria-label={placeholder || "Select an option"}>
+            <VisuallyHidden asChild>
+              <DrawerTitle>{placeholder || "Select an option"}</DrawerTitle>
+            </VisuallyHidden>
+
+            <div className="mt-4 border-t">{list}</div>
+          </DrawerContent>
+        </Drawer>
+      </div>
+    </>
   )
 }
 

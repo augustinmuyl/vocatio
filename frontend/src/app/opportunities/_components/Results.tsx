@@ -44,6 +44,16 @@ const MOCK_DATA: Opportunity[] = [
     approved: true,
   },
 ];
+const cardsContainer = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.3,
+      delayChildren: 0.6,
+    },
+  },
+};
 
 export default function Results() {
   return (
@@ -51,32 +61,34 @@ export default function Results() {
       <div className="mx-auto max-w-6xl">
         <motion.div
           className="grid grid-cols-1 md:grid-cols-2 items-stretch gap-6 lg:gap-8"
-          variants={container}
+          variants={cardsContainer}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.2 }}
         >
           {MOCK_DATA.map((opportunity) => (
             <motion.div key={opportunity.id} variants={fadeInSide} className="h-full">
-              <Card className="relative flex h-full min-h-[200px] flex-col p-6 text-text">
-                {opportunity.approved ? (
-                  <Badge
-                    className="absolute top-4 right-4 rounded-lg border-transparent bg-success/45 text-text"
-                    aria-label="Approved opportunity"
-                  >
-                    <BadgeCheckIcon />
-                    Approved
-                  </Badge>
-                ) : null}
-
-                <div>
-                  <h3 className="text-xl font-semibold leading-snug">{opportunity.title}</h3>
-                  <p className="mt-2 text-text-mute">
-                    {opportunity.description}
-                  </p>
+              <Card className="relative flex h-full min-h-[200px] flex-col gap-3 p-6 text-text">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between w-full">
+                  <h3 className="text-xl font-semibold leading-snug">
+                    {opportunity.title}
+                  </h3>
+                  {opportunity.approved ? (
+                    <Badge
+                      className="rounded-md border-transparent bg-success/45 text-text"
+                      aria-label="Approved opportunity"
+                    >
+                      <BadgeCheckIcon />
+                      Approved
+                    </Badge>
+                  ) : null}
                 </div>
 
-                <p className="mt-6 text-text-mute">
+                <p className="text-text-mute">
+                  {opportunity.description}
+                </p>
+
+                <p className="mt-auto pt-4 text-text-mute">
                   {opportunity.hours} hours · Counts for Graduation
                 </p>
               </Card>
