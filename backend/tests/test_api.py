@@ -56,12 +56,14 @@ def test_opportunity_crud():
         "org_id": org_id,
         "title": "Beach Cleanup",
         "description": "Help clean the beach",
-        "community_hours": 5,
-        "event_date": "2024-01-01T00:00:00",
+        # leave community_hours out to test derivation: 9am-2pm = 5h
+        "start_at": "2024-01-01T09:00:00Z",
+        "end_at": "2024-01-01T14:00:00Z",
+        "timezone": "America/New_York",
+        "location": "MIAMI",
         "address": "123 Beach Ave",
-        "city": "Miami",
-        "state": "FL",
         "zip_code": "33101",
+        "themes": ["ENVIRONMENT"],
         "is_active": True,
     }
     opp_resp = client.post("/opportunities", json=opp_payload)
@@ -70,7 +72,97 @@ def test_opportunity_crud():
 
     get_resp = client.get(f"/opportunities/{opp_id}")
     assert get_resp.status_code == 200
-    assert get_resp.json()["title"] == opp_payload["title"]
+    data = get_resp.json()
+    assert data["title"] == opp_payload["title"]
+    assert data["community_hours"] == 5
+    assert data["location"] == "MIAMI"
+
+
+def test_opportunity_requires_address_for_non_remote():
+    # create org
+    user_payload = {
+        "name": "Org2",
+        "email": "org2@example.com",
+        "password": "password123",
+        "role": "ORG",
+    }
+    user_resp = client.post("/users", json=user_payload)
+    org_id = user_resp.json()["id"]
+
+    # missing address for MIAMI should fail validation
+    opp_payload = {
+        "org_id": org_id,
+        "title": "Park Cleanup",
+        "description": "Help clean the park",
+        "start_at": "2024-02-01T09:00:00Z",
+        "end_at": "2024-02-01T12:00:00Z",
+        "timezone": "America/New_York",
+        "location": "MIAMI",
+        "zip_code": "33101",
+        "is_active": True,
+    }
+    resp = client.post("/opportunities", json=opp_payload)
+    assert resp.status_code == 422
+
+
+def test_opportunity_end_before_start_invalid():
+    # create org
+    user_payload = {
+        "name": "Org3",
+        "email": "org3@example.com",
+        "password": "password123",
+        "role": "ORG",
+    }
+    user_resp = client.post("/users", json=user_payload)
+    org_id = user_resp.json()["id"]
+
+    opp_payload = {
+        "org_id": org_id,
+        "title": "Food Drive",
+        "description": "Help collect food",
+        "start_at": "2024-03-01T12:00:00Z",
+        "end_at": "2024-03-01T10:00:00Z",
+        "timezone": "America/New_York",
+        "location": "REMOTE",
+        "is_active": True,
+    }
+    resp = client.post("/opportunities", json=opp_payload)
+    assert resp.status_code == 422
+
+
+def test_opportunity_slug_collision_suffix():
+    user_payload = {
+        "name": "Org4",
+        "email": "org4@example.com",
+        "password": "password123",
+        "role": "ORG",
+    }
+    user_resp = client.post("/users", json=user_payload)
+    org_id = user_resp.json()["id"]
+
+    base_payload = {
+        "org_id": org_id,
+        "title": "Community Garden Day",
+        "description": "Plant and maintain a garden",
+        "start_at": "2024-04-01T09:00:00Z",
+        "end_at": "2024-04-01T11:00:00Z",
+        "timezone": "America/New_York",
+        "location": "NYC",
+        "address": "1 Main St",
+        "zip_code": "10001",
+        "is_active": True,
+    }
+
+    r1 = client.post("/opportunities", json=base_payload)
+    assert r1.status_code == 200
+    s1 = r1.json()["slug"]
+
+    r2 = client.post("/opportunities", json=base_payload)
+    assert r2.status_code == 200
+    s2 = r2.json()["slug"]
+
+    assert s1 != s2
+    assert s2.startswith(s1 + "-") or s2.endswith("-1")
 
 
 def test_waitlist_signup():
@@ -96,4 +188,3 @@ def test_waitlist_signup():
     bot_payload = {**payload, "email": "bot@example.com", "website": "spam"}
     resp_bot = client.post("/waitlist", json=bot_payload)
     assert resp_bot.status_code == 400
-

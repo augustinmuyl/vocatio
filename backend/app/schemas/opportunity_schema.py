@@ -1,21 +1,36 @@
 from datetime import datetime
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
+
+from app.models.opportunity import Location, Theme
 
 
 class OpportunityCreate(BaseModel):
     org_id: int
     title: str = Field(..., max_length=200)
-    description: str = Field(..., max_length=1000)
-    community_hours: int = Field(..., ge=1, le=1000)
-    event_date: datetime
+    description: str = Field(..., max_length=4000)
+    community_hours: int | None = Field(default=None, ge=1, le=1000)
 
-    address: str
-    city: str
-    state: str
-    zip_code: str = Field(..., pattern=r"^\d{5}(-\d{4})?$")
+    start_at: datetime
+    end_at: datetime
+    timezone: str = Field(default="America/New_York", max_length=64)
 
-    is_active: bool = Field(default=True)  # give orgs the option to keep as drafts
+    location: Location
+    address: str | None = Field(default=None, max_length=200)
+    zip_code: str | None = Field(default=None, pattern=r"^\d{5}(-\d{4})?$")
+
+    themes: list[Theme] | None = None
+    signup_url: str | None = Field(default=None, max_length=2048)
+
+    is_active: bool = Field(default=True)
+
+    @model_validator(mode="after")
+    def validate_fields(self):
+        if self.location != Location.REMOTE and not self.address:
+            raise ValueError("address is required for non-REMOTE locations")
+        if self.end_at <= self.start_at:
+            raise ValueError("end_at must be after start_at")
+        return self
 
 
 class OpportunityRead(BaseModel):
@@ -23,13 +38,19 @@ class OpportunityRead(BaseModel):
     org_id: int
     title: str
     description: str
-    community_hours: int
-    event_date: datetime
+    community_hours: int | None
+    slug: str
 
-    address: str
-    city: str
-    state: str
-    zip_code: str
+    start_at: datetime
+    end_at: datetime
+    timezone: str
+
+    location: Location
+    address: str | None
+    zip_code: str | None
+
+    themes: list[Theme] | None
+    signup_url: str | None
 
     created_at: datetime
     updated_at: datetime
@@ -40,13 +61,18 @@ class OpportunityRead(BaseModel):
 
 class OpportunityUpdate(BaseModel):
     title: str | None = Field(default=None, max_length=200)
-    description: str | None = Field(default=None, max_length=1000)
+    description: str | None = Field(default=None, max_length=4000)
     community_hours: int | None = Field(default=None, ge=1, le=1000)
-    event_date: datetime | None = None
 
-    address: str | None = None
-    city: str | None = None
-    state: str | None = None
+    start_at: datetime | None = None
+    end_at: datetime | None = None
+    timezone: str | None = Field(default=None, max_length=64)
+
+    location: Location | None = None
+    address: str | None = Field(default=None, max_length=200)
     zip_code: str | None = Field(default=None, pattern=r"^\d{5}(-\d{4})?$")
+
+    themes: list[Theme] | None = None
+    signup_url: str | None = Field(default=None, max_length=2048)
 
     is_active: bool | None = None
