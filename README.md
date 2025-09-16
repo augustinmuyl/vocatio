@@ -144,7 +144,12 @@ Security tip: do not commit real secrets. Prefer `.env` files kept out of versio
 - Create/update schema: `alembic upgrade head`.
 - Alembic reads the URL from settings at runtime; no manual `sqlalchemy.url` editing needed.
 
-SQLite is supported for local development; PostgreSQL is recommended for production. The engine auto-configures sensible defaults (e.g., SSL for Postgres, thread checks for SQLite).
+Migrations policy
+- Alembic migrations are PostgreSQL-only. Running Alembic against SQLite will raise a clear error by design.
+- Tests use an in-memory SQLite database and initialize schema via `SQLModel.metadata.create_all(engine)` — migrations are not executed in tests.
+- This avoids dialect drift and lets us use Postgres-native features (enums, JSONB, GIN indexes) without branching in migrations.
+
+SQLite is supported for local development and tests; PostgreSQL is recommended and used in production. The engine auto-configures sensible defaults (e.g., SSL for Postgres, thread checks for SQLite).
 
 ## API Overview
 

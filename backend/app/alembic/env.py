@@ -40,6 +40,11 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
+        # Guard: we only support Postgres for Alembic migrations.
+        if connection.dialect.name != "postgresql":
+            raise RuntimeError(
+                f"Alembic migrations require PostgreSQL; got '{connection.dialect.name}'."
+            )
         context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
