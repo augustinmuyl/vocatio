@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
-from sqlmodel import SQLModel
+from sqlmodel import SQLModel, Session
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
@@ -13,6 +13,7 @@ os.environ["FRONTEND_URL"] = "http://testserver"
 
 from app.db.session import engine  # noqa: E402
 from app.main import app  # noqa: E402
+from app.models import Account, AccountKind, Organization  # noqa: E402
 
 
 @pytest.fixture(autouse=True)
@@ -25,32 +26,20 @@ def prepare_database():
 client = TestClient(app)
 
 
-def test_user_crud():
-    payload = {
-        "name": "Alice",
-        "email": "alice@example.com",
-        "password": "password123",
-        "role": "STUDENT",
-    }
-    resp = client.post("/users", json=payload)
-    assert resp.status_code == 200
-    data = resp.json()
-    user_id = data["id"]
-
-    get_resp = client.get(f"/users/{user_id}")
-    assert get_resp.status_code == 200
-    assert get_resp.json()["email"] == payload["email"]
+# Removed user CRUD tests as legacy /users routes were deleted
 
 
 def test_opportunity_crud():
-    user_payload = {
-        "name": "Org",
-        "email": "org@example.com",
-        "password": "password123",
-        "role": "ORG",
-    }
-    user_resp = client.post("/users", json=user_payload)
-    org_id = user_resp.json()["id"]
+    # Create an org account + organization directly in the DB
+    with Session(engine) as session:
+        acct = Account(email="org@example.com", hashed_password="x", kind=AccountKind.ORG)
+        session.add(acct)
+        session.commit()
+        session.refresh(acct)
+        org = Organization(account_id=acct.id, name="Org", slug="org")
+        session.add(org)
+        session.commit()
+        org_id = acct.id
 
     opp_payload = {
         "org_id": org_id,
@@ -79,15 +68,16 @@ def test_opportunity_crud():
 
 
 def test_opportunity_requires_address_for_non_remote():
-    # create org
-    user_payload = {
-        "name": "Org2",
-        "email": "org2@example.com",
-        "password": "password123",
-        "role": "ORG",
-    }
-    user_resp = client.post("/users", json=user_payload)
-    org_id = user_resp.json()["id"]
+    # Create org directly in the DB
+    with Session(engine) as session:
+        acct = Account(email="org2@example.com", hashed_password="x", kind=AccountKind.ORG)
+        session.add(acct)
+        session.commit()
+        session.refresh(acct)
+        org = Organization(account_id=acct.id, name="Org2", slug="org2")
+        session.add(org)
+        session.commit()
+        org_id = acct.id
 
     # missing address for MIAMI should fail validation
     opp_payload = {
@@ -106,15 +96,16 @@ def test_opportunity_requires_address_for_non_remote():
 
 
 def test_opportunity_end_before_start_invalid():
-    # create org
-    user_payload = {
-        "name": "Org3",
-        "email": "org3@example.com",
-        "password": "password123",
-        "role": "ORG",
-    }
-    user_resp = client.post("/users", json=user_payload)
-    org_id = user_resp.json()["id"]
+    # Create org directly in the DB
+    with Session(engine) as session:
+        acct = Account(email="org3@example.com", hashed_password="x", kind=AccountKind.ORG)
+        session.add(acct)
+        session.commit()
+        session.refresh(acct)
+        org = Organization(account_id=acct.id, name="Org3", slug="org3")
+        session.add(org)
+        session.commit()
+        org_id = acct.id
 
     opp_payload = {
         "org_id": org_id,
@@ -131,14 +122,15 @@ def test_opportunity_end_before_start_invalid():
 
 
 def test_opportunity_slug_collision_suffix():
-    user_payload = {
-        "name": "Org4",
-        "email": "org4@example.com",
-        "password": "password123",
-        "role": "ORG",
-    }
-    user_resp = client.post("/users", json=user_payload)
-    org_id = user_resp.json()["id"]
+    with Session(engine) as session:
+        acct = Account(email="org4@example.com", hashed_password="x", kind=AccountKind.ORG)
+        session.add(acct)
+        session.commit()
+        session.refresh(acct)
+        org = Organization(account_id=acct.id, name="Org4", slug="org4")
+        session.add(org)
+        session.commit()
+        org_id = acct.id
 
     base_payload = {
         "org_id": org_id,

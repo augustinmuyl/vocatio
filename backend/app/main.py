@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import opportunities, test, users, waitlist
+from app.api.routes import opportunities, test, waitlist
 from app.core.config import settings
 
 app = FastAPI()
@@ -18,6 +18,5 @@ app.add_middleware(
 
 
 app.include_router(test.router)
-app.include_router(users.router)
 app.include_router(opportunities.router)
 app.include_router(waitlist.router)

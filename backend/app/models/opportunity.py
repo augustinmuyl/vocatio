@@ -37,7 +37,8 @@ class Opportunity(SQLModel, table=True):
         default=None,
         sa_column=Column(Integer, Sequence("opportunity_id_seq"), primary_key=True),
     )
-    org_id: int = Field(foreign_key="users.id", index=True)
+    # Link to organizations via their shared primary key (account_id)
+    org_id: int = Field(foreign_key="organizations.account_id", index=True)
     title: str = Field(max_length=200)
     description: str = Field(max_length=4000)
     community_hours: int | None = None
