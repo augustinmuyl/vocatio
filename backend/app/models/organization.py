@@ -1,6 +1,6 @@
 from datetime import UTC, datetime
 
-from sqlalchemy import Integer, Sequence, String
+from sqlalchemy import String
 from sqlmodel import Column, DateTime, Field, SQLModel, func
 
 

@@ -1,7 +1,6 @@
 from datetime import UTC, datetime
 from enum import Enum as PYEnum
 
-from sqlalchemy import Integer
 from sqlmodel import Column, DateTime, Enum, Field, SQLModel, func
 
 
