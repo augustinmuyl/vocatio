@@ -1,5 +1,10 @@
+from __future__ import annotations
+
 import re
-from datetime import timedelta
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from datetime import timedelta
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select

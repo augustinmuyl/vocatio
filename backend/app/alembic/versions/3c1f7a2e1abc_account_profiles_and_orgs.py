@@ -6,6 +6,7 @@ Create Date: 2025-09-16 00:00:00.000000
 """
 
 from collections.abc import Sequence
+from contextlib import suppress
 
 import sqlalchemy as sa
 from alembic import op
@@ -88,10 +89,11 @@ def upgrade() -> None:
     op.create_index(op.f("ix_organizations_name"), "organizations", ["name"], unique=False)
 
     # Backfill organizations from org users
-    if is_pg:
-        slug_expr = "lower(regexp_replace(name, '[^a-zA-Z0-9]+', '-', 'g'))"
-    else:
-        slug_expr = "lower(name)"
+    slug_expr = (
+        "lower(regexp_replace(name, '[^a-zA-Z0-9]+', '-', 'g'))"
+        if is_pg
+        else "lower(name)"
+    )
     op.execute(
         sa.text(
             f"""
@@ -138,11 +140,9 @@ def upgrade() -> None:
 
     # Rewire opportunities.org_id FK to organizations(account_id)
     with op.batch_alter_table("opportunities") as batch_op:
-        try:
-            batch_op.drop_constraint("opportunities_org_id_fkey", type_="foreignkey")
-        except Exception:
+        with suppress(Exception):
             # Constraint name may differ on some DBs; try generic drop
-            pass
+            batch_op.drop_constraint("opportunities_org_id_fkey", type_="foreignkey")
         batch_op.create_foreign_key(
             "opportunities_org_id_fkey",
             "organizations",
@@ -152,11 +152,9 @@ def upgrade() -> None:
 
     # Drop legacy users table and enum/sequence if present (no data assumed)
     # Safe on Postgres; on SQLite table/enum handling is simplified
-    try:
-        op.drop_table("users")
-    except Exception:
+    with suppress(Exception):
         # Table may have been removed already or not exist
-        pass
+        op.drop_table("users")
     if is_pg:
         # Drop legacy enum and sequence if they exist
         op.execute(sa.text("DROP TYPE IF EXISTS user_role_enum"))
@@ -169,10 +167,8 @@ def downgrade() -> None:
 
     # Restore opportunities FK to users.id
     with op.batch_alter_table("opportunities") as batch_op:
-        try:
+        with suppress(Exception):
             batch_op.drop_constraint("opportunities_org_id_fkey", type_="foreignkey")
-        except Exception:
-            pass
         batch_op.create_foreign_key(
             "opportunities_org_id_fkey",
             "users",
