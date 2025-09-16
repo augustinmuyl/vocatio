@@ -1,7 +1,8 @@
 from datetime import UTC, datetime
 from enum import Enum as PYEnum
+from uuid import UUID, uuid4
 
-from sqlalchemy import JSON, CheckConstraint, Integer, Sequence, String
+from sqlalchemy import JSON, CheckConstraint, ForeignKey, String, Uuid
 from sqlmodel import Column, DateTime, Enum, Field, SQLModel, func
 
 
@@ -33,12 +34,19 @@ class Opportunity(SQLModel, table=True):
         ),
     )
 
-    id: int | None = Field(
-        default=None,
-        sa_column=Column(Integer, Sequence("opportunity_id_seq"), primary_key=True),
+    id: UUID | None = Field(
+        default_factory=uuid4,
+        sa_column=Column(Uuid(as_uuid=True), primary_key=True, nullable=False),
     )
     # Link to organizations via their shared primary key (account_id)
-    org_id: int = Field(foreign_key="organizations.account_id", index=True)
+    org_id: UUID = Field(
+        sa_column=Column(
+            Uuid(as_uuid=True),
+            ForeignKey("organizations.account_id"),
+            nullable=False,
+            index=True,
+        )
+    )
     title: str = Field(max_length=200)
     description: str = Field(max_length=4000)
     community_hours: int | None = None

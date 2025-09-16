@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from datetime import timedelta
+    from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
@@ -54,7 +55,7 @@ def create_opportunity(payload: OpportunityCreate, session: Session = Depends(ge
 
 
 @router.get("/opportunities/{opportunity_id}", response_model=OpportunityRead)
-def read_opportunity(opportunity_id: int, session: Session = Depends(get_session)):
+def read_opportunity(opportunity_id: UUID, session: Session = Depends(get_session)):
     opportunity = session.get(Opportunity, opportunity_id)
     if not opportunity:
         raise HTTPException(status_code=404, detail="Opportunity not found")

@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Literal
+from uuid import UUID
 
 from pydantic import BaseModel, EmailStr, Field
 
@@ -16,7 +17,7 @@ class WaitlistCreate(BaseModel):
 
 
 class WaitlistRead(BaseModel):
-    id: int
+    id: UUID
     role: WaitlistRole
     name: str
     email: EmailStr

@@ -1,6 +1,7 @@
 from datetime import UTC, datetime
+from uuid import UUID
 
-from sqlalchemy import String
+from sqlalchemy import ForeignKey, String, Uuid
 from sqlmodel import Column, DateTime, Field, SQLModel, func
 
 
@@ -8,7 +9,11 @@ class Organization(SQLModel, table=True):
     __tablename__ = "organizations"  # type: ignore[override]
 
     # Shared primary key referencing accounts.id
-    account_id: int = Field(primary_key=True, foreign_key="accounts.id")
+    account_id: UUID = Field(
+        sa_column=Column(
+            Uuid(as_uuid=True), ForeignKey("accounts.id"), primary_key=True
+        )
+    )
 
     name: str = Field(max_length=200)
     slug: str = Field(

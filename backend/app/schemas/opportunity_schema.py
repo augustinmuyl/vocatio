@@ -1,4 +1,5 @@
 from datetime import datetime
+from uuid import UUID
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -6,7 +7,7 @@ from app.models.opportunity import Location, Theme
 
 
 class OpportunityCreate(BaseModel):
-    org_id: int
+    org_id: UUID
     title: str = Field(..., max_length=200)
     description: str = Field(..., max_length=4000)
     community_hours: int | None = Field(default=None, ge=1, le=1000)
@@ -34,8 +35,8 @@ class OpportunityCreate(BaseModel):
 
 
 class OpportunityRead(BaseModel):
-    id: int
-    org_id: int
+    id: UUID
+    org_id: UUID
     title: str
     description: str
     community_hours: int | None

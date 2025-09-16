@@ -1,7 +1,8 @@
 from datetime import UTC, datetime
 from enum import Enum as PYEnum
+from uuid import UUID, uuid4
 
-from sqlalchemy import Integer, Sequence
+from sqlalchemy import Uuid
 from sqlmodel import Column, DateTime, Enum, Field, SQLModel, func
 
 
@@ -13,9 +14,9 @@ class AccountKind(str, PYEnum):
 class Account(SQLModel, table=True):
     __tablename__ = "accounts"  # type: ignore[override]
 
-    id: int | None = Field(
-        default=None,
-        sa_column=Column(Integer, Sequence("account_id_seq"), primary_key=True),
+    id: UUID | None = Field(
+        default_factory=uuid4,
+        sa_column=Column(Uuid(as_uuid=True), primary_key=True, nullable=False),
     )
     email: str = Field(max_length=320, unique=True, index=True)
     hashed_password: str = Field(max_length=255)
@@ -36,4 +37,3 @@ class Account(SQLModel, table=True):
     last_login: datetime | None = Field(
         default=None, sa_column=Column(DateTime(timezone=True), nullable=True)
     )
-

@@ -39,7 +39,7 @@ def test_opportunity_crud():
         org = Organization(account_id=acct.id, name="Org", slug="org")
         session.add(org)
         session.commit()
-        org_id = acct.id
+        org_id = str(acct.id)
 
     opp_payload = {
         "org_id": org_id,
@@ -77,7 +77,7 @@ def test_opportunity_requires_address_for_non_remote():
         org = Organization(account_id=acct.id, name="Org2", slug="org2")
         session.add(org)
         session.commit()
-        org_id = acct.id
+        org_id = str(acct.id)
 
     # missing address for MIAMI should fail validation
     opp_payload = {
@@ -105,7 +105,7 @@ def test_opportunity_end_before_start_invalid():
         org = Organization(account_id=acct.id, name="Org3", slug="org3")
         session.add(org)
         session.commit()
-        org_id = acct.id
+        org_id = str(acct.id)
 
     opp_payload = {
         "org_id": org_id,
@@ -130,7 +130,7 @@ def test_opportunity_slug_collision_suffix():
         org = Organization(account_id=acct.id, name="Org4", slug="org4")
         session.add(org)
         session.commit()
-        org_id = acct.id
+        org_id = str(acct.id)
 
     base_payload = {
         "org_id": org_id,
