@@ -3,15 +3,20 @@
 from __future__ import annotations
 
 import re
-from collections.abc import MutableSet
-from datetime import datetime, timedelta
-from uuid import UUID
+from typing import TYPE_CHECKING
 
+from sqlalchemy import func, or_
 from sqlmodel import Session, select
 
-from app.models.opportunity import Location, Opportunity
+from app.models.opportunity import Location, Opportunity, Theme
 from app.models.organization import Organization
-from app.schemas.opportunity_schema import OpportunityCreate, OpportunityUpdate
+
+if TYPE_CHECKING:
+    from collections.abc import MutableSet, Sequence
+    from datetime import datetime, timedelta
+    from uuid import UUID
+
+    from app.schemas.opportunity_schema import OpportunityCreate, OpportunityUpdate
 
 
 class OrganizationLookupError(Exception):
@@ -137,7 +142,7 @@ def update_opportunity(
         raise ValueError("end_at must be after start_at")
 
     location = data.get("location", opportunity.location)
-    address = data["address"] if "address" in data else opportunity.address
+    address = data.get("address", opportunity.address)
 
     if location != Location.REMOTE and not address:
         raise ValueError("address is required for non-REMOTE locations")
@@ -155,3 +160,65 @@ def update_opportunity(
             session.refresh(opportunity)
 
     return opportunity
+
+
+def list_opportunities(
+    session: Session,
+    *,
+    page: int,
+    page_size: int,
+    locations: Sequence[Location] | None = None,
+    themes: Sequence[Theme] | None = None,
+    sort_by: str = "updated_at",
+    sort_direction: str = "desc",
+) -> tuple[list[Opportunity], int]:
+    """Return paginated opportunities with optional filters."""
+
+    filters = [Opportunity.is_active.is_(True)]
+
+    if locations:
+        filters.append(Opportunity.location.in_(list(locations)))
+
+    if themes:
+        theme_filters = [
+            Opportunity.themes.contains([theme.value]) for theme in themes
+        ]
+        if theme_filters:
+            if len(theme_filters) == 1:
+                filters.append(theme_filters[0])
+            else:
+                filters.append(or_(*theme_filters))
+
+    allowed_sorts = {"updated_at", "created_at"}
+    if sort_by not in allowed_sorts:
+        raise ValueError(f"sort_by must be one of {sorted(allowed_sorts)}")
+
+    sort_column = getattr(Opportunity, sort_by)
+    sort_desc = sort_direction.lower() != "asc"
+
+    offset = (page - 1) * page_size
+
+    count_stmt = select(func.count()).select_from(Opportunity).where(*filters)
+    total = session.exec(count_stmt).one()
+
+    order_clauses = [sort_column.desc() if sort_desc else sort_column.asc()]
+    if sort_desc:
+        order_clauses.append(Opportunity.id.desc())
+    else:
+        order_clauses.append(Opportunity.id.asc())
+
+    stmt = (
+        select(Opportunity)
+        .where(*filters)
+        .order_by(*order_clauses)
+        .offset(offset)
+        .limit(page_size)
+    )
+
+    items = session.exec(stmt).all()
+    return items, int(total)
+
+
+def get_opportunity_by_slug(session: Session, slug: str) -> Opportunity | None:
+    statement = select(Opportunity).where(Opportunity.slug == slug)
+    return session.exec(statement).first()

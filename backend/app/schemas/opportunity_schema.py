@@ -122,3 +122,29 @@ class OpportunityUpdate(BaseModel):
             raise ValueError("address is required for non-REMOTE locations")
 
         return self
+
+
+class OpportunityListItem(BaseModel):
+    id: UUID
+    org_id: UUID
+    title: str
+    slug: str
+    start_at: datetime
+    end_at: datetime
+    timezone: str
+    location: Location
+    themes: list[Theme] | None
+    community_hours: int | None
+    signup_url: str | None
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class OpportunityListResponse(BaseModel):
+    items: list[OpportunityListItem]
+    total: int
+    page: int
+    page_size: int
+    has_next: bool

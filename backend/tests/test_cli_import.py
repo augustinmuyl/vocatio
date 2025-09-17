@@ -48,7 +48,7 @@ def _create_org(session: Session, *, email: str, slug: str) -> Organization:
 
 def test_cli_imports_opportunities_success(tmp_path: Path):
     with Session(engine) as session:
-        org_a = _create_org(session, email="a@example.com", slug="org-a")
+        _create_org(session, email="a@example.com", slug="org-a")
         org_b = _create_org(session, email="b@example.com", slug="org-b")
 
     csv_path = tmp_path / "opportunities.csv"

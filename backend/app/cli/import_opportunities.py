@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 import csv
+import pathlib
+import uuid
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Any
-from uuid import UUID
 
 try:
     import typer
@@ -74,8 +74,8 @@ class OrganizationCache:
     """Caches organization lookups to avoid repeated DB hits."""
 
     def __init__(self) -> None:
-        self._ids: set[UUID] = set()
-        self._slug_to_id: dict[str, UUID] = {}
+        self._ids: set[uuid.UUID] = set()
+        self._slug_to_id: dict[str, uuid.UUID] = {}
 
     def resolve(
         self,
@@ -83,7 +83,7 @@ class OrganizationCache:
         *,
         org_id_raw: str | None,
         org_slug_raw: str | None,
-    ) -> UUID:
+    ) -> uuid.UUID:
         org_id = _normalize(org_id_raw)
         org_slug = _normalize(org_slug_raw)
 
@@ -92,7 +92,7 @@ class OrganizationCache:
 
         if org_id:
             try:
-                org_uuid = UUID(org_id)
+                org_uuid = uuid.UUID(org_id)
             except ValueError as exc:
                 raise RowValidationError("org_id must be a valid UUID") from exc
 
@@ -113,7 +113,7 @@ class OrganizationCache:
         assert org_slug is not None  # for type checker
         return self._resolve_by_slug(session, org_slug)
 
-    def _resolve_by_slug(self, session: Session, slug: str) -> UUID:
+    def _resolve_by_slug(self, session: Session, slug: str) -> uuid.UUID:
         key = slug.lower()
         if key in self._slug_to_id:
             return self._slug_to_id[key]
@@ -239,12 +239,14 @@ def _build_payload(
 
 
 def import_opportunities_from_csv(
-    csv_path: Path,
+    csv_path: pathlib.Path,
     *,
     dry_run: bool = False,
     continue_on_error: bool = False,
 ) -> ImportOutcome:
     """Core CSV import workflow shared by CLI and tests."""
+
+    csv_path = pathlib.Path(csv_path)
 
     with csv_path.open(newline="", encoding="utf-8") as handle:
         reader = csv.DictReader(handle)
@@ -316,7 +318,7 @@ def import_opportunities_from_csv(
 if typer:
 
     def import_opportunities(
-        csv_path: Path = typer.Argument(
+        csv_path: pathlib.Path = typer.Argument(
             ..., exists=True, dir_okay=False, readable=True
         ),
         *,
@@ -342,7 +344,7 @@ if typer:
             typer.echo(exc.args[0], err=True)
             for err_detail in exc.errors:
                 typer.echo(f"  line {err_detail.line}: {err_detail.message}", err=True)
-            raise typer.Exit(code=exc.exit_code)
+            raise typer.Exit(code=exc.exit_code) from exc
 
         if outcome.dry_run:
             typer.echo(

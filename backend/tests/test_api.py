@@ -1,6 +1,7 @@
 import os
 import sys
 from pathlib import Path
+from uuid import UUID
 
 import pytest
 from fastapi.testclient import TestClient
@@ -13,7 +14,7 @@ os.environ["FRONTEND_URL"] = "http://testserver"
 
 from app.db.session import engine  # noqa: E402
 from app.main import app  # noqa: E402
-from app.models import Account, AccountKind, Organization  # noqa: E402
+from app.models import Account, AccountKind, Opportunity, Organization  # noqa: E402
 
 
 @pytest.fixture(autouse=True)
@@ -180,3 +181,95 @@ def test_waitlist_signup():
     bot_payload = {**payload, "email": "bot@example.com", "website": "spam"}
     resp_bot = client.post("/waitlist", json=bot_payload)
     assert resp_bot.status_code == 400
+
+
+def _create_org(name: str, slug: str, email: str) -> str:
+    with Session(engine) as session:
+        acct = Account(email=email, hashed_password="x", kind=AccountKind.ORG)
+        session.add(acct)
+        session.commit()
+        session.refresh(acct)
+        org = Organization(account_id=acct.id, name=name, slug=slug)
+        session.add(org)
+        session.commit()
+        return str(acct.id)
+
+
+def test_list_opportunities_with_filters_and_pagination():
+    org_id = _create_org(name="OrgList", slug="orglist", email="orglist@example.com")
+
+    created_ids: list[str] = []
+    created_slugs: list[str] = []
+
+    for i in range(14):
+        location = ["REMOTE", "MIAMI", "NYC"][i % 3]
+        themes = ["ENVIRONMENT"] if i % 2 == 0 else ["EDUCATION"]
+        payload = {
+            "org_id": org_id,
+            "title": f"Opportunity {i}",
+            "description": "Help out",
+            "start_at": "2024-05-01T09:00:00Z",
+            "end_at": "2024-05-01T12:00:00Z",
+            "timezone": "America/New_York",
+            "location": location,
+            "themes": themes,
+            "is_active": True,
+        }
+
+        if location != "REMOTE":
+            payload["address"] = f"{i} Example St"
+            payload["zip_code"] = "10001" if location == "NYC" else "33101"
+
+        resp = client.post("/opportunities", json=payload)
+        assert resp.status_code == 200
+        body = resp.json()
+        created_ids.append(body["id"])
+        created_slugs.append(body["slug"])
+
+    inactive_id = created_ids[0]
+    with Session(engine) as session:
+        opp = session.get(Opportunity, UUID(inactive_id))
+        assert opp is not None
+        opp.is_active = False
+        session.add(opp)
+        session.commit()
+
+    list_resp = client.get("/opportunities")
+    assert list_resp.status_code == 200
+    payload = list_resp.json()
+    assert payload["page"] == 1
+    assert payload["page_size"] == 12
+    assert payload["total"] == 13
+    assert payload["has_next"] is True
+    assert len(payload["items"]) == 12
+    ids = {item["id"] for item in payload["items"]}
+    assert inactive_id not in ids
+
+    # page 2 should include the remaining active item
+    second_page = client.get("/opportunities", params={"page": 2})
+    assert second_page.status_code == 200
+    page_data = second_page.json()
+    assert page_data["page"] == 2
+    assert len(page_data["items"]) == 1
+
+    miami_resp = client.get("/opportunities", params={"locations": "MIAMI"})
+    assert miami_resp.status_code == 200
+    miami_items = miami_resp.json()["items"]
+    assert miami_items
+    assert all(item["location"] == "MIAMI" for item in miami_items)
+
+    theme_resp = client.get("/opportunities", params={"themes": "ENVIRONMENT"})
+    assert theme_resp.status_code == 200
+    theme_items = theme_resp.json()["items"]
+    assert theme_items
+    assert all("ENVIRONMENT" in item.get("themes", []) for item in theme_items)
+
+    # slug lookup should succeed for an active opportunity
+    active_slug = next(slug for idx, slug in zip(created_ids, created_slugs, strict=False) if idx != inactive_id)
+    slug_resp = client.get(f"/opportunities/slug/{active_slug}")
+    assert slug_resp.status_code == 200
+    assert slug_resp.json()["slug"] == active_slug
+
+    # inactive opportunities should no longer be retrievable
+    inactive_detail = client.get(f"/opportunities/{inactive_id}")
+    assert inactive_detail.status_code == 404
