@@ -40,6 +40,9 @@ export default function Navbar() {
           <Link href="/about-us" className="inline-flex items-center font-medium tracking-tight transition-colors duration-300 [&_svg]:shrink-0 relative gap-x-1.5 rounded-md px-3.75 py-4 text-text-mute hover:text-text">
             <span className="relative text-sm leading-none font-medium tracking-tight">About Us</span>
           </Link>
+          <Link href="/opportunities" className="inline-flex items-center font-medium tracking-tight transition-colors duration-300 [&_svg]:shrink-0 relative gap-x-1.5 rounded-md px-3.75 py-4 text-text-mute hover:text-text">
+            <span className="relative text-sm leading-none font-medium tracking-tight">Opportunities</span>
+          </Link>
         </nav>
 
         <div className="flex grow items-center justify-end gap-x-3.5">
