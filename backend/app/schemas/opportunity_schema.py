@@ -1,7 +1,8 @@
 from datetime import datetime
 from uuid import UUID
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 from app.models.opportunity import Location, Theme
 
@@ -32,6 +33,15 @@ class OpportunityCreate(BaseModel):
         if self.end_at <= self.start_at:
             raise ValueError("end_at must be after start_at")
         return self
+
+    @field_validator("timezone")
+    @classmethod
+    def validate_timezone(cls, value: str) -> str:
+        try:
+            ZoneInfo(value)
+        except ZoneInfoNotFoundError as exc:
+            raise ValueError("timezone must be a valid IANA zone string") from exc
+        return value
 
 
 class OpportunityRead(BaseModel):
@@ -77,3 +87,38 @@ class OpportunityUpdate(BaseModel):
     signup_url: str | None = Field(default=None, max_length=2048)
 
     is_active: bool | None = None
+
+    @field_validator("timezone")
+    @classmethod
+    def validate_timezone(cls, value: str | None) -> str | None:
+        if value is None:
+            return value
+        try:
+            ZoneInfo(value)
+        except ZoneInfoNotFoundError as exc:
+            raise ValueError("timezone must be a valid IANA zone string") from exc
+        return value
+
+    @model_validator(mode="after")
+    def validate_fields(self):
+        fields_set = self.model_fields_set
+
+        if "start_at" in fields_set and self.start_at is None:
+            raise ValueError("start_at cannot be null")
+        if "end_at" in fields_set and self.end_at is None:
+            raise ValueError("end_at cannot be null")
+        if "timezone" in fields_set and self.timezone is None:
+            raise ValueError("timezone cannot be null")
+
+        if self.start_at and self.end_at and self.end_at <= self.start_at:
+            raise ValueError("end_at must be after start_at")
+
+        if (
+            self.location is not None
+            and self.location != Location.REMOTE
+            and "address" in fields_set
+            and not self.address
+        ):
+            raise ValueError("address is required for non-REMOTE locations")
+
+        return self
