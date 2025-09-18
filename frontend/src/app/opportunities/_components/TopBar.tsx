@@ -4,27 +4,31 @@ import { motion } from "motion/react";
 import { container, fadeInUp } from "@/lib/variants";
 import { Input } from "@/components/ui/input";
 import { Combobox } from "@/components/ui/combobox";
-import * as React from "react";
 import { SearchIcon } from "lucide-react";
+import * as React from "react";
+
+import { useOpportunityFilters } from "@/app/opportunities/_hooks/useOpportunityFilters";
 
 export default function TopBar() {
   const [search, setSearch] = React.useState("");
-  const [location, setLocation] = React.useState<string | null>(null);
-  const [theme, setTheme] = React.useState<string | null>(null);
+  const { filters, setLocations, setThemes } = useOpportunityFilters();
+
+  const location = filters.locations[0] ?? null;
+  const theme = filters.themes[0] ?? null;
 
   const locationOptions = [
-    { value: "nyc", label: "New York" },
-    { value: "mia", label: "Miami" },
-    { value: "remote", label: "Remote" },
-    { value: "other", label: "Other" },
+    { value: "NYC", label: "New York" },
+    { value: "MIAMI", label: "Miami" },
+    { value: "REMOTE", label: "Remote" },
+    { value: "OTHER", label: "Other" },
   ];
 
   const themeOptions = [
-    { value: "environment", label: "Environment" },
-    { value: "education", label: "Education" },
-    { value: "community", label: "Community" },
-    { value: "health", label: "Health" },
-    { value: "arts", label: "Arts & Culture" },
+    { value: "ENVIRONMENT", label: "Environment" },
+    { value: "EDUCATION", label: "Education" },
+    { value: "COMMUNITY_SERVICE", label: "Community" },
+    { value: "HEALTH", label: "Health" },
+    { value: "ARTS", label: "Arts & Culture" },
   ];
   return (
     <section className="px-6 sm:px-8 lg:px-12 pt-28 pb-8">
@@ -66,7 +70,7 @@ export default function TopBar() {
             <Combobox
               options={locationOptions}
               value={location}
-              onChange={(v) => setLocation(v)}
+              onChange={(value) => setLocations(value ? [value] : null)}
               placeholder="Location"
               buttonWidthClassName="w-full lg:w-[200px]"
               contentClassName="w-[var(--radix-popover-trigger-width)] lg:w-[200px]"
@@ -76,7 +80,7 @@ export default function TopBar() {
             <Combobox
               options={themeOptions}
               value={theme}
-              onChange={(v) => setTheme(v)}
+              onChange={(value) => setThemes(value ? [value] : null)}
               placeholder="Theme"
               buttonWidthClassName="w-full lg:w-[200px]"
               contentClassName="w-[var(--radix-popover-trigger-width)] lg:w-[200px]"

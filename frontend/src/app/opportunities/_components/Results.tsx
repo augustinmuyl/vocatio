@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { BadgeCheck as BadgeCheckIcon } from "lucide-react";
 import { motion } from "motion/react";
 import { fadeInSide } from "@/lib/variants";
+import { useOpportunityFilters } from "@/app/opportunities/_hooks/useOpportunityFilters";
 
 type Opportunity = {
   id: string;
@@ -50,6 +51,23 @@ export default function Results() {
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [total, setTotal] = useState<number>(0);
+
+  const { filters } = useOpportunityFilters();
+  const { page, pageSize, sortBy, sortDirection, locations, themes } = filters;
+
+  const filterKey = [
+    page,
+    pageSize,
+    sortBy,
+    sortDirection,
+    locations.join("|"),
+    themes.join("|"),
+  ].join(":");
+
+  const hasSummary = !error && !isLoading && total > 0;
+  const startItem = hasSummary ? (page - 1) * pageSize + 1 : 0;
+  const endItem = hasSummary ? startItem + opportunities.length - 1 : 0;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -64,7 +82,21 @@ export default function Results() {
       }
 
       try {
-        const response = await fetch(`${baseUrl}/opportunities`, {
+        const params = new URLSearchParams();
+        params.set("page", String(page));
+        params.set("page_size", String(pageSize));
+        params.set("sort_by", sortBy);
+        params.set("sort_direction", sortDirection);
+
+        locations.forEach((location) => {
+          params.append("locations", location);
+        });
+
+        themes.forEach((theme) => {
+          params.append("themes", theme);
+        });
+
+        const response = await fetch(`${baseUrl}/opportunities?${params.toString()}`, {
           signal: controller.signal,
         });
 
@@ -83,6 +115,7 @@ export default function Results() {
 
         setOpportunities(mapped);
         setError(null);
+        setTotal(data.total);
         setIsLoading(false)
       } catch (err) {
         if ((err as Error).name === "AbortError") {
@@ -100,19 +133,24 @@ export default function Results() {
     return () => {
       controller.abort();
     };
-  }, []);
+  }, [page, pageSize, sortBy, sortDirection, locations, themes]);
 
   return (
-    <main className="w-full px-6 sm:px-8 lg:px-12 pb-16">
+    <main className="w-full px-6 sm:px-8 lg:px-12 pb-16 min-h-screen">
       <div className="mx-auto max-w-6xl">
         {error ? (
           <p className="text-sm text-destructive">{error}</p>
+        ) : null}
+        {hasSummary ? (
+          <p className="mb-4 text-sm text-text-mute">
+            Showing {startItem}-{endItem} of {total} opportunities
+          </p>
         ) : null}
         {!error && !isLoading && opportunities.length === 0 ? (
           <p className="text-sm text-text-mute">No opportunities available yet.</p>
         ) : null}
         <motion.div
-          key={isLoading ? "loading" : "loaded"}
+          key={isLoading ? "loading" : filterKey}
           className="grid grid-cols-1 md:grid-cols-2 items-stretch gap-6 lg:gap-8"
           variants={cardsContainer}
           initial={"hidden"}
