@@ -1,26 +1,87 @@
 from datetime import UTC, datetime
+from enum import Enum as PYEnum
+from uuid import UUID, uuid4
 
-from sqlalchemy import Integer, Sequence
-from sqlmodel import Column, DateTime, Field, SQLModel, func
+from sqlalchemy import JSON, CheckConstraint, ForeignKey, String, Uuid
+from sqlmodel import Column, DateTime, Enum, Field, SQLModel, func
+
+
+class Location(str, PYEnum):
+    NYC = "NYC"
+    MIAMI = "MIAMI"
+    OTHER = "OTHER"
+    REMOTE = "REMOTE"
+
+
+class Theme(str, PYEnum):
+    COMMUNITY_SERVICE = "COMMUNITY_SERVICE"
+    ENVIRONMENT = "ENVIRONMENT"
+    EDUCATION = "EDUCATION"
+    HEALTH = "HEALTH"
+    ARTS = "ARTS"
+    STEM = "STEM"
+    SPORTS = "SPORTS"
+    ADVOCACY = "ADVOCACY"
 
 
 class Opportunity(SQLModel, table=True):
     __tablename__ = "opportunities"  # type: ignore[override]
-
-    id: int | None = Field(
-        default=None,
-        sa_column=Column(Integer, Sequence("opportunity_id_seq"), primary_key=True),
+    __table_args__ = (
+        CheckConstraint("end_at > start_at", name="ck_opportunity_end_after_start"),
+        CheckConstraint(
+            "(location = 'REMOTE' OR address IS NOT NULL)",
+            name="ck_opportunity_address_required",
+        ),
     )
-    org_id: int = Field(foreign_key="users.id")
-    title: str = Field(max_length=200)
-    description: str = Field(max_length=1000)
-    community_hours: int
-    event_date: datetime
 
-    address: str = Field(max_length=200)
-    city: str = Field(max_length=100)
-    state: str = Field(max_length=100)
-    zip_code: str = Field(max_length=10)
+    id: UUID | None = Field(
+        default_factory=uuid4,
+        sa_column=Column(Uuid(as_uuid=True), primary_key=True, nullable=False),
+    )
+    # Link to organizations via their shared primary key (account_id)
+    org_id: UUID = Field(
+        sa_column=Column(
+            Uuid(as_uuid=True),
+            ForeignKey("organizations.account_id"),
+            nullable=False,
+            index=True,
+        )
+    )
+    title: str = Field(max_length=200)
+    description: str = Field(max_length=4000)
+    community_hours: int | None = None
+
+    # Slug for human-friendly links; keep unique
+    slug: str = Field(
+        max_length=100,
+        sa_column=Column(String(100), nullable=False, unique=True, index=True),
+    )
+
+    # Event timing
+    start_at: datetime = Field(
+        sa_column=Column(DateTime(timezone=True), nullable=False, index=True)
+    )
+    end_at: datetime = Field(sa_column=Column(DateTime(timezone=True), nullable=False))
+    timezone: str = Field(
+        default="America/New_York",
+        max_length=64,
+        sa_column=Column(String(64), nullable=False),
+    )
+
+    # Location and address
+    location: Location = Field(
+        sa_column=Column(
+            Enum(Location, name="opportunity_location_enum"), nullable=False, index=True
+        )
+    )
+    address: str | None = Field(default=None, max_length=200)
+    zip_code: str | None = Field(default=None, max_length=10)
+
+    # Themes for filtering (portable: JSON array of enum labels)
+    themes: list[Theme] | None = Field(
+        default=None,
+        sa_column=Column(JSON, nullable=True),
+    )
 
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(UTC),
@@ -28,6 +89,15 @@ class Opportunity(SQLModel, table=True):
     )
     updated_at: datetime = Field(
         default_factory=lambda: datetime.now(UTC),
-        sa_column=Column(DateTime(timezone=True), server_default=func.now()),
-    )  # remember to update in routes
-    is_active: bool = Field(default=True)
+        sa_column=Column(
+            DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+        ),
+    )
+    is_active: bool = Field(default=True, index=True)
+
+    # Optional signup URL for applications/RSVP
+    signup_url: str | None = Field(
+        default=None,
+        max_length=2048,
+        sa_column=Column(String(2048), nullable=True),
+    )

@@ -43,6 +43,9 @@
 
 - Backend: place tests in `backend/tests`, mirror package paths; name `test_*.py`.
   - Aim for ≥80% coverage; use `pytest -q` (add `--cov` if configured).
+  - Migrations are Postgres-only: do not add SQLite branches to Alembic.
+    - Tests use SQLite in-memory with `SQLModel.metadata.create_all(engine)` and do not run Alembic.
+    - Alembic is configured to error if the dialect is not PostgreSQL.
 - Frontend: co-locate `*.test.ts(x)` with components or under `__tests__/`.
   - Use React Testing Library patterns; run with `npm test`.
 

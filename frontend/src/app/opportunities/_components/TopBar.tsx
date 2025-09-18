@@ -1,57 +1,47 @@
 "use client";
 
-import { motion } from "motion/react";
-import { container, fadeInUp } from "@/lib/variants";
 import { Input } from "@/components/ui/input";
 import { Combobox } from "@/components/ui/combobox";
-import * as React from "react";
 import { SearchIcon } from "lucide-react";
+import * as React from "react";
+
+import { useOpportunityFilters } from "@/app/opportunities/_hooks/useOpportunityFilters";
 
 export default function TopBar() {
   const [search, setSearch] = React.useState("");
-  const [location, setLocation] = React.useState<string | null>(null);
-  const [theme, setTheme] = React.useState<string | null>(null);
+  const { filters, setLocations, setThemes } = useOpportunityFilters();
+
+  const location = filters.locations[0] ?? null;
+  const theme = filters.themes[0] ?? null;
 
   const locationOptions = [
-    { value: "nyc", label: "New York" },
-    { value: "mia", label: "Miami" },
-    { value: "remote", label: "Remote" },
-    { value: "other", label: "Other" },
+    { value: "NYC", label: "New York" },
+    { value: "MIAMI", label: "Miami" },
+    { value: "REMOTE", label: "Remote" },
+    { value: "OTHER", label: "Other" },
   ];
 
   const themeOptions = [
-    { value: "environment", label: "Environment" },
-    { value: "education", label: "Education" },
-    { value: "community", label: "Community" },
-    { value: "health", label: "Health" },
-    { value: "arts", label: "Arts & Culture" },
+    { value: "COMMUNITY_SERVICE", label: "Community Service" },
+    { value: "ENVIRONMENT", label: "Environment" },
+    { value: "EDUCATION", label: "Education" },
+    { value: "HEALTH", label: "Health" },
+    { value: "ARTS", label: "Arts & Culture" },
+    { value: "STEM", label: "STEM" },
+    { value: "SPORTS", label: "Sports" },
+    { value: "ADVOCACY", label: "Advocacy" },
   ];
   return (
     <section className="px-6 sm:px-8 lg:px-12 pt-28 pb-8">
-      <motion.div
-        className="mx-auto max-w-6xl text-left"
-        variants={container}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.3 }}
-      >
-        <motion.h1
-          className="text-3xl sm:text-4xl md:text-5xl font-bold text-text leading-tight tracking-tight"
-          variants={fadeInUp}
-        >
+      <div className="mx-auto max-w-6xl text-left">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-text leading-tight tracking-tight">
           Discover Community Service Opportunities
-        </motion.h1>
-        <motion.p
-          className="mt-3 max-w-2xl text-base sm:text-lg text-text-mute"
-          variants={fadeInUp}
-        >
+        </h1>
+        <p className="mt-3 max-w-2xl text-base sm:text-lg text-text-mute">
           Explore curated, verified ways to contribute and earn hours that count toward graduation.
-        </motion.p>
+        </p>
 
-        <motion.div
-          className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_auto_auto] items-center gap-3"
-          variants={fadeInUp}
-        >
+        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_auto_auto] items-center gap-3">
           <div className="relative col-span-1 sm:col-span-2 lg:col-span-1">
             <SearchIcon className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 opacity-50" />
             <Input
@@ -66,7 +56,7 @@ export default function TopBar() {
             <Combobox
               options={locationOptions}
               value={location}
-              onChange={(v) => setLocation(v)}
+              onChange={(value) => setLocations(value ? [value] : null)}
               placeholder="Location"
               buttonWidthClassName="w-full lg:w-[200px]"
               contentClassName="w-[var(--radix-popover-trigger-width)] lg:w-[200px]"
@@ -76,14 +66,14 @@ export default function TopBar() {
             <Combobox
               options={themeOptions}
               value={theme}
-              onChange={(v) => setTheme(v)}
+              onChange={(value) => setThemes(value ? [value] : null)}
               placeholder="Theme"
               buttonWidthClassName="w-full lg:w-[200px]"
               contentClassName="w-[var(--radix-popover-trigger-width)] lg:w-[200px]"
             />
           </div>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </section>
   );
 }

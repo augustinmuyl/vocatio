@@ -1,16 +1,8 @@
 from datetime import UTC, datetime
 from enum import Enum as PYEnum
+from uuid import UUID, uuid4
 
-from sqlalchemy import (
-    Boolean,
-    Column,
-    DateTime,
-    Enum,
-    Integer,
-    Sequence,
-    Text,
-    UniqueConstraint,
-)
+from sqlalchemy import Boolean, Column, DateTime, Enum, Text, UniqueConstraint, Uuid
 from sqlmodel import Field, SQLModel, func
 
 
@@ -25,13 +17,9 @@ class WaitlistEntry(SQLModel, table=True):
     __tablename__ = "waitlist_entries"  # type: ignore[override]
     __table_args__ = (UniqueConstraint("email", name="uq_waitlist_email"),)
 
-    id: int | None = Field(
-        default=None,
-        sa_column=Column(
-            Integer,
-            Sequence("waitlist_entry_id_seq"),
-            primary_key=True,
-        ),
+    id: UUID | None = Field(
+        default_factory=uuid4,
+        sa_column=Column(Uuid(as_uuid=True), primary_key=True, nullable=False),
     )
     role: WaitlistRole = Field(
         sa_column=Column(
