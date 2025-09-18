@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import unicodedata
 from typing import TYPE_CHECKING
 
 from sqlalchemy import func, or_
@@ -17,6 +18,16 @@ if TYPE_CHECKING:
     from uuid import UUID
 
     from app.schemas.opportunity_schema import OpportunityCreate, OpportunityUpdate
+
+try:  # pragma: no cover - optional dependency path
+    import regex as _regex
+except ModuleNotFoundError:  # pragma: no cover - fallback path
+    _regex = None
+
+
+_ELLIPSIS = "\u2026"
+_ZWJ = "\u200d"
+_VARIATION_SELECTORS = {0xFE0E, 0xFE0F}
 
 
 class OrganizationLookupError(Exception):
@@ -222,3 +233,73 @@ def list_opportunities(
 def get_opportunity_by_slug(session: Session, slug: str) -> Opportunity | None:
     statement = select(Opportunity).where(Opportunity.slug == slug)
     return session.exec(statement).first()
+
+
+def build_description_preview(description: str, *, limit: int = 140) -> str:
+    """Collapse whitespace, truncate to limit, and append an ellipsis when shortened."""
+
+    collapsed = re.sub(r"\s+", " ", description).strip()
+    if not collapsed:
+        return ""
+
+    if len(collapsed) <= limit:
+        return collapsed
+
+    boundary = collapsed.rfind(" ", 0, limit + 1)
+    if boundary > 0:
+        truncated = collapsed[:boundary].rstrip()
+        if truncated:
+            return f"{truncated}{_ELLIPSIS}"
+
+    truncated = _truncate_graphemes(collapsed, limit)
+    if not truncated:
+        truncated = collapsed[:limit].rstrip()
+
+    return f"{truncated}{_ELLIPSIS}"
+
+
+def _truncate_graphemes(text: str, limit: int) -> str:
+    result: list[str] = []
+    total_length = 0
+    for cluster in _grapheme_clusters(text):
+        cluster_length = len(cluster)
+        if total_length + cluster_length > limit:
+            break
+        result.append(cluster)
+        total_length += cluster_length
+
+    return "".join(result).rstrip()
+
+
+def _grapheme_clusters(text: str) -> list[str]:
+    if _regex is not None:  # pragma: no cover - exercised when regex is installed
+        return _regex.findall(r"\X", text)
+
+    clusters: list[str] = []
+    cluster = ""
+
+    for char in text:
+        if not cluster:
+            cluster = char
+            continue
+
+        codepoint = ord(char)
+        if unicodedata.combining(char) or codepoint in _VARIATION_SELECTORS:
+            cluster += char
+            continue
+
+        if cluster.endswith(_ZWJ):
+            cluster += char
+            continue
+
+        if char == _ZWJ:
+            cluster += char
+            continue
+
+        clusters.append(cluster)
+        cluster = char
+
+    if cluster:
+        clusters.append(cluster)
+
+    return clusters

@@ -10,7 +10,7 @@ import { fadeInSide } from "@/lib/variants";
 type Opportunity = {
   id: string;
   title: string;
-  description?: string | null;
+  preview: string;
   communityHours: number | null;
   approved: boolean;
 };
@@ -24,6 +24,7 @@ type OpportunityListItem = {
   start_at: string;
   end_at: string;
   timezone: string;
+  preview: string;
 };
 
 type OpportunityListResponse = {
@@ -73,7 +74,7 @@ export default function Results() {
         const mapped = data.items.map((item) => ({
           id: item.id,
           title: item.title,
-          description: null,
+          preview: item.preview,
           communityHours: item.community_hours,
           approved: true,
         }));
@@ -131,7 +132,7 @@ export default function Results() {
                 </div>
 
                 <p className="text-text-mute">
-                  {opportunity.description ?? "Details coming soon."}
+                  {opportunity.preview || "Details coming soon."}
                 </p>
 
                 <p className="mt-auto pt-4 text-text-mute">

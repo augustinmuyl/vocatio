@@ -200,6 +200,7 @@ def test_list_opportunities_with_filters_and_pagination():
 
     created_ids: list[str] = []
     created_slugs: list[str] = []
+    long_description_id: str | None = None
 
     for i in range(14):
         location = ["REMOTE", "MIAMI", "NYC"][i % 3]
@@ -216,6 +217,13 @@ def test_list_opportunities_with_filters_and_pagination():
             "is_active": True,
         }
 
+        if i == 13:
+            payload["description"] = (
+                "  Families coming together for meaningful service!    "
+                "\nJoin us for hands-on support, snacks, and community building.家庭共同志愿服务 "
+                "👨‍👩‍👧‍👦👨‍👩‍👧‍👦 extra emojis to exercise grapheme handling."
+            )
+
         if location != "REMOTE":
             payload["address"] = f"{i} Example St"
             payload["zip_code"] = "10001" if location == "NYC" else "33101"
@@ -225,6 +233,8 @@ def test_list_opportunities_with_filters_and_pagination():
         body = resp.json()
         created_ids.append(body["id"])
         created_slugs.append(body["slug"])
+        if i == 13:
+            long_description_id = body["id"]
 
     inactive_id = created_ids[0]
     with Session(engine) as session:
@@ -244,6 +254,9 @@ def test_list_opportunities_with_filters_and_pagination():
     assert len(payload["items"]) == 12
     ids = {item["id"] for item in payload["items"]}
     assert inactive_id not in ids
+    assert payload["items"]
+    assert all(isinstance(item["preview"], str) for item in payload["items"])
+
 
     # page 2 should include the remaining active item
     second_page = client.get("/opportunities", params={"page": 2})
@@ -264,8 +277,26 @@ def test_list_opportunities_with_filters_and_pagination():
     assert theme_items
     assert all("ENVIRONMENT" in item.get("themes", []) for item in theme_items)
 
+    combined_items = payload["items"] + page_data["items"]
+    assert len(combined_items) == 13
+
+    if long_description_id is not None:
+        preview_item = next(
+            item for item in combined_items if item["id"] == long_description_id
+        )
+        assert preview_item["preview"]
+        assert preview_item["preview"].endswith("…")
+        assert len(preview_item["preview"]) <= 141
+        assert "家庭" in preview_item["preview"]
+        assert "  " not in preview_item["preview"]
+
+    short_item = next(item for item in combined_items if item["preview"] == "Help out")
+    assert short_item["preview"] == "Help out"
+
     # slug lookup should succeed for an active opportunity
-    active_slug = next(slug for idx, slug in zip(created_ids, created_slugs, strict=False) if idx != inactive_id)
+    active_slug = next(
+        slug for idx, slug in zip(created_ids, created_slugs, strict=False) if idx != inactive_id
+    )
     slug_resp = client.get(f"/opportunities/slug/{active_slug}")
     assert slug_resp.status_code == 200
     assert slug_resp.json()["slug"] == active_slug

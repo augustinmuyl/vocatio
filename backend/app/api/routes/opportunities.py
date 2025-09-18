@@ -9,11 +9,13 @@ from app.db.session import get_session
 from app.models.opportunity import Location, Opportunity, Theme
 from app.schemas.opportunity_schema import (
     OpportunityCreate,
+    OpportunityListItem,
     OpportunityListResponse,
     OpportunityRead,
 )
 from app.services.opportunity_service import (
     OrganizationLookupError,
+    build_description_preview,
     create_opportunity as create_opportunity_service,
     get_opportunity_by_slug,
     list_opportunities,
@@ -75,9 +77,17 @@ def list_opportunities_route(
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
+    response_items: list[OpportunityListItem] = []
+    for item in items:
+        model = OpportunityListItem.model_validate(item, from_attributes=True)
+        model = model.model_copy(
+            update={"preview": build_description_preview(item.description)}
+        )
+        response_items.append(model)
+
     has_next = page * page_size < total
     return OpportunityListResponse(
-        items=items,
+        items=response_items,
         total=total,
         page=page,
         page_size=page_size,

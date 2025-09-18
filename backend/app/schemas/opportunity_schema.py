@@ -138,6 +138,7 @@ class OpportunityListItem(BaseModel):
     signup_url: str | None
     created_at: datetime
     updated_at: datetime
+    preview: str = ""
 
     model_config = {"from_attributes": True}
 
