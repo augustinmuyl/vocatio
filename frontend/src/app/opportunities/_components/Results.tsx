@@ -48,6 +48,7 @@ const cardsContainer = {
 
 export default function Results() {
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -58,6 +59,7 @@ export default function Results() {
 
       if (!baseUrl) {
         setError("Backend URL is not configured");
+        setIsLoading(false)
         return;
       }
 
@@ -81,15 +83,18 @@ export default function Results() {
 
         setOpportunities(mapped);
         setError(null);
+        setIsLoading(false)
       } catch (err) {
         if ((err as Error).name === "AbortError") {
           return;
         }
         console.error("Failed to load opportunities", err);
         setError("Unable to load opportunities");
+        setIsLoading(false)
       }
     }
 
+    setIsLoading(true)
     fetchOpportunities();
 
     return () => {
@@ -103,15 +108,15 @@ export default function Results() {
         {error ? (
           <p className="text-sm text-destructive">{error}</p>
         ) : null}
-        {!error && opportunities.length === 0 ? (
+        {!error && !isLoading && opportunities.length === 0 ? (
           <p className="text-sm text-text-mute">No opportunities available yet.</p>
         ) : null}
         <motion.div
+          key={isLoading ? "loading" : "loaded"}
           className="grid grid-cols-1 md:grid-cols-2 items-stretch gap-6 lg:gap-8"
           variants={cardsContainer}
-          initial="show"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.2 }}
+          initial={"hidden"}
+          animate={"show"}
         >
           {opportunities.map((opportunity) => (
             <motion.div key={opportunity.id} variants={fadeInSide} className="h-full">
