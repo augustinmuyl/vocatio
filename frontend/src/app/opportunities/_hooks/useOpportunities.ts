@@ -1,0 +1,142 @@
+import { useEffect, useState } from "react";
+
+type OpportunityListItem = {
+  id: string;
+  title: string;
+  slug: string;
+  community_hours: number | null;
+  themes: string[] | null;
+  start_at: string;
+  end_at: string;
+  timezone: string;
+  preview: string;
+};
+
+type OpportunityListResponse = {
+  items: OpportunityListItem[];
+  total: number;
+  page: number;
+  page_size: number;
+  has_next: boolean;
+};
+
+export type Opportunity = {
+  id: string;
+  title: string;
+  preview: string;
+  communityHours: number | null;
+  approved: boolean;
+};
+
+export type OpportunityFilters = {
+  page: number;
+  pageSize: number;
+  sortBy: string;
+  sortDirection: string;
+  locations: string[];
+  themes: string[];
+};
+
+type UseOpportunitiesState = {
+  opportunities: Opportunity[];
+  total: number;
+  isLoading: boolean;
+  error: string | null;
+};
+
+const initialState: UseOpportunitiesState = {
+  opportunities: [],
+  total: 0,
+  isLoading: true,
+  error: null,
+};
+
+export function useOpportunities(filters: OpportunityFilters) {
+  const [{ opportunities, total, isLoading, error }, setState] =
+    useState<UseOpportunitiesState>(initialState);
+
+  const { page, pageSize, sortBy, sortDirection, locations, themes } = filters;
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function fetchOpportunities() {
+      const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+      if (!baseUrl) {
+        setState({
+          opportunities: [],
+          total: 0,
+          isLoading: false,
+          error: "Backend URL is not configured",
+        });
+        return;
+      }
+
+      setState((prev) => ({ ...prev, isLoading: true, error: null }));
+
+      try {
+        const params = new URLSearchParams();
+        params.set("page", String(page));
+        params.set("page_size", String(pageSize));
+        params.set("sort_by", sortBy);
+        params.set("sort_direction", sortDirection);
+
+        locations.forEach((location) => {
+          params.append("locations", location);
+        });
+
+        themes.forEach((theme) => {
+          params.append("themes", theme);
+        });
+
+        const response = await fetch(
+          `${baseUrl}/opportunities?${params.toString()}`,
+          {
+            signal: controller.signal,
+          },
+        );
+
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`);
+        }
+
+        const data: OpportunityListResponse = await response.json();
+        const mapped = data.items.map<Opportunity>((item) => ({
+          id: item.id,
+          title: item.title,
+          preview: item.preview,
+          communityHours: item.community_hours,
+          approved: true,
+        }));
+
+        setState({
+          opportunities: mapped,
+          total: data.total,
+          isLoading: false,
+          error: null,
+        });
+      } catch (err) {
+        if ((err as Error).name === "AbortError") {
+          return;
+        }
+
+        setState({
+          opportunities: [],
+          total: 0,
+          isLoading: false,
+          error: "Unable to load opportunities",
+        });
+        console.error("Failed to load opportunities", err);
+      }
+    }
+
+    fetchOpportunities();
+
+    return () => {
+      controller.abort();
+    };
+  }, [page, pageSize, sortBy, sortDirection, locations, themes]);
+
+  return { opportunities, total, isLoading, error };
+}
