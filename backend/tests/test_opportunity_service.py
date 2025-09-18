@@ -15,9 +15,13 @@ os.environ.setdefault("FRONTEND_URL", "http://testserver")
 
 from app.db.session import engine
 from app.models import Account, AccountKind, Organization
-from app.models.opportunity import Location
+from app.models.opportunity import Location, Theme
 from app.schemas.opportunity_schema import OpportunityCreate, OpportunityUpdate
-from app.services.opportunity_service import create_opportunity, update_opportunity
+from app.services.opportunity_service import (
+    create_opportunity,
+    list_opportunities,
+    update_opportunity,
+)
 
 
 @pytest.fixture(autouse=True)
@@ -104,3 +108,46 @@ def test_timezone_validation():
 
     with pytest.raises(ValidationError):
         OpportunityUpdate(timezone="Mars/Phobos")
+
+
+def test_list_opportunities_filters_by_theme():
+    with Session(engine) as session:
+        org = _create_org(session, email="c@example.com", slug="org-c")
+
+        common_kwargs = dict(
+            org_id=org.account_id,
+            description="Testing filters",
+            start_at=_aware(datetime(2024, 1, 1, 10, 0)),
+            end_at=_aware(datetime(2024, 1, 1, 12, 0)),
+            location=Location.REMOTE,
+        )
+
+        first = create_opportunity(
+            session,
+            OpportunityCreate(
+                title="STEM Opportunity",
+                themes=[Theme.STEM],
+                **common_kwargs,
+            ),
+        )
+
+        create_opportunity(
+            session,
+            OpportunityCreate(
+                title="Arts Opportunity",
+                themes=[Theme.ARTS],
+                **common_kwargs,
+            ),
+        )
+
+        items, total = list_opportunities(
+            session,
+            page=1,
+            page_size=10,
+            themes=[Theme.STEM],
+            locations=None,
+        )
+
+        assert total == 1
+        assert len(items) == 1
+        assert items[0].id == first.id

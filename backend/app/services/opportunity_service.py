@@ -6,7 +6,8 @@ import re
 import unicodedata
 from typing import TYPE_CHECKING
 
-from sqlalchemy import func, or_
+from sqlalchemy import cast, func, or_
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlmodel import Session, select
 
 from app.models.opportunity import Location, Opportunity, Theme
@@ -191,9 +192,10 @@ def list_opportunities(
         filters.append(Opportunity.location.in_(list(locations)))
 
     if themes:
-        theme_filters = [
-            Opportunity.themes.contains([theme.value]) for theme in themes
-        ]
+        bind = session.get_bind()
+        is_postgres = bind is not None and bind.dialect.name == "postgresql"
+        themes_column = cast(Opportunity.themes, JSONB) if is_postgres else Opportunity.themes
+        theme_filters = [themes_column.contains([theme.value]) for theme in themes]
         if theme_filters:
             if len(theme_filters) == 1:
                 filters.append(theme_filters[0])

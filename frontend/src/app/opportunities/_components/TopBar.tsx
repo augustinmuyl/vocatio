@@ -22,11 +22,14 @@ export default function TopBar() {
   ];
 
   const themeOptions = [
+    { value: "COMMUNITY_SERVICE", label: "Community Service" },
     { value: "ENVIRONMENT", label: "Environment" },
     { value: "EDUCATION", label: "Education" },
-    { value: "COMMUNITY_SERVICE", label: "Community" },
     { value: "HEALTH", label: "Health" },
     { value: "ARTS", label: "Arts & Culture" },
+    { value: "STEM", label: "STEM" },
+    { value: "SPORTS", label: "Sports" },
+    { value: "ADVOCACY", label: "Advocacy" },
   ];
   return (
     <section className="px-6 sm:px-8 lg:px-12 pt-28 pb-8">
