@@ -1,15 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   async rewrites() {
     return [
       {
-        source: "/ingest/static/:path*",
+        source: "/relay-BhE5/static/:path*",
         destination: "https://us-assets.i.posthog.com/static/:path*",
       },
       {
-        source: "/ingest/:path*",
+        source: "/relay-BhE5/:path*",
         destination: "https://us.i.posthog.com/:path*",
       },
     ];
