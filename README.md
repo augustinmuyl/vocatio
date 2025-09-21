@@ -212,15 +212,15 @@ If Postmark credentials are configured, a confirmation email is sent asynchronou
 
 - [x] Landing page
 - [x] Interest form / waitlist for orgs & students
-- [ ] Set up analytics (kinda done?)
+- [x] Set up analytics (kinda done?)
 
 ### MVP (v0.1.0)
 
-- [ ] User browse opportunities
+- [x] User browse opportunities
   - [ ] Details page (contact, sign up)
   - [ ] Filter by:
-    - [ ] Location
-    - [ ] Theme
+    - [x] Location
+    - [x] Theme
     - [ ] Community hours
   - [ ] *Lazy loading and/or pagination ?*
   - [ ] *Search bar ?*
