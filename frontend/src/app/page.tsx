@@ -4,6 +4,7 @@ import About from "@/app/_components/About";
 import HowItWorks from "@/app/_components/HowItWorks";
 import Waitlist from "@/app/_components/Waitlist";
 import Footer from "@/components/Footer";
+import FaqSection from "@/app/_components/FaqSection"; // <— alias + exact casing
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <Hero />
       <About />
       <HowItWorks />
+      <FaqSection />
       <Waitlist />
       <Footer />
     </div>
