@@ -13,8 +13,8 @@ export default function Home() {
       <Hero />
       <About />
       <HowItWorks />
+      <FaqSection />
       <Waitlist />
-      <FaqSection /> {/* renders here */}
       <Footer />
     </div>
   );

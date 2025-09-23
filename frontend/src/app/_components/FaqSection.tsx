@@ -1,12 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 
 type FaqItem = {
@@ -45,7 +40,6 @@ const defaultItems: FaqItem[] = [
         For organizations and schools, we charge a small fee in order to handle
         any logistics. This including tracking of active or inactive volunteers, location logistics, and even marketing,
         Vocatio is a non-profit, and any fees we charge are reinvested into a better experience.
-      
       </p>
     ),
   },
@@ -79,9 +73,9 @@ function toJsonLd(items: FaqItem[]) {
         (typeof it.answer === "string"
           ? it.answer
           : React.isValidElement(it.answer)
-          ? // @ts-expect-error children access on simple <p>
+            ? // @ts-expect-error children access on simple <p>
             (it.answer.props?.children ?? "").toString()
-          : String(it.answer)) || "",
+            : String(it.answer)) || "",
     },
   }));
   return {
@@ -105,51 +99,63 @@ export default function FaqSection({
   const jsonLd = toJsonLd(prepared);
 
   return (
-    <section
-      id="faq"
-      className="relative mx-auto w-full max-w-3xl px-4 py-16 sm:px-6 lg:px-8"
-    >
-      <div className="mx-auto mb-8 flex max-w-2xl flex-col items-start gap-2 text-left">
-        <span className="rounded-full border px-3 py-1 text-xs font-medium">
-          FAQ
-        </span>
-        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-          Frequently asked questions
-        </h2>
-        <p className="text-muted-foreground">
-          Everything you need to know about getting started with Vocatio.
-        </p>
-      </div>
+    <section id="faq" className="scroll-mt-24 py-24 md:py-32">
+      <div className="container mx-auto px-4 sm:px-6">
+        <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
+          <span className="inline-flex items-center rounded-full bg-bg px-3 py-1 text-xs font-medium uppercase tracking-wide text-text ring-1 ring-border">
+            FAQ
+          </span>
+          <h2 className="mt-4 text-3xl font-bold text-text sm:text-4xl md:text-5xl">
+            Frequently asked questions
+          </h2>
+          <p className="mt-4 max-w-2xl text-base text-text-mute sm:text-lg">
+            Everything you need to know about getting started with Vocatio.
+          </p>
+        </div>
+        <div className="my-8 mb-16 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <Button variant="outline" size="lg" asChild>
+            <a href="mailto:hi@vocatio.app">Still have questions?</a>
+          </Button>
+        </div>
 
-      <Accordion
-        type="single"
-        collapsible
-        defaultValue={defaultValue ?? prepared[0]?.value}
-      >
-        {prepared.map((item) => (
-          <AccordionItem key={item.value} value={item.value!} className="border-b">
-            <AccordionTrigger className="text-left text-base font-medium">
-              {item.question}
-            </AccordionTrigger>
-            <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
-              {item.answer}
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
+        <div className="mx-auto mt-10 max-w-4xl sm:mt-12">
+          <Accordion
+            type="single"
+            collapsible
+            defaultValue={defaultValue ?? prepared[0]?.value}
+            className="space-y-4"
+          >
+            {prepared.map((item) => (
+              <AccordionItem
+                key={item.value}
+                value={item.value!}
+                className="overflow-hidden rounded-2xl border border-border bg-muted/40 px-4 transition-shadow hover:shadow-custom sm:px-6"
+              >
+                <AccordionTrigger className="text-left text-base font-semibold text-text sm:text-lg">
+                  {item.question}
+                </AccordionTrigger>
+                <AccordionContent className="text-base leading-relaxed text-text-mute">
+                  {item.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
 
-      <div className="mt-8 flex items-center gap-3">
-        <Button asChild>
-          <a href="/signup">Get started</a>
-        </Button>
-        <Button variant="ghost" asChild>
-          <a href="#contact">Still have questions?</a>
-        </Button>
+        {/*
+        <div className="mt-12 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <Button asChild size="lg">
+            <a href="/signup">Get started</a>
+          </Button>
+          <Button variant="outline" size="lg" asChild>
+            <a href="#contact">Still have questions?</a>
+          </Button>
+        </div>
+        */}
       </div>
 
       <script
         type="application/ld+json"
-        // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
     </section>
