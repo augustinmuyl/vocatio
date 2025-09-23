@@ -41,7 +41,7 @@ type SetSortArgs = {
 function parseInteger(
   value: string | null,
   fallback: number,
-  { min, max }: { min?: number; max?: number } = {}
+  { min, max }: { min?: number; max?: number } = {},
 ): number {
   if (!value) {
     return fallback;
@@ -82,7 +82,9 @@ function ensureDefaultSort(param: string | null): "updated_at" | "created_at" {
   if (!param) {
     return DEFAULT_SORT_BY;
   }
-  return VALID_SORT_BY.has(param) ? (param as "updated_at" | "created_at") : DEFAULT_SORT_BY;
+  return VALID_SORT_BY.has(param)
+    ? (param as "updated_at" | "created_at")
+    : DEFAULT_SORT_BY;
 }
 
 function ensureDefaultDirection(param: string | null): "asc" | "desc" {
@@ -102,19 +104,33 @@ export function useOpportunityFilters() {
   const [isPending, startTransition] = useTransition();
 
   const filters = useMemo<OpportunityFiltersState>(() => {
-    const paramsLocations = searchParams.getAll("locations").map((value) => value.toUpperCase());
-    const locations = paramsLocations.filter((value) => VALID_LOCATIONS.has(value));
+    const paramsLocations = searchParams
+      .getAll("locations")
+      .map((value) => value.toUpperCase());
+    const locations = paramsLocations.filter((value) =>
+      VALID_LOCATIONS.has(value),
+    );
 
-    const paramsThemes = searchParams.getAll("themes").map((value) => value.toUpperCase());
+    const paramsThemes = searchParams
+      .getAll("themes")
+      .map((value) => value.toUpperCase());
     const themes = paramsThemes.filter((value) => VALID_THEMES.has(value));
 
-    const page = parseInteger(searchParams.get("page"), DEFAULT_PAGE, { min: 1 });
-    const pageSize = parseInteger(searchParams.get("page_size"), DEFAULT_PAGE_SIZE, {
+    const page = parseInteger(searchParams.get("page"), DEFAULT_PAGE, {
       min: 1,
-      max: 50,
     });
+    const pageSize = parseInteger(
+      searchParams.get("page_size"),
+      DEFAULT_PAGE_SIZE,
+      {
+        min: 1,
+        max: 50,
+      },
+    );
     const sortBy = ensureDefaultSort(searchParams.get("sort_by"));
-    const sortDirection = ensureDefaultDirection(searchParams.get("sort_direction"));
+    const sortDirection = ensureDefaultDirection(
+      searchParams.get("sort_direction"),
+    );
 
     return {
       page,
@@ -139,7 +155,7 @@ export function useOpportunityFilters() {
         });
       });
     },
-    [pathname, router, searchParams, startTransition]
+    [pathname, router, searchParams, startTransition],
   );
 
   const setLocations = useCallback(
@@ -156,7 +172,7 @@ export function useOpportunityFilters() {
         params.delete("page");
       });
     },
-    [updateSearchParams]
+    [updateSearchParams],
   );
 
   const setThemes = useCallback(
@@ -173,7 +189,7 @@ export function useOpportunityFilters() {
         params.delete("page");
       });
     },
-    [updateSearchParams]
+    [updateSearchParams],
   );
 
   const setPage = useCallback(
@@ -186,7 +202,7 @@ export function useOpportunityFilters() {
         params.set("page", page.toString());
       });
     },
-    [updateSearchParams]
+    [updateSearchParams],
   );
 
   const setPageSize = useCallback(
@@ -201,7 +217,7 @@ export function useOpportunityFilters() {
         params.delete("page");
       });
     },
-    [updateSearchParams]
+    [updateSearchParams],
   );
 
   const setSort = useCallback(
@@ -219,7 +235,7 @@ export function useOpportunityFilters() {
         }
       });
     },
-    [updateSearchParams]
+    [updateSearchParams],
   );
 
   const resetFilters = useCallback(() => {
@@ -245,4 +261,6 @@ export function useOpportunityFilters() {
   };
 }
 
-export type UseOpportunityFiltersReturn = ReturnType<typeof useOpportunityFilters>;
+export type UseOpportunityFiltersReturn = ReturnType<
+  typeof useOpportunityFilters
+>;

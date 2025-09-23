@@ -38,7 +38,8 @@ export default function TopBar() {
           Discover Community Service Opportunities
         </h1>
         <p className="mt-3 max-w-2xl text-base sm:text-lg text-text-mute">
-          Explore curated, verified ways to contribute and earn hours that count toward graduation.
+          Explore curated, verified ways to contribute and earn hours that count
+          toward graduation.
         </p>
 
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_auto_auto] items-center gap-3">
