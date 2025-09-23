@@ -1,45 +1,10 @@
 import { cache, use } from "react";
 import { notFound } from "next/navigation";
 
-export type OpportunityResponse = {
-  id: string;
-  org_id: string;
-  title: string;
-  description: string;
-  community_hours: number | null;
-  slug: string;
-  start_at: string;
-  end_at: string;
-  timezone: string;
-  location: string;
-  address: string | null;
-  zip_code: string | null;
-  themes: string[] | null;
-  signup_url: string | null;
-  created_at: string;
-  updated_at: string;
-  is_active: boolean;
-};
-
-export type Opportunity = {
-  id: string;
-  orgId: string;
-  title: string;
-  description: string;
-  communityHours: number | null;
-  slug: string;
-  startAt: string;
-  endAt: string;
-  timezone: string;
-  location: string;
-  address: string | null;
-  zipCode: string | null;
-  themes: string[];
-  signupUrl: string | null;
-  createdAt: string;
-  updatedAt: string;
-  isActive: boolean;
-};
+import {
+  type OpportunityDetail,
+  type OpportunityDetailResponse,
+} from "@/app/opportunities/_types";
 
 function assertBackendConfigured(baseUrl: string | undefined): string {
   if (!baseUrl) {
@@ -48,7 +13,7 @@ function assertBackendConfigured(baseUrl: string | undefined): string {
   return baseUrl.replace(/\/$/, "");
 }
 
-function mapOpportunity(data: OpportunityResponse): Opportunity {
+function mapOpportunity(data: OpportunityDetailResponse): OpportunityDetail {
   return {
     id: data.id,
     orgId: data.org_id,
@@ -70,7 +35,7 @@ function mapOpportunity(data: OpportunityResponse): Opportunity {
   };
 }
 
-const fetchOpportunity = cache(async (slug: string): Promise<Opportunity> => {
+const fetchOpportunity = cache(async (slug: string): Promise<OpportunityDetail> => {
   const baseUrl = assertBackendConfigured(process.env.NEXT_PUBLIC_BACKEND_URL);
   const response = await fetch(`${baseUrl}/opportunities/slug/${slug}`, {
     next: { revalidate: 300 },
@@ -84,14 +49,14 @@ const fetchOpportunity = cache(async (slug: string): Promise<Opportunity> => {
     throw new Error(`Failed to load opportunity (${response.status})`);
   }
 
-  const data: OpportunityResponse = await response.json();
+  const data: OpportunityDetailResponse = await response.json();
   return mapOpportunity(data);
 });
 
-export function useOpportunity(slug: string): Opportunity {
+export function useOpportunity(slug: string): OpportunityDetail {
   return use(fetchOpportunity(slug));
 }
 
-export async function getOpportunity(slug: string): Promise<Opportunity> {
+export async function getOpportunity(slug: string): Promise<OpportunityDetail> {
   return fetchOpportunity(slug);
 }

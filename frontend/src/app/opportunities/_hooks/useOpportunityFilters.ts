@@ -3,39 +3,35 @@
 import { useCallback, useMemo, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
+import {
+  OPPORTUNITY_LOCATIONS,
+  OPPORTUNITY_SORT_DIRECTIONS,
+  OPPORTUNITY_SORT_FIELDS,
+  OPPORTUNITY_THEMES,
+  type OpportunityFiltersState,
+  type OpportunityLocation,
+  type OpportunitySortDirection,
+  type OpportunitySortField,
+  type OpportunityTheme,
+} from "@/app/opportunities/_types";
+
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 12;
-const DEFAULT_SORT_BY = "updated_at";
-const DEFAULT_SORT_DIRECTION = "desc";
+const DEFAULT_SORT_BY: OpportunitySortField = "updated_at";
+const DEFAULT_SORT_DIRECTION: OpportunitySortDirection = "desc";
 
-const VALID_LOCATIONS = new Set(["NYC", "MIAMI", "REMOTE", "OTHER"]);
-const VALID_THEMES = new Set([
-  "COMMUNITY_SERVICE",
-  "ENVIRONMENT",
-  "EDUCATION",
-  "HEALTH",
-  "ARTS",
-  "STEM",
-  "SPORTS",
-  "ADVOCACY",
-]);
-const VALID_SORT_BY = new Set(["updated_at", "created_at"]);
-const VALID_SORT_DIRECTION = new Set(["asc", "desc"]);
+const VALID_LOCATIONS = new Set<OpportunityLocation>(OPPORTUNITY_LOCATIONS);
+const VALID_THEMES = new Set<OpportunityTheme>(OPPORTUNITY_THEMES);
+const VALID_SORT_BY = new Set<OpportunitySortField>(OPPORTUNITY_SORT_FIELDS);
+const VALID_SORT_DIRECTION = new Set<OpportunitySortDirection>(
+  OPPORTUNITY_SORT_DIRECTIONS,
+);
 
 type UpdateParamsFn = (params: URLSearchParams) => void;
 
-type OpportunityFiltersState = {
-  page: number;
-  pageSize: number;
-  sortBy: "updated_at" | "created_at";
-  sortDirection: "asc" | "desc";
-  locations: string[];
-  themes: string[];
-};
-
 type SetSortArgs = {
-  sortBy?: "updated_at" | "created_at";
-  sortDirection?: "asc" | "desc";
+  sortBy?: OpportunitySortField;
+  sortDirection?: OpportunitySortDirection;
 };
 
 function parseInteger(
@@ -78,22 +74,22 @@ function normalizeParams(params: URLSearchParams) {
   }
 }
 
-function ensureDefaultSort(param: string | null): "updated_at" | "created_at" {
+function ensureDefaultSort(param: string | null): OpportunitySortField {
   if (!param) {
     return DEFAULT_SORT_BY;
   }
-  return VALID_SORT_BY.has(param)
-    ? (param as "updated_at" | "created_at")
+  return VALID_SORT_BY.has(param as OpportunitySortField)
+    ? (param as OpportunitySortField)
     : DEFAULT_SORT_BY;
 }
 
-function ensureDefaultDirection(param: string | null): "asc" | "desc" {
+function ensureDefaultDirection(param: string | null): OpportunitySortDirection {
   if (!param) {
     return DEFAULT_SORT_DIRECTION;
   }
   const lower = param.toLowerCase();
-  return VALID_SORT_DIRECTION.has(lower)
-    ? (lower as "asc" | "desc")
+  return VALID_SORT_DIRECTION.has(lower as OpportunitySortDirection)
+    ? (lower as OpportunitySortDirection)
     : DEFAULT_SORT_DIRECTION;
 }
 
@@ -107,14 +103,18 @@ export function useOpportunityFilters() {
     const paramsLocations = searchParams
       .getAll("locations")
       .map((value) => value.toUpperCase());
-    const locations = paramsLocations.filter((value) =>
-      VALID_LOCATIONS.has(value),
+    const locations = paramsLocations.filter(
+      (value): value is OpportunityLocation =>
+        VALID_LOCATIONS.has(value as OpportunityLocation),
     );
 
     const paramsThemes = searchParams
       .getAll("themes")
       .map((value) => value.toUpperCase());
-    const themes = paramsThemes.filter((value) => VALID_THEMES.has(value));
+    const themes = paramsThemes.filter(
+      (value): value is OpportunityTheme =>
+        VALID_THEMES.has(value as OpportunityTheme),
+    );
 
     const page = parseInteger(searchParams.get("page"), DEFAULT_PAGE, {
       min: 1,
@@ -164,8 +164,9 @@ export function useOpportunityFilters() {
         params.delete("locations");
         if (values && values.length > 0) {
           values.forEach((value) => {
-            if (VALID_LOCATIONS.has(value)) {
-              params.append("locations", value);
+            const upper = value.toUpperCase();
+            if (VALID_LOCATIONS.has(upper as OpportunityLocation)) {
+              params.append("locations", upper);
             }
           });
         }
@@ -181,8 +182,9 @@ export function useOpportunityFilters() {
         params.delete("themes");
         if (values && values.length > 0) {
           values.forEach((value) => {
-            if (VALID_THEMES.has(value)) {
-              params.append("themes", value);
+            const upper = value.toUpperCase();
+            if (VALID_THEMES.has(upper as OpportunityTheme)) {
+              params.append("themes", upper);
             }
           });
         }

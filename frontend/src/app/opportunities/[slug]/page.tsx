@@ -7,10 +7,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
+import { getOpportunity } from "@/app/opportunities/_hooks/useOpportunity";
 import {
-  getOpportunity,
-  type Opportunity,
-} from "@/app/opportunities/_hooks/useOpportunity";
+  OPPORTUNITY_LOCATION_LABELS,
+  OPPORTUNITY_THEME_LABELS,
+  type OpportunityDetail,
+  type OpportunityLocation,
+  type OpportunityTheme,
+} from "@/app/opportunities/_types";
 
 const FALLBACK_TITLE = "Opportunity";
 const DATE_FORMAT: Intl.DateTimeFormatOptions = {
@@ -24,16 +28,12 @@ const DAY_FORMAT: Intl.DateTimeFormatOptions = {
   day: "numeric",
 };
 
-const LOCATION_LABELS: Record<string, string> = {
-  NYC: "New York City",
-  MIAMI: "Miami",
-  REMOTE: "Remote",
-  OTHER: "Other",
-};
-
 function formatEnumLabel(value: string): string {
-  if (LOCATION_LABELS[value]) {
-    return LOCATION_LABELS[value];
+  if (value in OPPORTUNITY_LOCATION_LABELS) {
+    return OPPORTUNITY_LOCATION_LABELS[value as OpportunityLocation];
+  }
+  if (value in OPPORTUNITY_THEME_LABELS) {
+    return OPPORTUNITY_THEME_LABELS[value as OpportunityTheme];
   }
 
   return value
@@ -66,7 +66,11 @@ function formatDescription(description: string): string[] {
     .filter(Boolean);
 }
 
-function OpportunityDetails({ opportunity }: { opportunity: Opportunity }) {
+function OpportunityDetails({
+  opportunity,
+}: {
+  opportunity: OpportunityDetail;
+}) {
   const sameDay =
     formatDate(opportunity.startAt, opportunity.timezone) ===
     formatDate(opportunity.endAt, opportunity.timezone);
