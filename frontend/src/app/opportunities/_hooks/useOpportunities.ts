@@ -23,6 +23,7 @@ type OpportunityListResponse = {
 export type Opportunity = {
   id: string;
   title: string;
+  slug: string;
   preview: string;
   communityHours: number | null;
   approved: boolean;
@@ -105,6 +106,7 @@ export function useOpportunities(filters: OpportunityFilters) {
         const mapped = data.items.map<Opportunity>((item) => ({
           id: item.id,
           title: item.title,
+          slug: item.slug,
           preview: item.preview,
           communityHours: item.community_hours,
           approved: true,
