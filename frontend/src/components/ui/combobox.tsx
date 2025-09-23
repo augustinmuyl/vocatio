@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Check, ChevronsUpDown } from "lucide-react"
+import * as React from "react";
+import { Check, ChevronsUpDown } from "lucide-react";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -12,32 +12,37 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer"
+} from "@/components/ui/popover";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 export type ComboboxOption = {
-  value: string
-  label: string
-}
+  value: string;
+  label: string;
+};
 
 export type ComboboxProps = {
-  options: ComboboxOption[]
-  value?: string | null
-  defaultValue?: string | null
-  onChange?: (value: string | null, option?: ComboboxOption) => void
-  placeholder?: string
-  searchPlaceholder?: string
-  emptyText?: string
-  buttonClassName?: string
-  contentClassName?: string
-  buttonWidthClassName?: string
-}
+  options: ComboboxOption[];
+  value?: string | null;
+  defaultValue?: string | null;
+  onChange?: (value: string | null, option?: ComboboxOption) => void;
+  placeholder?: string;
+  searchPlaceholder?: string;
+  emptyText?: string;
+  buttonClassName?: string;
+  contentClassName?: string;
+  buttonWidthClassName?: string;
+};
 
 export function Combobox({
   options,
@@ -52,32 +57,34 @@ export function Combobox({
   buttonWidthClassName = "w-[200px]",
 }: ComboboxProps) {
   // Separate open states to avoid cross-opening the hidden variant
-  const [openPopover, setOpenPopover] = React.useState(false)
-  const [openDrawer, setOpenDrawer] = React.useState(false)
-  const [uncontrolledValue, setUncontrolledValue] = React.useState<string | null>(
-    defaultValue ?? null
-  )
+  const [openPopover, setOpenPopover] = React.useState(false);
+  const [openDrawer, setOpenDrawer] = React.useState(false);
+  const [uncontrolledValue, setUncontrolledValue] = React.useState<
+    string | null
+  >(defaultValue ?? null);
   // Avoid SSR/client markup mismatch by not branching on media query during render.
   // We render both desktop (Popover) and mobile (Drawer) variants and hide/show via CSS.
 
-  const isControlled = controlledValue !== undefined
-  const value = isControlled ? controlledValue ?? null : uncontrolledValue
+  const isControlled = controlledValue !== undefined;
+  const value = isControlled ? (controlledValue ?? null) : uncontrolledValue;
 
   const selected =
-    value != null ? options.find((o) => o.value === value) : undefined
+    value != null ? options.find((o) => o.value === value) : undefined;
 
   const handleSelect = (currentValue: string) => {
-    const nextValue = currentValue === value ? null : currentValue
+    const nextValue = currentValue === value ? null : currentValue;
     if (!isControlled) {
-      setUncontrolledValue(nextValue)
+      setUncontrolledValue(nextValue);
     }
     onChange?.(
       nextValue,
-      nextValue != null ? options.find((o) => o.value === nextValue) : undefined
-    )
-    setOpenPopover(false)
-    setOpenDrawer(false)
-  }
+      nextValue != null
+        ? options.find((o) => o.value === nextValue)
+        : undefined,
+    );
+    setOpenPopover(false);
+    setOpenDrawer(false);
+  };
 
   const list = (
     <Command>
@@ -95,7 +102,7 @@ export function Combobox({
               <Check
                 className={cn(
                   "ml-auto",
-                  value === option.value ? "opacity-100" : "opacity-0"
+                  value === option.value ? "opacity-100" : "opacity-0",
                 )}
               />
             </CommandItem>
@@ -103,7 +110,7 @@ export function Combobox({
         </CommandGroup>
       </CommandList>
     </Command>
-  )
+  );
 
   return (
     <>
@@ -117,7 +124,7 @@ export function Combobox({
               className={cn(
                 buttonWidthClassName,
                 "justify-between",
-                buttonClassName
+                buttonClassName,
               )}
             >
               {selected ? selected.label : placeholder}
@@ -143,7 +150,7 @@ export function Combobox({
               className={cn(
                 buttonWidthClassName,
                 "justify-between",
-                buttonClassName
+                buttonClassName,
               )}
             >
               {selected ? selected.label : placeholder}
@@ -160,8 +167,8 @@ export function Combobox({
         </Drawer>
       </div>
     </>
-  )
+  );
 }
 
 // Backwards-compatible alias in case existing imports use the demo name
-export const ComboboxDemo = Combobox
+export const ComboboxDemo = Combobox;

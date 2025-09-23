@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -24,13 +24,13 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 const formSchema = z.object({
-  role: z.enum(["student", "parent", "organization", "other"], { error: "Please select a role" }),
+  role: z.enum(["student", "parent", "organization", "other"], {
+    error: "Please select a role",
+  }),
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email"),
   additionalInfo: z.string().optional(),
-  consent: z
-    .boolean()
-    .refine((val) => val, { error: "Consent is required" }),
+  consent: z.boolean().refine((val) => val, { error: "Consent is required" }),
   website: z.string().max(0),
 });
 
@@ -68,15 +68,17 @@ export default function Waitlist() {
     student: "E.g., your interests, skills, or availability",
     parent: "E.g., your interests, skills, or availability",
     organization: "E.g., tutoring, food drives, or environmental projects",
-    other: "Share extra info or context (if any)"
-  }
+    other: "Share extra info or context (if any)",
+  };
 
   const nameLabel = role === "organization" ? "Contact Name" : "Name";
   const additionalInfoLabel = role
     ? additionalInfoLabels[role]
     : "Additional Information";
 
-  const additionalInfoPlaceholder = role ? additionalInfoPlaceholders[role] : "Add any details you’d like us to know"
+  const additionalInfoPlaceholder = role
+    ? additionalInfoPlaceholders[role]
+    : "Add any details you’d like us to know";
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (values.website) {
@@ -121,8 +123,14 @@ export default function Waitlist() {
               <div className="space-y-6">
                 <div className="space-y-4">
                   {[
-                    { icon: CheckCircle2, text: "Find approved opportunities faster" },
-                    { icon: CheckCircle2, text: "Track hours and requirements clearly" },
+                    {
+                      icon: CheckCircle2,
+                      text: "Find approved opportunities faster",
+                    },
+                    {
+                      icon: CheckCircle2,
+                      text: "Track hours and requirements clearly",
+                    },
                     { icon: CheckCircle2, text: "Export school-ready reports" },
                   ].map(({ icon: Icon, text }, i) => (
                     <div key={i} className="flex items-start gap-3">
@@ -139,8 +147,14 @@ export default function Waitlist() {
                     <Shield className="w-5 h-5 text-primary" /> Privacy matters
                   </div>
                   <ul className="mt-2 space-y-1 text-sm text-text-mute">
-                    <li className="flex items-center gap-2"><Lock className="w-4 h-4 text-primary" /> We only send early‑access updates</li>
-                    <li className="flex items-center gap-2"><Lock className="w-4 h-4 text-primary" /> Your info is never shared</li>
+                    <li className="flex items-center gap-2">
+                      <Lock className="w-4 h-4 text-primary" /> We only send
+                      early‑access updates
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Lock className="w-4 h-4 text-primary" /> Your info is
+                      never shared
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -150,9 +164,14 @@ export default function Waitlist() {
             <motion.div className="lg:col-span-7" variants={fadeInUp}>
               <div className="rounded-2xl border border-border bg-muted/40 p-6 sm:p-8 shadow-custom">
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-6"
+                  >
                     <fieldset
-                      disabled={status === "success" || form.formState.isSubmitting}
+                      disabled={
+                        status === "success" || form.formState.isSubmitting
+                      }
                       className="space-y-6"
                     >
                       <input
@@ -183,7 +202,10 @@ export default function Waitlist() {
                                       className="border border-primary"
                                     />
                                   </FormControl>
-                                  <FormLabel htmlFor="student" className="font-normal">
+                                  <FormLabel
+                                    htmlFor="student"
+                                    className="font-normal"
+                                  >
                                     Student
                                   </FormLabel>
                                 </FormItem>
@@ -195,7 +217,10 @@ export default function Waitlist() {
                                       className="border border-primary"
                                     />
                                   </FormControl>
-                                  <FormLabel htmlFor="parent" className="font-normal">
+                                  <FormLabel
+                                    htmlFor="parent"
+                                    className="font-normal"
+                                  >
                                     Parent
                                   </FormLabel>
                                 </FormItem>
@@ -222,7 +247,10 @@ export default function Waitlist() {
                                       className="border border-primary"
                                     />
                                   </FormControl>
-                                  <FormLabel htmlFor="other" className="font-normal">
+                                  <FormLabel
+                                    htmlFor="other"
+                                    className="font-normal"
+                                  >
                                     Other
                                   </FormLabel>
                                 </FormItem>
@@ -270,7 +298,9 @@ export default function Waitlist() {
                         name="additionalInfo"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{additionalInfoLabel} (optional)</FormLabel>
+                            <FormLabel>
+                              {additionalInfoLabel} (optional)
+                            </FormLabel>
                             <FormControl>
                               <Textarea
                                 placeholder={additionalInfoPlaceholder}
@@ -306,7 +336,9 @@ export default function Waitlist() {
 
                       <div className="pt-4">
                         <Button type="submit" className="w-full">
-                          {form.formState.isSubmitting ? "Submitting..." : "Submit"}
+                          {form.formState.isSubmitting
+                            ? "Submitting..."
+                            : "Submit"}
                         </Button>
                         <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-text-mute">
                           <div className="flex items-center justify-center sm:justify-start gap-2">
