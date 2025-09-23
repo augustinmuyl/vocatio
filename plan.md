@@ -8,12 +8,11 @@
 
 ## Opportunity page
 
-- Create page
-  - Title
-  - Description
-  - Org preview
-    - Org page link
-  - Signup link
+- Title
+- Description
+- Org preview
+  - Org page link
+- Signup link
 
 ## Auth
 
