@@ -1,8 +1,10 @@
 "use client";
 
 import React from "react";
+import { motion } from "motion/react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import { container, fadeInUp } from "@/lib/variants";
 
 type FaqItem = {
   question: string;
@@ -63,6 +65,8 @@ const defaultItems: FaqItem[] = [
   },
 ];
 
+const MotionAccordionItem = motion(AccordionItem);
+
 function toJsonLd(items: FaqItem[]) {
   const pairs = items.map((it) => ({
     "@type": "Question",
@@ -100,25 +104,41 @@ export default function FaqSection({
 
   return (
     <section id="faq" className="scroll-mt-24 py-24 md:py-32">
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
-          <span className="inline-flex items-center rounded-full bg-bg px-3 py-1 text-xs font-medium uppercase tracking-wide text-text ring-1 ring-border">
+      <motion.div
+        className="container mx-auto px-4 sm:px-6"
+        variants={container}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.3 }}
+      >
+        <motion.div className="mx-auto flex max-w-4xl flex-col items-center text-center" variants={container}>
+          <motion.span
+            className="inline-flex items-center rounded-full bg-bg px-3 py-1 text-xs font-medium uppercase tracking-wide text-text ring-1 ring-border"
+            variants={fadeInUp}
+          >
             FAQ
-          </span>
-          <h2 className="mt-4 text-3xl font-bold text-text sm:text-4xl md:text-5xl">
+          </motion.span>
+          <motion.h2
+            className="mt-4 text-3xl font-bold text-text sm:text-4xl md:text-5xl"
+            variants={fadeInUp}
+          >
             Frequently asked questions
-          </h2>
-          <p className="mt-4 max-w-2xl text-base text-text-mute sm:text-lg">
+          </motion.h2>
+          <motion.p className="mt-4 max-w-2xl text-base text-text-mute sm:text-lg" variants={fadeInUp}>
             Everything you need to know about getting started with Vocatio.
-          </p>
-        </div>
-        <div className="my-8 mb-16 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          </motion.p>
+        </motion.div>
+
+        <motion.div
+          className="my-8 mb-16 flex flex-col items-center justify-center gap-3 sm:flex-row"
+          variants={fadeInUp}
+        >
           <Button variant="outline" size="lg" asChild>
             <a href="mailto:hi@vocatio.app">Still have questions?</a>
           </Button>
-        </div>
+        </motion.div>
 
-        <div className="mx-auto mt-10 max-w-4xl sm:mt-12">
+        <motion.div className="mx-auto mt-10 max-w-4xl sm:mt-12" variants={container}>
           <Accordion
             type="single"
             collapsible
@@ -126,10 +146,11 @@ export default function FaqSection({
             className="space-y-4"
           >
             {prepared.map((item) => (
-              <AccordionItem
+              <MotionAccordionItem
                 key={item.value}
                 value={item.value!}
                 className="overflow-hidden rounded-2xl border border-border bg-muted/40 px-4 transition-shadow hover:shadow-custom sm:px-6"
+                variants={fadeInUp}
               >
                 <AccordionTrigger className="text-left text-base font-semibold text-text sm:text-lg">
                   {item.question}
@@ -137,22 +158,22 @@ export default function FaqSection({
                 <AccordionContent className="text-base leading-relaxed text-text-mute">
                   {item.answer}
                 </AccordionContent>
-              </AccordionItem>
+              </MotionAccordionItem>
             ))}
           </Accordion>
-        </div>
+        </motion.div>
 
         {/*
-        <div className="mt-12 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <motion.div className="mt-12 flex flex-col items-center justify-center gap-3 sm:flex-row" variants={fadeInUp}>
           <Button asChild size="lg">
             <a href="/signup">Get started</a>
           </Button>
           <Button variant="outline" size="lg" asChild>
             <a href="#contact">Still have questions?</a>
           </Button>
-        </div>
+        </motion.div>
         */}
-      </div>
+      </motion.div>
 
       <script
         type="application/ld+json"
