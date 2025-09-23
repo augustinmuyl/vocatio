@@ -35,23 +35,27 @@ function mapOpportunity(data: OpportunityDetailResponse): OpportunityDetail {
   };
 }
 
-const fetchOpportunity = cache(async (slug: string): Promise<OpportunityDetail> => {
-  const baseUrl = assertBackendConfigured(process.env.NEXT_PUBLIC_BACKEND_URL);
-  const response = await fetch(`${baseUrl}/opportunities/slug/${slug}`, {
-    next: { revalidate: 300 },
-  });
+const fetchOpportunity = cache(
+  async (slug: string): Promise<OpportunityDetail> => {
+    const baseUrl = assertBackendConfigured(
+      process.env.NEXT_PUBLIC_BACKEND_URL,
+    );
+    const response = await fetch(`${baseUrl}/opportunities/slug/${slug}`, {
+      next: { revalidate: 300 },
+    });
 
-  if (response.status === 404) {
-    notFound();
-  }
+    if (response.status === 404) {
+      notFound();
+    }
 
-  if (!response.ok) {
-    throw new Error(`Failed to load opportunity (${response.status})`);
-  }
+    if (!response.ok) {
+      throw new Error(`Failed to load opportunity (${response.status})`);
+    }
 
-  const data: OpportunityDetailResponse = await response.json();
-  return mapOpportunity(data);
-});
+    const data: OpportunityDetailResponse = await response.json();
+    return mapOpportunity(data);
+  },
+);
 
 export function useOpportunity(slug: string): OpportunityDetail {
   return use(fetchOpportunity(slug));

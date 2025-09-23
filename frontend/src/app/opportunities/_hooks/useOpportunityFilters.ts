@@ -83,7 +83,9 @@ function ensureDefaultSort(param: string | null): OpportunitySortField {
     : DEFAULT_SORT_BY;
 }
 
-function ensureDefaultDirection(param: string | null): OpportunitySortDirection {
+function ensureDefaultDirection(
+  param: string | null,
+): OpportunitySortDirection {
   if (!param) {
     return DEFAULT_SORT_DIRECTION;
   }
@@ -111,9 +113,8 @@ export function useOpportunityFilters() {
     const paramsThemes = searchParams
       .getAll("themes")
       .map((value) => value.toUpperCase());
-    const themes = paramsThemes.filter(
-      (value): value is OpportunityTheme =>
-        VALID_THEMES.has(value as OpportunityTheme),
+    const themes = paramsThemes.filter((value): value is OpportunityTheme =>
+      VALID_THEMES.has(value as OpportunityTheme),
     );
 
     const page = parseInteger(searchParams.get("page"), DEFAULT_PAGE, {
