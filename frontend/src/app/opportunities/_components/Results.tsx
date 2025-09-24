@@ -36,7 +36,7 @@ export default function Results() {
   const endItem = hasSummary ? startItem + opportunities.length - 1 : 0;
 
   const skeletonCards = useMemo(() => {
-    const count = Math.min(Math.max(pageSize, 1), 6);
+    const count = Math.min(Math.max(pageSize, 1), 12);
     return Array.from({ length: count }, (_, index) => (
       <div key={`skeleton-${index}`} className="h-full">
         <Card className="relative flex h-full min-h-[200px] flex-col gap-3 p-6 text-text">
@@ -98,7 +98,7 @@ export default function Results() {
                         ) : null}
                       </div>
 
-                      <p className="text-text-mute">
+                      <p className="text-text-mute line-clamp-2">
                         {opportunity.preview || "Details coming soon."}
                       </p>
 

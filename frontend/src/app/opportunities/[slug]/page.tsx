@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 
 import Opportunity from "@/app/opportunities/[slug]/_components/Opportunity";
@@ -39,7 +38,6 @@ export default async function OpportunityPage({
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <Opportunity opportunity={opportunity} />
-      <Footer />
     </div>
   );
 }

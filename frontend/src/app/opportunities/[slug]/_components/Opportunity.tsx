@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import Logo from "../../../../../public/logo.png";
+import Volunteering_Mock from "../../../../../public/volunteering.webp";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -10,7 +12,8 @@ import {
   type OpportunityLocation,
   type OpportunityTheme,
 } from "@/app/opportunities/_types";
-import { ArrowLeft, ChevronLeft, MoveLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import Image from "next/image";
 
 const DAY_FORMAT: Intl.DateTimeFormatOptions = {
   weekday: "long",
@@ -47,6 +50,52 @@ function formatDate(value: string, timezone: string): string {
   return formatter.format(new Date(value));
 }
 
+function formatDateRange(start: string, end: string, timezone: string): string {
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+
+  if (Number.isNaN(startDate.valueOf()) || Number.isNaN(endDate.valueOf())) {
+    return formatDate(start, timezone);
+  }
+
+  const partsFormatter = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    timeZone: timezone,
+  });
+
+  const startParts = Object.fromEntries(
+    partsFormatter
+      .formatToParts(startDate)
+      .filter(
+        (part) =>
+          part.type === "year" || part.type === "month" || part.type === "day",
+      )
+      .map((part) => [part.type, part.value]),
+  );
+  const endParts = Object.fromEntries(
+    partsFormatter
+      .formatToParts(endDate)
+      .filter(
+        (part) =>
+          part.type === "year" || part.type === "month" || part.type === "day",
+      )
+      .map((part) => [part.type, part.value]),
+  );
+
+  const sameDay =
+    startParts.year === endParts.year &&
+    startParts.month === endParts.month &&
+    startParts.day === endParts.day;
+
+  if (sameDay) {
+    return formatDate(start, timezone);
+  }
+
+  return `${formatDate(start, timezone)} - ${formatDate(end, timezone)}`;
+}
+
 function formatTime(value: string, timezone: string): string {
   const formatter = new Intl.DateTimeFormat("en-US", {
     ...TIME_FORMAT,
@@ -55,11 +104,7 @@ function formatTime(value: string, timezone: string): string {
   return formatter.format(new Date(value));
 }
 
-function formatTimeRange(
-  start: string,
-  end: string,
-  timezone: string,
-): string {
+function formatTimeRange(start: string, end: string, timezone: string): string {
   return `${formatTime(start, timezone)} - ${formatTime(end, timezone)}`;
 }
 
@@ -108,10 +153,20 @@ function OpportunityDetails({
       <h2 className="text-xl font-semibold text-text mb-2">Details</h2>
       <ul className="space-y-2 text-text-mute">
         <li>
-          <strong>Date:</strong> {formatDate(opportunity.startAt, opportunity.timezone)}
+          <strong>Date:</strong>{" "}
+          {formatDateRange(
+            opportunity.startAt,
+            opportunity.endAt,
+            opportunity.timezone,
+          )}
         </li>
         <li>
-          <strong>Time:</strong> {formatTimeRange(opportunity.startAt, opportunity.endAt, opportunity.timezone)}
+          <strong>Time:</strong>{" "}
+          {formatTimeRange(
+            opportunity.startAt,
+            opportunity.endAt,
+            opportunity.timezone,
+          )}
         </li>
         <li>
           <strong>Total Hours:</strong> {formatTotalHours(opportunity)}
@@ -157,22 +212,19 @@ function OpportunityOrganizer({
   opportunity: OpportunityDetail;
 }) {
   const initial = getTitleInitial(opportunity.title);
+  console.log(initial);
 
   return (
-    <section className="pt-6 border-t border-gray-200">
+    <section className="pt-6 border-t border-border">
       <h2 className="text-xl font-semibold text-text mb-3">Organizer</h2>
       <div className="flex items-center gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-gray-100 text-text-mute font-semibold">
-          {initial}
+        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-gray-100 text-text-mute font-semibold overflow-hidden">
+          <Image src={Logo} alt="icon" />
         </div>
         <div className="space-y-1 text-sm text-text-mute">
-          <p className="text-base font-medium text-text">
-            Organizer details coming soon
-          </p>
-          <p>
-            We&apos;re working on surfacing organization contacts for each opportunity.
-          </p>
-          <p className="text-xs text-text-mute">Organization ID: {opportunity.orgId}</p>
+          <p className="text-base font-medium text-text">Vocatio</p>
+          <p>Contact: Mihir Ganesan</p>
+          <p className="text-text-mute">📧 hi@vocatio.app</p>
         </div>
       </div>
     </section>
@@ -198,7 +250,7 @@ export default function Opportunity({
           </Link>
           <header className="space-y-6">
             <div className="space-y-3">
-              <h1 className="text-3xl font-bold text-text">
+              <h1 className="text-3xl md:text-4xl font-bold text-text">
                 {opportunity.title}
               </h1>
               <div className="flex flex-wrap items-center gap-4">
@@ -209,8 +261,10 @@ export default function Opportunity({
                       <Badge
                         key={theme}
                         variant="secondary"
-                        className={`rounded-full px-2 py-[3px] text-sm font-medium ${THEME_BADGE_CLASSES[theme] ?? "bg-gray-100 text-gray-800"
-                          }`}
+                        className={`rounded-full px-[10px] py-[3px] text-xs ${
+                          THEME_BADGE_CLASSES[theme] ??
+                          "bg-gray-100 text-gray-800"
+                        }`}
                       >
                         {formatEnumLabel(theme)}
                       </Badge>
@@ -221,9 +275,7 @@ export default function Opportunity({
             </div>
             <div className="flex flex-wrap gap-4">
               {opportunity.signupUrl ? (
-                <Button
-                  asChild
-                >
+                <Button asChild>
                   <Link
                     href={opportunity.signupUrl}
                     target="_blank"
@@ -234,13 +286,15 @@ export default function Opportunity({
                   </Link>
                 </Button>
               ) : null}
-              <Button
-                type="button"
-                variant="outline"
-              >
+              <Button type="button" variant="outline">
                 Save
               </Button>
             </div>
+            <Image
+              src={Volunteering_Mock}
+              className="rounded-md shadow-card w-full"
+              alt=""
+            />
           </header>
 
           <OpportunityDescription description={opportunity.description} />
