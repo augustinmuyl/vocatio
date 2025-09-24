@@ -66,13 +66,11 @@ function OpportunityDetails({
 }: {
   opportunity: OpportunityDetail;
 }) {
-  const sameDay =
-    formatDate(opportunity.startAt, opportunity.timezone) ===
-    formatDate(opportunity.endAt, opportunity.timezone);
 
   return (
-    <Card className="p-6 text-text">
-      <dl className="grid gap-5 sm:grid-cols-2">
+    <div className="text-text">
+      <dl className="flex flex-col gap-5">
+        <h2 className="text-text text-lg font-semibold">Details</h2>
         <div>
           <dt className="text-xs uppercase tracking-wide text-text-mute">
             Starts
@@ -88,12 +86,6 @@ function OpportunityDetails({
           <dd className="text-base font-medium">
             {formatDateTime(opportunity.endAt, opportunity.timezone)}
           </dd>
-        </div>
-        <div>
-          <dt className="text-xs uppercase tracking-wide text-text-mute">
-            Timezone
-          </dt>
-          <dd className="text-base font-medium">{opportunity.timezone}</dd>
         </div>
         <div>
           <dt className="text-xs uppercase tracking-wide text-text-mute">
@@ -116,19 +108,8 @@ function OpportunityDetails({
             </dd>
           </div>
         ) : null}
-        {sameDay ? null : (
-          <div className="sm:col-span-2">
-            <dt className="text-xs uppercase tracking-wide text-text-mute">
-              Duration
-            </dt>
-            <dd className="text-base font-medium">
-              {formatDate(opportunity.startAt, opportunity.timezone)} –{" "}
-              {formatDate(opportunity.endAt, opportunity.timezone)}
-            </dd>
-          </div>
-        )}
       </dl>
-    </Card>
+    </div>
   );
 }
 
@@ -136,8 +117,8 @@ function OpportunityDescription({ description }: { description: string }) {
   const paragraphs = formatDescription(description);
 
   return (
-    <Card className="p-6 text-text">
-      <h2 className="text-lg font-semibold">About this opportunity</h2>
+    <div className="text-text flex-col">
+      <h2 className="text-lg text-text font-semibold">Description</h2>
       <div className="mt-4 space-y-4 text-base leading-relaxed text-text-mute">
         {paragraphs.length > 0 ? (
           paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)
@@ -145,7 +126,7 @@ function OpportunityDescription({ description }: { description: string }) {
           <p>Details coming soon.</p>
         )}
       </div>
-    </Card>
+    </div>
   );
 }
 
@@ -155,49 +136,68 @@ export default function Opportunity({
   opportunity: OpportunityDetail;
 }) {
   return (
-    <main className="flex-1 bg-background pt-24 pb-16">
-      <div className="mx-auto flex w-full max-w-4xl flex-col gap-8 px-6 sm:px-8 lg:px-0">
-        <div className="space-y-6">
+    <main className="flex-1 pt-24 pb-16">
+      <div className="mx-auto flex w-full max-w-4xl flex-col gap-8 rounded-2xl border border-border bg-muted/40 p-6 sm:p-8 shadow-custom">
+        <div className="space-y-4">
+          {/*
           <Link
             href="/opportunities"
             className="text-sm font-medium text-text-mute hover:text-text"
           >
             ← Back to opportunities
           </Link>
+          */}
           <div className="space-y-3">
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="secondary">
-                {formatEnumLabel(opportunity.location)}
-              </Badge>
-              {opportunity.themes.map((theme) => (
-                <Badge key={theme} variant="outline">
-                  {formatEnumLabel(theme)}
-                </Badge>
-              ))}
-            </div>
             <h1 className="text-3xl font-semibold leading-tight text-text sm:text-4xl">
               {opportunity.title}
             </h1>
+            <div className="flex flex-wrap gap-5">
+              <div className="text-text-mute">
+                📍 {formatEnumLabel(opportunity.location)}
+              </div>
+              <div className="flex gap-2">
+                {opportunity.themes.map((theme) => (
+                  <Badge
+                    key={theme}
+                    variant="outline"
+                    className="rounded-full"
+                  >
+                    {formatEnumLabel(theme)}
+                  </Badge>
+                ))}
+              </div>
+            </div>
             <p className="text-sm text-text-mute">
               Updated{" "}
               {formatDateTime(opportunity.updatedAt, opportunity.timezone)}
             </p>
           </div>
-          {opportunity.signupUrl ? (
-            <Button asChild size="sm">
+          <div className="flex gap-4">
+            {opportunity.signupUrl ? (
+              <Button asChild >
+                <Link
+                  href={opportunity.signupUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  prefetch={false}
+                >
+                  Sign up
+                </Link>
+              </Button>
+            ) : null}
+            <Button asChild variant="outline">
               <Link
-                href={opportunity.signupUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+                href=""
                 prefetch={false}
               >
-                Sign up
+                Save
               </Link>
             </Button>
-          ) : null}
+          </div>
+
         </div>
-        <OpportunityDetails opportunity={opportunity} />
         <OpportunityDescription description={opportunity.description} />
+        <OpportunityDetails opportunity={opportunity} />
       </div>
     </main>
   );

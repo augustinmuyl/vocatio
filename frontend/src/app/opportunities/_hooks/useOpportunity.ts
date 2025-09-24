@@ -37,9 +37,7 @@ function mapOpportunity(data: OpportunityDetailResponse): OpportunityDetail {
 
 const fetchOpportunity = cache(
   async (slug: string): Promise<OpportunityDetail> => {
-    const baseUrl = assertBackendConfigured(
-      process.env.NEXT_PUBLIC_BACKEND_URL,
-    );
+    const baseUrl = assertBackendConfigured(process.env.BACKEND_INTERNAL_URL);
     const response = await fetch(`${baseUrl}/opportunities/slug/${slug}`, {
       next: { revalidate: 300 },
     });
