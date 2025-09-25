@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
+import type { MouseEvent } from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,9 +9,18 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { BadgeCheck as BadgeCheckIcon } from "lucide-react";
 import { useOpportunityFilters } from "@/app/opportunities/_hooks/useOpportunityFilters";
 import { useOpportunities } from "@/app/opportunities/_hooks/useOpportunities";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 export default function Results() {
-  const { filters } = useOpportunityFilters();
+  const { filters, setPage, isPending } = useOpportunityFilters();
   const { page, pageSize, sortBy, sortDirection, locations, themes } = filters;
 
   const { opportunities, total, isLoading, error } = useOpportunities({
@@ -34,6 +44,96 @@ export default function Results() {
   const hasSummary = !error && !isLoading && total > 0;
   const startItem = hasSummary ? (page - 1) * pageSize + 1 : 0;
   const endItem = hasSummary ? startItem + opportunities.length - 1 : 0;
+
+  const totalPages = useMemo(() => {
+    if (pageSize <= 0) {
+      return 0;
+    }
+    if (total <= 0) {
+      return 0;
+    }
+    return Math.max(1, Math.ceil(total / pageSize));
+  }, [pageSize, total]);
+
+  const paginationRange = useMemo(() => {
+    if (totalPages <= 0) {
+      return [] as Array<number | "ellipsis">;
+    }
+
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, index) => index + 1);
+    }
+
+    const range: Array<number | "ellipsis"> = [];
+    const add = (value: number | "ellipsis") => {
+      if (range[range.length - 1] !== value) {
+        range.push(value);
+      }
+    };
+
+    const delta = 2;
+    const left = Math.max(2, page - delta);
+    const right = Math.min(totalPages - 1, page + delta);
+
+    add(1);
+
+    if (left > 2) {
+      add("ellipsis");
+    } else {
+      for (let current = 2; current < left; current += 1) {
+        add(current);
+      }
+    }
+
+    for (let current = left; current <= right; current += 1) {
+      add(current);
+    }
+
+    if (right < totalPages - 1) {
+      add("ellipsis");
+    } else {
+      for (let current = right + 1; current < totalPages; current += 1) {
+        add(current);
+      }
+    }
+
+    add(totalPages);
+
+    return range;
+  }, [page, totalPages]);
+
+  const isPageTransitionDisabled = isLoading || isPending;
+  const canGoToPrevious = page > 1;
+  const canGoToNext = totalPages > 0 ? page < totalPages : false;
+  const shouldShowPagination = totalPages > 1 || page > 1;
+
+  const handlePageChange = useCallback(
+    (nextPage: number) => {
+      if (
+        isPageTransitionDisabled ||
+        nextPage === page ||
+        nextPage < 1 ||
+        (totalPages > 0 && nextPage > totalPages)
+      ) {
+        return;
+      }
+
+      setPage(nextPage);
+    },
+    [isPageTransitionDisabled, page, setPage, totalPages],
+  );
+
+  const createPageClickHandler = useCallback(
+    (nextPage: number, disabled: boolean) =>
+      (event: MouseEvent<HTMLAnchorElement>) => {
+        event.preventDefault();
+        if (disabled) {
+          return;
+        }
+        handlePageChange(nextPage);
+      },
+    [handlePageChange],
+  );
 
   const skeletonCards = useMemo(() => {
     const count = Math.min(Math.max(pageSize, 1), 12);
@@ -111,6 +211,72 @@ export default function Results() {
                 </div>
               ))}
         </div>
+        {shouldShowPagination ? (
+          <div className="mt-10">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    href="#"
+                    aria-disabled={!canGoToPrevious || isPageTransitionDisabled}
+                    tabIndex={!canGoToPrevious || isPageTransitionDisabled ? -1 : undefined}
+                    className={
+                      !canGoToPrevious || isPageTransitionDisabled
+                        ? "pointer-events-none opacity-50"
+                        : undefined
+                    }
+                    onClick={createPageClickHandler(
+                      page - 1,
+                      !canGoToPrevious || isPageTransitionDisabled,
+                    )}
+                  />
+                </PaginationItem>
+                {paginationRange.map((item, index) => (
+                  <PaginationItem key={`${item}-${index}`}>
+                    {item === "ellipsis" ? (
+                      <PaginationEllipsis />
+                    ) : (
+                      <PaginationLink
+                        href="#"
+                        size="default"
+                        isActive={item === page}
+                        aria-disabled={isPageTransitionDisabled}
+                        tabIndex={isPageTransitionDisabled ? -1 : undefined}
+                        className={
+                          isPageTransitionDisabled
+                            ? "pointer-events-none opacity-50"
+                            : undefined
+                        }
+                        onClick={createPageClickHandler(
+                          item,
+                          isPageTransitionDisabled,
+                        )}
+                      >
+                        {item}
+                      </PaginationLink>
+                    )}
+                  </PaginationItem>
+                ))}
+                <PaginationItem>
+                  <PaginationNext
+                    href="#"
+                    aria-disabled={!canGoToNext || isPageTransitionDisabled}
+                    tabIndex={!canGoToNext || isPageTransitionDisabled ? -1 : undefined}
+                    className={
+                      !canGoToNext || isPageTransitionDisabled
+                        ? "pointer-events-none opacity-50"
+                        : undefined
+                    }
+                    onClick={createPageClickHandler(
+                      page + 1,
+                      !canGoToNext || isPageTransitionDisabled,
+                    )}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        ) : null}
       </div>
     </main>
   );
