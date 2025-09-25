@@ -257,6 +257,14 @@ def test_list_opportunities_with_filters_and_pagination():
     assert payload["items"]
     assert all(isinstance(item["preview"], str) for item in payload["items"])
 
+    assert long_description_id is not None
+    search_resp = client.get("/opportunities", params={"search": " families "})
+    assert search_resp.status_code == 200
+    search_payload = search_resp.json()
+    assert search_payload["total"] == 1
+    assert len(search_payload["items"]) == 1
+    assert search_payload["items"][0]["id"] == long_description_id
+
 
     # page 2 should include the remaining active item
     second_page = client.get("/opportunities", params={"page": 2})

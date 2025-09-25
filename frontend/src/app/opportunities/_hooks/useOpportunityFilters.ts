@@ -60,6 +60,9 @@ function parseInteger(
 
 function normalizeParams(params: URLSearchParams) {
   // Strip defaults to keep URLs clean.
+  if (!params.get("search")?.trim()) {
+    params.delete("search");
+  }
   if (params.get("page") === String(DEFAULT_PAGE)) {
     params.delete("page");
   }
@@ -102,6 +105,8 @@ export function useOpportunityFilters() {
   const [isPending, startTransition] = useTransition();
 
   const filters = useMemo<OpportunityFiltersState>(() => {
+    const searchParam = searchParams.get("search");
+    const search = searchParam ? searchParam.trim() : "";
     const paramsLocations = searchParams
       .getAll("locations")
       .map((value) => value.toUpperCase());
@@ -134,6 +139,7 @@ export function useOpportunityFilters() {
     );
 
     return {
+      search,
       page,
       pageSize,
       sortBy,
@@ -195,6 +201,32 @@ export function useOpportunityFilters() {
     [updateSearchParams],
   );
 
+  const setSearch = useCallback(
+    (value: string) => {
+      updateSearchParams((params) => {
+        const trimmed = value.trim();
+        const current = params.get("search");
+
+        if (!trimmed) {
+          if (!current) {
+            return;
+          }
+          params.delete("search");
+          params.delete("page");
+          return;
+        }
+
+        if (current === trimmed) {
+          return;
+        }
+
+        params.set("search", trimmed);
+        params.delete("page");
+      });
+    },
+    [updateSearchParams],
+  );
+
   const setPage = useCallback(
     (page: number) => {
       updateSearchParams((params) => {
@@ -243,6 +275,7 @@ export function useOpportunityFilters() {
 
   const resetFilters = useCallback(() => {
     updateSearchParams((params) => {
+      params.delete("search");
       params.delete("locations");
       params.delete("themes");
       params.delete("page");
@@ -255,6 +288,7 @@ export function useOpportunityFilters() {
   return {
     filters,
     isPending,
+    setSearch,
     setLocations,
     setThemes,
     setPage,

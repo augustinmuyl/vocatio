@@ -151,3 +151,66 @@ def test_list_opportunities_filters_by_theme():
         assert total == 1
         assert len(items) == 1
         assert items[0].id == first.id
+
+
+def test_list_opportunities_filters_by_search():
+    with Session(engine) as session:
+        org = _create_org(session, email="search@example.com", slug="search-org")
+
+        common_kwargs = dict(
+            org_id=org.account_id,
+            start_at=_aware(datetime(2024, 6, 1, 9, 0)),
+            end_at=_aware(datetime(2024, 6, 1, 12, 0)),
+            location=Location.REMOTE,
+            themes=[Theme.COMMUNITY_SERVICE],
+        )
+
+        cleanup = create_opportunity(
+            session,
+            OpportunityCreate(
+                title="Neighborhood Cleanup",
+                description="Join us to clean the park",
+                **common_kwargs,
+            ),
+        )
+
+        families = create_opportunity(
+            session,
+            OpportunityCreate(
+                title="Support Families",
+                description="FAMILIES gather for tutoring support",
+                **common_kwargs,
+            ),
+        )
+
+        create_opportunity(
+            session,
+            OpportunityCreate(
+                title="Food Pantry Help",
+                description="Organize donations",
+                **common_kwargs,
+            ),
+        )
+
+        items, total = list_opportunities(
+            session,
+            page=1,
+            page_size=10,
+            search="cleanup",
+        )
+
+        assert total == 1
+        assert len(items) == 1
+        assert items[0].id == cleanup.id
+
+        items, total = list_opportunities(
+            session,
+            page=1,
+            page_size=10,
+            search="  families  ",
+        )
+
+        assert total == 1
+        assert len(items) == 1
+        assert items[0].id == families.id
+

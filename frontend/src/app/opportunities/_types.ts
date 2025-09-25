@@ -118,6 +118,7 @@ export type OpportunityDetail = {
 };
 
 export type OpportunityFilters = {
+  search: string;
   page: number;
   pageSize: number;
   sortBy: OpportunitySortField;

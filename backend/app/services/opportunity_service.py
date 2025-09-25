@@ -179,6 +179,7 @@ def list_opportunities(
     *,
     page: int,
     page_size: int,
+    search: str | None = None,
     locations: Sequence[Location] | None = None,
     themes: Sequence[Theme] | None = None,
     sort_by: str = "updated_at",
@@ -201,6 +202,17 @@ def list_opportunities(
                 filters.append(theme_filters[0])
             else:
                 filters.append(or_(*theme_filters))
+
+    if search:
+        trimmed = search.strip()
+        if trimmed:
+            pattern = f"%{trimmed.lower()}%"
+            filters.append(
+                or_(
+                    func.lower(Opportunity.title).like(pattern),
+                    func.lower(Opportunity.description).like(pattern),
+                )
+            )
 
     allowed_sorts = {"updated_at", "created_at"}
     if sort_by not in allowed_sorts:

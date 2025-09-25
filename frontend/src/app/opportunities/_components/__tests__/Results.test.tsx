@@ -20,6 +20,7 @@ describe("Results pagination", () => {
 
     useOpportunityFiltersMock.mockReturnValue({
       filters: {
+        search: "",
         page: 5,
         pageSize: 5,
         sortBy: "updated_at",
@@ -28,6 +29,7 @@ describe("Results pagination", () => {
         themes: [],
       },
       isPending: false,
+      setSearch: jest.fn(),
       setPage,
       setLocations: jest.fn(),
       setThemes: jest.fn(),
@@ -58,6 +60,7 @@ describe("Results pagination", () => {
 
     useOpportunityFiltersMock.mockReturnValue({
       filters: {
+        search: "",
         page: 1,
         pageSize: 5,
         sortBy: "updated_at",
@@ -66,6 +69,7 @@ describe("Results pagination", () => {
         themes: [],
       },
       isPending: false,
+      setSearch: jest.fn(),
       setPage,
       setLocations: jest.fn(),
       setThemes: jest.fn(),

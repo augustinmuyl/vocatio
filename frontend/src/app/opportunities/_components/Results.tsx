@@ -21,9 +21,11 @@ import {
 
 export default function Results() {
   const { filters, setPage, isPending } = useOpportunityFilters();
-  const { page, pageSize, sortBy, sortDirection, locations, themes } = filters;
+  const { search, page, pageSize, sortBy, sortDirection, locations, themes } =
+    filters;
 
   const { opportunities, total, isLoading, error } = useOpportunities({
+    search,
     page,
     pageSize,
     sortBy,
@@ -33,6 +35,7 @@ export default function Results() {
   });
 
   const filterKey = [
+    search,
     page,
     pageSize,
     sortBy,
@@ -219,7 +222,11 @@ export default function Results() {
                   <PaginationPrevious
                     href="#"
                     aria-disabled={!canGoToPrevious || isPageTransitionDisabled}
-                    tabIndex={!canGoToPrevious || isPageTransitionDisabled ? -1 : undefined}
+                    tabIndex={
+                      !canGoToPrevious || isPageTransitionDisabled
+                        ? -1
+                        : undefined
+                    }
                     className={
                       !canGoToPrevious || isPageTransitionDisabled
                         ? "pointer-events-none opacity-50"
@@ -261,7 +268,9 @@ export default function Results() {
                   <PaginationNext
                     href="#"
                     aria-disabled={!canGoToNext || isPageTransitionDisabled}
-                    tabIndex={!canGoToNext || isPageTransitionDisabled ? -1 : undefined}
+                    tabIndex={
+                      !canGoToNext || isPageTransitionDisabled ? -1 : undefined
+                    }
                     className={
                       !canGoToNext || isPageTransitionDisabled
                         ? "pointer-events-none opacity-50"

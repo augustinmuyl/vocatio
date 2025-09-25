@@ -24,7 +24,8 @@ export function useOpportunities(filters: OpportunityFilters) {
   const [{ opportunities, total, isLoading, error }, setState] =
     useState<UseOpportunitiesState>(initialState);
 
-  const { page, pageSize, sortBy, sortDirection, locations, themes } = filters;
+  const { search, page, pageSize, sortBy, sortDirection, locations, themes } =
+    filters;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -46,6 +47,9 @@ export function useOpportunities(filters: OpportunityFilters) {
 
       try {
         const params = new URLSearchParams();
+        if (search) {
+          params.set("search", search);
+        }
         params.set("page", String(page));
         params.set("page_size", String(pageSize));
         params.set("sort_by", sortBy);
@@ -106,7 +110,7 @@ export function useOpportunities(filters: OpportunityFilters) {
     return () => {
       controller.abort();
     };
-  }, [page, pageSize, sortBy, sortDirection, locations, themes]);
+  }, [locations, page, pageSize, search, sortBy, sortDirection, themes]);
 
   return { opportunities, total, isLoading, error };
 }

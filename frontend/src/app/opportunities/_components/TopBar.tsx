@@ -1,9 +1,10 @@
 "use client";
 
+import * as React from "react";
+
 import { Input } from "@/components/ui/input";
 import { Combobox } from "@/components/ui/combobox";
 import { SearchIcon } from "lucide-react";
-import * as React from "react";
 
 import { useOpportunityFilters } from "@/app/opportunities/_hooks/useOpportunityFilters";
 import {
@@ -14,8 +15,19 @@ import {
 } from "@/app/opportunities/_types";
 
 export default function TopBar() {
-  const [search, setSearch] = React.useState("");
-  const { filters, setLocations, setThemes } = useOpportunityFilters();
+  const {
+    filters,
+    setSearch: setSearchFilter,
+    setLocations,
+    setThemes,
+  } = useOpportunityFilters();
+
+  const { search } = filters;
+  const [inputValue, setInputValue] = React.useState(search);
+
+  React.useEffect(() => {
+    setInputValue(search);
+  }, [search]);
 
   const location = filters.locations[0] ?? null;
   const theme = filters.themes[0] ?? null;
@@ -44,8 +56,14 @@ export default function TopBar() {
           <div className="relative col-span-1 sm:col-span-2 lg:col-span-1">
             <SearchIcon className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 opacity-50" />
             <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              value={inputValue}
+              onChange={(event) => setInputValue(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" && !event.nativeEvent.isComposing) {
+                  event.preventDefault();
+                  setSearchFilter(inputValue);
+                }
+              }}
               placeholder="Search opportunities..."
               aria-label="Search opportunities"
               className="pl-9 bg-background dark:bg-[oklh(0.15 0.005 264)] border border-border shadow-xs hover:bg-accent hover:text-accent-foreground dark:hover:bg-input/50"
