@@ -113,7 +113,7 @@ export default function Results() {
         isPageTransitionDisabled ||
         nextPage === page ||
         nextPage < 1 ||
-        (totalPages > 0 && nextPage > totalPages)
+        (totalPages > 0 && nextPage > totalPages && nextPage > page)
       ) {
         return;
       }
