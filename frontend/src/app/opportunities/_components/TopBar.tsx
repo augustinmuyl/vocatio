@@ -6,6 +6,12 @@ import { SearchIcon } from "lucide-react";
 import * as React from "react";
 
 import { useOpportunityFilters } from "@/app/opportunities/_hooks/useOpportunityFilters";
+import {
+  OPPORTUNITY_LOCATIONS,
+  OPPORTUNITY_LOCATION_LABELS,
+  OPPORTUNITY_THEMES,
+  OPPORTUNITY_THEME_LABELS,
+} from "@/app/opportunities/_types";
 
 export default function TopBar() {
   const [search, setSearch] = React.useState("");
@@ -14,23 +20,15 @@ export default function TopBar() {
   const location = filters.locations[0] ?? null;
   const theme = filters.themes[0] ?? null;
 
-  const locationOptions = [
-    { value: "NYC", label: "New York" },
-    { value: "MIAMI", label: "Miami" },
-    { value: "REMOTE", label: "Remote" },
-    { value: "OTHER", label: "Other" },
-  ];
+  const locationOptions = OPPORTUNITY_LOCATIONS.map((value) => ({
+    value,
+    label: OPPORTUNITY_LOCATION_LABELS[value],
+  }));
 
-  const themeOptions = [
-    { value: "COMMUNITY_SERVICE", label: "Community Service" },
-    { value: "ENVIRONMENT", label: "Environment" },
-    { value: "EDUCATION", label: "Education" },
-    { value: "HEALTH", label: "Health" },
-    { value: "ARTS", label: "Arts & Culture" },
-    { value: "STEM", label: "STEM" },
-    { value: "SPORTS", label: "Sports" },
-    { value: "ADVOCACY", label: "Advocacy" },
-  ];
+  const themeOptions = OPPORTUNITY_THEMES.map((value) => ({
+    value,
+    label: OPPORTUNITY_THEME_LABELS[value],
+  }));
   return (
     <section className="px-6 sm:px-8 lg:px-12 pt-28 pb-8">
       <div className="mx-auto max-w-6xl text-left">

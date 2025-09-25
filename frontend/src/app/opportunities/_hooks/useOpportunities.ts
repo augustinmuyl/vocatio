@@ -1,44 +1,13 @@
 import { useEffect, useState } from "react";
 
-type OpportunityListItem = {
-  id: string;
-  title: string;
-  slug: string;
-  community_hours: number | null;
-  themes: string[] | null;
-  start_at: string;
-  end_at: string;
-  timezone: string;
-  preview: string;
-};
-
-type OpportunityListResponse = {
-  items: OpportunityListItem[];
-  total: number;
-  page: number;
-  page_size: number;
-  has_next: boolean;
-};
-
-export type Opportunity = {
-  id: string;
-  title: string;
-  preview: string;
-  communityHours: number | null;
-  approved: boolean;
-};
-
-export type OpportunityFilters = {
-  page: number;
-  pageSize: number;
-  sortBy: string;
-  sortDirection: string;
-  locations: string[];
-  themes: string[];
-};
+import {
+  type OpportunityFilters,
+  type OpportunityListItem,
+  type OpportunityListResponse,
+} from "@/app/opportunities/_types";
 
 type UseOpportunitiesState = {
-  opportunities: Opportunity[];
+  opportunities: OpportunityListItem[];
   total: number;
   isLoading: boolean;
   error: string | null;
@@ -102,9 +71,10 @@ export function useOpportunities(filters: OpportunityFilters) {
         }
 
         const data: OpportunityListResponse = await response.json();
-        const mapped = data.items.map<Opportunity>((item) => ({
+        const mapped = data.items.map<OpportunityListItem>((item) => ({
           id: item.id,
           title: item.title,
+          slug: item.slug,
           preview: item.preview,
           communityHours: item.community_hours,
           approved: true,
@@ -140,3 +110,10 @@ export function useOpportunities(filters: OpportunityFilters) {
 
   return { opportunities, total, isLoading, error };
 }
+
+export type {
+  OpportunityFilters,
+  OpportunityListItem,
+  OpportunityListItemResponse,
+  OpportunityListResponse,
+} from "@/app/opportunities/_types";

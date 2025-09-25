@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -35,7 +36,7 @@ export default function Results() {
   const endItem = hasSummary ? startItem + opportunities.length - 1 : 0;
 
   const skeletonCards = useMemo(() => {
-    const count = Math.min(Math.max(pageSize, 1), 6);
+    const count = Math.min(Math.max(pageSize, 1), 12);
     return Array.from({ length: count }, (_, index) => (
       <div key={`skeleton-${index}`} className="h-full">
         <Card className="relative flex h-full min-h-[200px] flex-col gap-3 p-6 text-text">
@@ -77,31 +78,36 @@ export default function Results() {
             ? skeletonCards
             : opportunities.map((opportunity) => (
                 <div key={opportunity.id} className="h-full">
-                  <Card className="relative flex h-full min-h-[200px] flex-col gap-3 p-6 text-text">
-                    <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                      <h3 className="text-xl font-semibold leading-snug">
-                        {opportunity.title}
-                      </h3>
-                      {opportunity.approved ? (
-                        <Badge
-                          className="rounded-md border-transparent bg-success/45 text-text"
-                          aria-label="Approved opportunity"
-                        >
-                          <BadgeCheckIcon />
-                          Approved
-                        </Badge>
-                      ) : null}
-                    </div>
+                  <Link
+                    href={`/opportunities/${opportunity.slug}`}
+                    className="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                  >
+                    <Card className="relative flex h-full min-h-[200px] flex-col gap-3 p-6 text-text transition-shadow hover:shadow-lg focus-visible:shadow-lg">
+                      <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                        <h3 className="text-xl font-semibold leading-snug">
+                          {opportunity.title}
+                        </h3>
+                        {opportunity.approved ? (
+                          <Badge
+                            className="rounded-md border-transparent bg-success/45 text-text"
+                            aria-label="Approved opportunity"
+                          >
+                            <BadgeCheckIcon />
+                            Approved
+                          </Badge>
+                        ) : null}
+                      </div>
 
-                    <p className="text-text-mute">
-                      {opportunity.preview || "Details coming soon."}
-                    </p>
+                      <p className="text-text-mute line-clamp-2">
+                        {opportunity.preview || "Details coming soon."}
+                      </p>
 
-                    <p className="mt-auto pt-4 text-text-mute">
-                      {opportunity.communityHours ?? 0} hours · Counts for
-                      Graduation
-                    </p>
-                  </Card>
+                      <p className="mt-auto pt-4 text-text-mute">
+                        {opportunity.communityHours ?? 0} hours · Counts for
+                        Graduation
+                      </p>
+                    </Card>
+                  </Link>
                 </div>
               ))}
         </div>
