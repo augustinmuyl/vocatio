@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { Input } from "@/components/ui/input";
 import { Combobox } from "@/components/ui/combobox";
-import { SearchIcon } from "lucide-react";
+import { ArrowBigUp, SearchIcon } from "lucide-react";
 
 import { useOpportunityFilters } from "@/app/opportunities/_hooks/useOpportunityFilters";
 import {
@@ -13,6 +13,7 @@ import {
   OPPORTUNITY_THEMES,
   OPPORTUNITY_THEME_LABELS,
 } from "@/app/opportunities/_types";
+import { Button } from "@/components/ui/button";
 
 export default function TopBar() {
   const {
@@ -66,8 +67,20 @@ export default function TopBar() {
               }}
               placeholder="Search opportunities..."
               aria-label="Search opportunities"
-              className="pl-9 bg-background dark:bg-[oklh(0.15 0.005 264)] border border-border shadow-xs hover:bg-accent hover:text-accent-foreground dark:hover:bg-input/50"
+              className="pl-9 pr-10 bg-background dark:bg-[oklh(0.15 0.005 264)] border border-border shadow-xs hover:bg-accent hover:text-accent-foreground dark:hover:bg-input/50"
             />
+            <Button
+              className="absolute right-1 top-1/2 -translate-y-1/2 rounded-sm size-7"
+              variant="outline"
+              size="icon"
+              aria-label="Apply search"
+              onClick={(event) => {
+                event.preventDefault();
+                setSearchFilter(inputValue);
+              }}
+            >
+              <ArrowBigUp />
+            </Button>
           </div>
           <div className="col-span-1 w-full">
             <Combobox
