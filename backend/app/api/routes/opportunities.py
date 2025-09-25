@@ -58,6 +58,7 @@ def read_opportunity(
 def list_opportunities_route(
     page: int = Query(default=1, ge=1),
     page_size: int = Query(default=12, ge=1, le=50),
+    search: str | None = Query(default=None),
     locations: list[Location] | None = Query(default=None),
     themes: list[Theme] | None = Query(default=None),
     sort_by: str = Query(default="updated_at"),
@@ -69,6 +70,7 @@ def list_opportunities_route(
             session,
             page=page,
             page_size=page_size,
+            search=search,
             locations=locations,
             themes=themes,
             sort_by=sort_by,
