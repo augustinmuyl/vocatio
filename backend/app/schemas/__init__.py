@@ -1,3 +1,8 @@
-from .opportunity_schema import OpportunityCreate, OpportunityRead, OpportunityUpdate  # noqa: F401
-from .user_schema import UserCreate, UserRead, UserUpdate  # noqa: F401
+from .opportunity_schema import (  # noqa: F401
+    OpportunityCreate,
+    OpportunityListItem,
+    OpportunityListResponse,
+    OpportunityRead,
+    OpportunityUpdate,
+)
 from .waitlist_schema import WaitlistCreate, WaitlistRead  # noqa: F401

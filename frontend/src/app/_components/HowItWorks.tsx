@@ -1,30 +1,43 @@
-"use client"
+"use client";
 
-import React from 'react';
-import { Search, ClipboardList, Award, FileText, Users, Handshake } from 'lucide-react';
-import { container, fadeInSide, fadeInUp } from '@/lib/variants';
-import { motion } from 'motion/react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import {
+  Search,
+  ClipboardList,
+  Award,
+  FileText,
+  Users,
+  Handshake,
+} from "lucide-react";
+import { container, fadeInSide, fadeInUp } from "@/lib/variants";
+import { motion } from "motion/react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 const primarySteps = [
   {
     number: 1,
-    title: 'Find approved hours',
+    title: "Find approved hours",
     icon: Search,
     description: (
-      <>Search real, <span className="text-secondary font-semibold">approved</span> community service opportunities near you.</>
+      <>
+        Search real,{" "}
+        <span className="text-secondary font-semibold">approved</span> community
+        service opportunities near you.
+      </>
     ),
   },
   {
     number: 2,
-    title: 'Track progress',
+    title: "Track progress",
     icon: Award,
-    description: <>Log hours and automatically see progress toward key milestones.</>,
+    description: (
+      <>Log hours and automatically see progress toward key milestones.</>
+    ),
   },
   {
     number: 3,
-    title: 'Export documentation',
+    title: "Export documentation",
     icon: FileText,
     description: <>Download school-ready reports and forms in seconds.</>,
   },
@@ -34,19 +47,31 @@ const supportive = [
   {
     icon: ClipboardList,
     description: (
-      <>See exactly how many <span className="text-secondary font-semibold">official</span> hours are offered per activity.</>
+      <>
+        See exactly how many{" "}
+        <span className="text-secondary font-semibold">official</span> hours are
+        offered per activity.
+      </>
     ),
   },
   {
     icon: Users,
     description: (
-      <>Parents: find <span className="text-secondary font-semibold">approved</span> opportunities and track family hours.</>
+      <>
+        Parents: find{" "}
+        <span className="text-secondary font-semibold">approved</span>{" "}
+        opportunities and track family hours.
+      </>
     ),
   },
   {
     icon: Handshake,
     description: (
-      <>Organizations: list your <span className="text-secondary font-semibold">approved</span> hours and reach local students.</>
+      <>
+        Organizations: list your{" "}
+        <span className="text-secondary font-semibold">approved</span> hours and
+        reach local students.
+      </>
     ),
   },
 ];
@@ -72,8 +97,8 @@ const HowItWorks = () => {
           className="mt-4 sm:mt-6 max-w-3xl mx-auto text-center text-base sm:text-lg text-text-mute"
           variants={fadeInUp}
         >
-          Simple steps from search to documentation — built for students, parents,
-          and organizations to stay aligned without the busywork.
+          Simple steps from search to documentation — built for students,
+          parents, and organizations to stay aligned without the busywork.
         </motion.p>
 
         {/* CTA (compact, above cards) */}
@@ -104,7 +129,9 @@ const HowItWorks = () => {
                     <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-primary/15 text-primary flex items-center justify-center font-bold">
                       {step.number}
                     </div>
-                    <h3 className="text-lg sm:text-xl font-semibold text-text">{step.title}</h3>
+                    <h3 className="text-lg sm:text-xl font-semibold text-text">
+                      {step.title}
+                    </h3>
                   </div>
                   <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
                 </div>
@@ -124,7 +151,11 @@ const HowItWorks = () => {
           {supportive.map((feature, idx) => {
             const Icon = feature.icon;
             return (
-              <MotionCard key={idx} variants={fadeInSide} className="min-h-[120px] p-6">
+              <MotionCard
+                key={idx}
+                variants={fadeInSide}
+                className="min-h-[120px] p-6"
+              >
                 <Icon className="w-6 h-6 text-primary flex-shrink-0 mr-3 mt-1" />
                 <p className="text-base text-text-mute leading-relaxed">
                   {feature.description}
@@ -133,12 +164,9 @@ const HowItWorks = () => {
             );
           })}
         </motion.div>
-
-
       </motion.div>
     </section>
   );
 };
 
 export default HowItWorks;
-

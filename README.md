@@ -144,7 +144,29 @@ Security tip: do not commit real secrets. Prefer `.env` files kept out of versio
 - Create/update schema: `alembic upgrade head`.
 - Alembic reads the URL from settings at runtime; no manual `sqlalchemy.url` editing needed.
 
-SQLite is supported for local development; PostgreSQL is recommended for production. The engine auto-configures sensible defaults (e.g., SSL for Postgres, thread checks for SQLite).
+Migrations policy
+- Alembic migrations are PostgreSQL-only. Running Alembic against SQLite will raise a clear error by design.
+- Tests use an in-memory SQLite database and initialize schema via `SQLModel.metadata.create_all(engine)` — migrations are not executed in tests.
+- This avoids dialect drift and lets us use Postgres-native features (enums, JSONB, GIN indexes) without branching in migrations.
+
+SQLite is supported for local development and tests; PostgreSQL is recommended and used in production. The engine auto-configures sensible defaults (e.g., SSL for Postgres, thread checks for SQLite).
+
+## Opportunity Imports
+
+- Run CSV imports via `python -m app.cli import-opportunities <csv_path>` from the `backend/` directory (venv activated). Runs are dry-run by default; append `--apply` when you’re ready to persist changes. A starter template lives at `backend/data/opportunities_template.csv`.
+- Required columns: `title`, `description`, `start_at`, `end_at`, `location`, and either `org_id` (UUID) or `org_slug`.
+- Optional columns: `timezone`, `address`, `zip_code`, `themes`, `community_hours`, `signup_url`, `is_active`.
+- `themes` accepts a `;`-delimited list of enum values (e.g., `COMMUNITY_SERVICE;ENVIRONMENT`). Locations and themes are case-insensitive; values are upper-cased before validation.
+- Use ISO-8601 timestamps with timezone information (e.g., `2024-05-01T10:00:00Z`). `is_active` accepts `true/false`, `yes/no`, or `1/0`.
+- The command enforces schema validation, derives missing community hours, generates unique slugs, and aborts on the first error unless `--continue-on-error` is specified. Add `--dry-run` to preview errors without persisting changes.
+
+Example CSV:
+
+```csv
+org_slug,org_id,title,description,start_at,end_at,location,timezone,address,zip_code,themes,community_hours,signup_url,is_active
+org-abc,,Park Cleanup,Help beautify the park,2024-06-01T09:00:00Z,2024-06-01T12:00:00Z,NYC,America/New_York,123 Main St,10001,ENVIRONMENT;COMMUNITY_SERVICE,,https://example.org/apply,true
+,9f2d4433-bc86-4f5e-9d8f-7ff8e2c96187,Remote Tutoring,Virtual homework help,2024-06-05T15:00:00Z,2024-06-05T17:00:00Z,REMOTE,America/Chicago,,,,STEM,,,
+```
 
 ## API Overview
 
@@ -190,15 +212,15 @@ If Postmark credentials are configured, a confirmation email is sent asynchronou
 
 - [x] Landing page
 - [x] Interest form / waitlist for orgs & students
-- [ ] Set up analytics (kinda done?)
+- [x] Set up analytics (kinda done?)
 
 ### MVP (v0.1.0)
 
-- [ ] User browse opportunities
+- [x] User browse opportunities
   - [ ] Details page (contact, sign up)
   - [ ] Filter by:
-    - [ ] Location
-    - [ ] Theme
+    - [x] Location
+    - [x] Theme
     - [ ] Community hours
   - [ ] *Lazy loading and/or pagination ?*
   - [ ] *Search bar ?*
