@@ -39,10 +39,10 @@ export default function Hero() {
             variants={fadeInUp}
           >
             <Button asChild size="lg">
-              <Link href="#waitlist">Join the Waitlist</Link>
+              <Link href="/opportunities">Browse Opportunities</Link>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <Link href="#how-it-works">How It Works</Link>
+              <Link href="#waitlist">Get Early Access</Link>
             </Button>
           </motion.div>
         </motion.div>

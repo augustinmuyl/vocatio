@@ -1,3 +1,4 @@
+"use client"
 import Link from "next/link";
 
 import Logo from "../../../../../public/logo.png";
@@ -14,6 +15,7 @@ import {
 } from "@/app/opportunities/_types";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
+import { toast } from "sonner";
 
 const DAY_FORMAT: Intl.DateTimeFormatOptions = {
   weekday: "long",
@@ -261,10 +263,9 @@ export default function Opportunity({
                       <Badge
                         key={theme}
                         variant="secondary"
-                        className={`rounded-full px-[10px] py-[3px] text-xs ${
-                          THEME_BADGE_CLASSES[theme] ??
+                        className={`rounded-full px-[10px] py-[3px] text-xs ${THEME_BADGE_CLASSES[theme] ??
                           "bg-gray-100 text-gray-800"
-                        }`}
+                          }`}
                       >
                         {formatEnumLabel(theme)}
                       </Badge>
@@ -286,7 +287,14 @@ export default function Opportunity({
                   </Link>
                 </Button>
               ) : null}
-              <Button type="button" variant="outline">
+              <Button type="button" variant="outline"
+                onClick={
+                  () =>
+                    toast.success("Opportunity saved!", {
+                      description: "Check your dashboard for more information",
+                    })
+                }
+              >
                 Save
               </Button>
             </div>
@@ -302,6 +310,6 @@ export default function Opportunity({
           <OpportunityOrganizer opportunity={opportunity} />
         </article>
       </div>
-    </main>
+    </main >
   );
 }
