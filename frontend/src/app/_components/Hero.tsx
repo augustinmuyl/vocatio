@@ -1,12 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion } from "motion/react";
 import { container, fadeInUp } from "@/lib/variants";
-import BrowsingMockup from "../../../public/browsing_mockup.png";
-import BrowsingMockupLight from "../../../public/browsing_mockup_light.png";
 
 export default function Hero() {
   return (
@@ -52,18 +49,17 @@ export default function Hero() {
           className="w-full mb-6 lg:mb-0 flex justify-center relative overflow-visible"
           variants={fadeInUp}
         >
-          <Image
-            priority
-            src={BrowsingMockup}
-            alt="Browsing approved community service opportunities"
-            className="hidden dark:block relative z-10 w-full max-w-sm sm:max-w-md md:max-w-xl lg:max-w-4xl xl:max-w-5xl rounded-2xl md:rounded-3xl border-4 shadow-custom pointer-events-none"
-          />
-          <Image
-            priority
-            src={BrowsingMockupLight}
-            alt="Browsing approved community service opportunities"
-            className="dark:hidden relative z-10 w-full max-w-sm sm:max-w-md md:max-w-xl lg:max-w-4xl xl:max-w-5xl rounded-2xl md:rounded-3xl border-4 shadow-custom pointer-events-none"
-          />
+          <video
+            className="relative z-10 w-full max-w-sm sm:max-w-md md:max-w-xl lg:max-w-4xl xl:max-w-5xl rounded-2xl md:rounded-3xl border-4 shadow-custom pointer-events-none"
+            autoPlay
+            loop
+            muted
+            playsInline
+            poster="/browsing_mockup.png"
+          >
+            <source src="/vocatio_demo.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
         </motion.div>
       </div>
       <div
