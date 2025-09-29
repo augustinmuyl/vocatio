@@ -107,7 +107,7 @@ const HowItWorks = () => {
           variants={fadeInUp}
         >
           <Button asChild variant="outline" size="lg">
-            <a href="#waitlist">Join the Waitlist</a>
+            <a href="#waitlist">Browse Opportunities</a>
           </Button>
         </motion.div>
 

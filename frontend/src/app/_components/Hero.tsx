@@ -55,7 +55,7 @@ export default function Hero() {
             loop
             muted
             playsInline
-            poster="/browsing_mockup.png"
+            poster="/vocatio_demo_placeholder.png"
           >
             <source src="/vocatio_demo.mp4" type="video/mp4" />
             Your browser does not support the video tag.

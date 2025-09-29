@@ -149,13 +149,13 @@ export default function FaqSection({
               <MotionAccordionItem
                 key={item.value}
                 value={item.value!}
-                className="overflow-hidden rounded-2xl border border-border bg-muted/40 px-4 transition-shadow hover:shadow-custom sm:px-6"
+                className="overflow-hidden rounded-2xl border border-border bg-muted/40 px-4 shadow-custom hover:bg-background transition-all sm:px-6"
                 variants={fadeInUp}
               >
-                <AccordionTrigger className="text-left text-base font-semibold text-text sm:text-lg">
+                <AccordionTrigger className="text-left text-base font-semibold text-text sm:text-lg hover:cursor-pointer">
                   {item.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-base leading-relaxed text-text-mute">
+                <AccordionContent className="text-base leading-relaxed text-text-mute hover:cursor-pointer">
                   {item.answer}
                 </AccordionContent>
               </MotionAccordionItem>
