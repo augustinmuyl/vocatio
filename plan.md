@@ -1,26 +1,18 @@
-# MVP final stretch plan
+# Plan
 
-## Opportunities page
+## Roadmap
 
-- Pagination
-- Search (elastic search?)
-- Loading state handling
+- [ ] Crawler
+- [ ] Orgs partnerships
+- [ ] Landing page refactor
 
-## Opportunity page
+## Crawler
 
-- Title
-- Description
-- Org preview
-  - Org page link
-- Signup link
+- Traverse multiple sites
+- Ingest data
+- Parse data
+- Entity resolution
 
-## Auth
-
-- Set up auth
-  - User vs Org
-  - Onboarding flow
-
-## Misc
-
-- App subdomain / separation with marketing pages
-- Non-logged-in opportunities preview
+- Auto-running:
+  - Scheduled traversals
+  - Old entities deletion
