@@ -8,6 +8,10 @@ Vocatio helps high-school students discover meaningful community service opportu
 
 > Building the go-to extracurricular companion for students pursuing graduation-required service hours.
 
+## Demo
+
+![Browsing demo](frontend/public/vocatio_demo.gif)
+
 ## Why It Matters
 
 - Students struggle to find verified, high-impact service work that fits their schedules.
@@ -19,7 +23,6 @@ Vocatio helps high-school students discover meaningful community service opportu
 - Personalized browsing with filters for location, themes, and community-hour counts.
 - Opportunity importer and waitlist workflows built in FastAPI with async background tasks.
 - Responsive Next.js web experience designed for mobile-first student usage.
-- Built with a focus on safety (verified orgs, opt-in communications) and data integrity.
 
 ## Architecture at a Glance
 
