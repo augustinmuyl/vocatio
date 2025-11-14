@@ -22,21 +22,18 @@ class NycServiceSpider(scrapy.Spider):
             response.css("#system-default-search-searchresultblock::attr(data-block-id)").get()
             or ""
         )
+        parent_block_id = (
+            response.css(
+                "#system-default-search-searchresultblock input[name='parentBlockId']::attr(value)"
+            ).get()
+            or block_id
+        )
+        form_parameters = self._extract_form_parameters(response)
         base_formdata = {
             "blockId": block_id,
-            "parameters[searchResultId]": response.css(
-                "#system-default-search-searchresultblock input[name='searchResultId']::attr(value)"
-            ).get()
-            or "",
-            "parameters[siteHOCId]": response.css(
-                "#system-default-search-searchresultblock input[name='siteHOCId']::attr(value)"
-            ).get()
-            or "",
-            "parameters[listingFormat]": response.css(
-                "#system-default-search-searchresultblock input[name='listingFormat']::attr(value)"
-            ).get()
-            or "",
+            "parentBlockId": parent_block_id,
         }
+        base_formdata.update({f"parameters[{k}]": v for k, v in form_parameters.items()})
 
         yield scrapy.FormRequest(
             url=self.retrieve_url,
@@ -139,3 +136,36 @@ class NycServiceSpider(scrapy.Spider):
             "requirements": requirements,
             "detail_location": location_hidden or summary.get("location"),
         }
+
+    def _extract_form_parameters(self, response) -> Dict[str, str]:
+        form = response.css("form#opportunities-search-block")
+        parameters: Dict[str, str] = {}
+        if not form:
+            return parameters
+
+        for field in form.css("input[name]"):
+            name = field.attrib.get("name")
+            if not name:
+                continue
+            input_type = field.attrib.get("type", "").lower()
+            if input_type in {"checkbox", "radio"} and "checked" not in field.attrib:
+                continue
+            parameters[name] = field.attrib.get("value", "") or ""
+
+        for select in form.css("select[name]"):
+            name = select.attrib.get("name")
+            if not name:
+                continue
+            value = select.css("option[selected]::attr(value)").get()
+            if value is None:
+                value = select.css("option::attr(value)").get()
+            parameters[name] = value or ""
+
+        for textarea in form.css("textarea[name]"):
+            name = textarea.attrib.get("name")
+            if not name:
+                continue
+            value = textarea.css("::text").get()
+            parameters[name] = value or ""
+
+        return parameters
