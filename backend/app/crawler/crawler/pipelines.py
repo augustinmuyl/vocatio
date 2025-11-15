@@ -1,5 +1,6 @@
 import hashlib
 import logging
+import re
 import secrets
 import sys
 from datetime import UTC, datetime, timedelta
@@ -18,7 +19,7 @@ if str(APP_DIR) not in sys.path:
 
 from app.db.session import engine  # type: ignore  # noqa: E402
 from app.models.account import Account, AccountKind  # type: ignore  # noqa: E402
-from app.models.opportunity import Location, Opportunity  # type: ignore  # noqa: E402
+from app.models.opportunity import Location, Opportunity, Theme  # type: ignore  # noqa: E402
 from app.models.organization import Organization  # type: ignore  # noqa: E402
 from app.schemas.opportunity_schema import OpportunityCreate  # type: ignore  # noqa: E402
 from app.services.opportunity_service import (  # type: ignore  # noqa: E402
@@ -27,6 +28,31 @@ from app.services.opportunity_service import (  # type: ignore  # noqa: E402
 )
 
 ZIP_RE = __import__("re").compile(r"\b\d{5}(?:-\d{4})?\b")
+
+ISSUE_AREA_THEME_MAP: Dict[str, list[Theme]] = {
+    "animals": [Theme.ANIMAL_WELFARE],
+    "arts & culture": [Theme.ARTS],
+    "board service & organizational development": [Theme.COMMUNITY_SERVICE],
+    "education & schools": [Theme.EDUCATION],
+    "eliminate hunger": [Theme.FOOD_SECURITY],
+    "eliminate poverty": [Theme.ECONOMIC_EMPOWERMENT],
+    "emergency response & preparedness": [Theme.EMERGENCY_RESPONSE],
+    "environmental care": [Theme.ENVIRONMENT],
+    "gender equity": [Theme.SOCIAL_JUSTICE],
+    "health & well-being": [Theme.HEALTH],
+    "human rights": [Theme.SOCIAL_JUSTICE],
+    "immigrant & refugee services": [Theme.SOCIAL_JUSTICE],
+    "mentoring": [Theme.EDUCATION],
+    "older adults": [Theme.COMMUNITY_SERVICE],
+    "other": [Theme.COMMUNITY_SERVICE],
+    "parks and gardens": [Theme.ENVIRONMENT],
+    "people with disabilities": [Theme.SOCIAL_JUSTICE],
+    "social justice": [Theme.SOCIAL_JUSTICE],
+    "sports & recreation": [Theme.SPORTS],
+    "tax prep": [Theme.ECONOMIC_EMPOWERMENT],
+    "workforce development": [Theme.WORKFORCE_DEVELOPMENT],
+    "youth": [Theme.EDUCATION],
+}
 
 
 class OpportunityPipeline:
@@ -178,7 +204,7 @@ class OpportunityPipeline:
             location=location_enum,
             address=address[:200] if address else None,
             zip_code=zip_code,
-            themes=None,
+            themes=self._map_issue_areas(adapter.get("issue_areas")),
             signup_url=adapter.get("occurrence_url"),
             is_active=True,
         )
@@ -213,6 +239,30 @@ class OpportunityPipeline:
             zip_code = match.group(0)
 
         return location_enum, text_location, zip_code
+
+    def _map_issue_areas(self, issue_field) -> Optional[list[Theme]]:
+        if not issue_field:
+            return None
+
+        themes: list[Theme] = []
+
+        if isinstance(issue_field, str):
+            candidates = re.split(r"[;,/]", issue_field)
+        else:
+            candidates = issue_field
+
+        for raw in candidates:
+            if not raw:
+                continue
+            key = raw.strip().lower()
+            mapped = ISSUE_AREA_THEME_MAP.get(key)
+            if not mapped:
+                continue
+            for theme in mapped:
+                if theme not in themes:
+                    themes.append(theme)
+
+        return themes or None
 
     def _parse_datetime(
         self, value: Optional[str], timezone: ZoneInfo | None
