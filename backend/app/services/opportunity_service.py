@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 import unicodedata
+from html import unescape
 from typing import TYPE_CHECKING
 
 from sqlalchemy import cast, func, or_
@@ -29,6 +30,7 @@ except ModuleNotFoundError:  # pragma: no cover - fallback path
 _ELLIPSIS = "\u2026"
 _ZWJ = "\u200d"
 _VARIATION_SELECTORS = {0xFE0E, 0xFE0F}
+_HTML_TAG_RE = re.compile(r"<[^>]+>")
 
 
 class OrganizationLookupError(Exception):
@@ -250,9 +252,9 @@ def get_opportunity_by_slug(session: Session, slug: str) -> Opportunity | None:
 
 
 def build_description_preview(description: str, *, limit: int = 140) -> str:
-    """Collapse whitespace, truncate to limit, and append an ellipsis when shortened."""
+    """Collapse whitespace, strip HTML, truncate to limit, append an ellipsis when shortened."""
 
-    collapsed = re.sub(r"\s+", " ", description).strip()
+    collapsed = re.sub(r"\s+", " ", _strip_html_tags(description)).strip()
     if not collapsed:
         return ""
 
@@ -317,3 +319,13 @@ def _grapheme_clusters(text: str) -> list[str]:
         clusters.append(cluster)
 
     return clusters
+
+
+def _strip_html_tags(text: str) -> str:
+    """Remove HTML tags and decode entities for preview text."""
+
+    if not text:
+        return ""
+
+    without_tags = _HTML_TAG_RE.sub(" ", text)
+    return unescape(without_tags)

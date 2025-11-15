@@ -145,6 +145,24 @@ function formatDescription(description: string): string[] {
     .filter(Boolean);
 }
 
+function containsHtmlContent(value: string): boolean {
+  return /<\/?[a-z][^>]*>/i.test(value);
+}
+
+function sanitizeHtmlContent(content: string): string {
+  if (typeof window === "undefined" || typeof DOMParser === "undefined") {
+    return content;
+  }
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(content, "text/html");
+  doc.querySelectorAll("script, style, iframe, object, embed").forEach((node) => {
+    node.remove();
+  });
+
+  return doc.body?.innerHTML ?? "";
+}
+
 function OpportunityDetails({
   opportunity,
 }: {
@@ -187,13 +205,21 @@ function OpportunityDetails({
 }
 
 function OpportunityDescription({ description }: { description: string }) {
-  const paragraphs = formatDescription(description);
+  const isHtml = containsHtmlContent(description);
+  const htmlDescription = isHtml ? sanitizeHtmlContent(description) : "";
+  const paragraphs = isHtml ? [] : formatDescription(description);
 
   return (
     <section className="flex flex-col">
       <h2 className="text-xl font-semibold text-text mb-2">Description</h2>
       <div className="space-y-4 text-base leading-relaxed text-text-mute">
-        {paragraphs.length > 0 ? (
+        {isHtml ? (
+          htmlDescription ? (
+            <div dangerouslySetInnerHTML={{ __html: htmlDescription }} />
+          ) : (
+            <p>Details coming soon.</p>
+          )
+        ) : paragraphs.length > 0 ? (
           paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)
         ) : (
           <p>Details coming soon.</p>
