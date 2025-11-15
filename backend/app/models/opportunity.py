@@ -2,7 +2,7 @@ from datetime import UTC, datetime
 from enum import Enum as PYEnum
 from uuid import UUID, uuid4
 
-from sqlalchemy import JSON, CheckConstraint, ForeignKey, String, Uuid
+from sqlalchemy import JSON, CheckConstraint, ForeignKey, String, Text, Uuid
 from sqlmodel import Column, DateTime, Enum, Field, SQLModel, func
 
 
@@ -54,7 +54,9 @@ class Opportunity(SQLModel, table=True):
         )
     )
     title: str = Field(max_length=200)
-    description: str = Field(max_length=4000)
+    description: str = Field(
+        sa_column=Column(Text, nullable=False),
+    )
     community_hours: int | None = None
 
     # Slug for human-friendly links; keep unique

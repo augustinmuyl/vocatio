@@ -220,17 +220,13 @@ class OpportunityPipeline:
                 or "Opportunity description unavailable."
             )
 
-        community_hours = (
-            self._calculate_hours(occ_start, occ_end) if has_precise_hours else None
-        )
-
-        if community_hours is None:
-            community_hours = 1
+        community_hours = self._calculate_hours(occ_start, occ_end) if has_precise_hours else None
+        community_hours = self._normalize_hours(community_hours)
 
         payload = OpportunityCreate(
             org_id=org_id,
             title=adapter.get("title") or "Untitled Opportunity",
-            description=self._truncate_description(description),
+            description=description.strip(),
             start_at=start_at,
             end_at=end_at,
             timezone=timezone_name,
@@ -399,15 +395,17 @@ class OpportunityPipeline:
         hours = int(delta.total_seconds() // 3600)
         return max(hours, 1) if hours > 0 else 1
 
-    def _truncate_description(self, description: str) -> str:
-        trimmed = description.strip()
-        return trimmed[:4000]
 
     def _sanitize_email(self, value: Optional[str]) -> Optional[str]:
         if not value:
             return None
         candidate = value.strip()
         return candidate if candidate and "@" in candidate else None
+
+    def _normalize_hours(self, hours: Optional[int]) -> int:
+        if hours is None or hours <= 0 or hours > 1000:
+            return 1
+        return hours
 
     def _parse_datetime(
         self, value: Optional[str], timezone: ZoneInfo | None

@@ -10,7 +10,7 @@ from app.models.opportunity import Location, Theme
 class OpportunityCreate(BaseModel):
     org_id: UUID
     title: str = Field(..., max_length=200)
-    description: str = Field(..., max_length=4000)
+    description: str = Field(...)
     community_hours: int | None = Field(default=None, ge=1, le=1000)
 
     start_at: datetime
@@ -72,7 +72,7 @@ class OpportunityRead(BaseModel):
 
 class OpportunityUpdate(BaseModel):
     title: str | None = Field(default=None, max_length=200)
-    description: str | None = Field(default=None, max_length=4000)
+    description: str | None = Field(default=None)
     community_hours: int | None = Field(default=None, ge=1, le=1000)
 
     start_at: datetime | None = None
