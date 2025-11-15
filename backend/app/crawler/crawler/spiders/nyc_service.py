@@ -106,7 +106,8 @@ class NycServiceSpider(scrapy.Spider):
             cleaned = " ".join(t.strip() for t in texts if t and t.strip())
             return cleaned or None
 
-        description = clean_text(response.css("#opportunity-detail-description ::text").getall())
+        description_text = clean_text(response.css("#opportunity-detail-description ::text").getall())
+        description_html = response.css("#opportunity-detail-description").get()
         issue_areas = response.css(".issueAreasSOppDetatils span.issue-areas::text").get()
         population_served = response.css(
             ".populationServedSOppDetatils span.population-served::text"
@@ -134,11 +135,22 @@ class NycServiceSpider(scrapy.Spider):
         item["end_datetime"] = listing.get("endDate")
         item["timezone"] = listing.get("TimeZone") or "America/New_York"
 
-        item["description"] = description
+        item["description"] = description_text
+        item["description_html"] = description_html
         item["detail_location"] = location_hidden or listing.get("Location")
         item["issue_areas"] = issue_areas
         item["population_served"] = population_served
         item["requirements"] = requirements
+
+        first_occurrence = response.css(".item-occ").xpath("(//div[contains(@class,'item-occ')])[1]")
+        if first_occurrence:
+            item["occurrence_day"] = first_occurrence.css(
+                "input.occurrence-day-name::attr(value)"
+            ).get()
+            item["occurrence_time"] = first_occurrence.css(
+                "input.occurrence-time-name::attr(value)"
+            ).get()
+            item["occurrence_end_date"] = first_occurrence.css(".title-IO-date::text").get()
 
         item["raw_listing"] = listing
 

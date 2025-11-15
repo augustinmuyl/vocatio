@@ -24,6 +24,12 @@ export const OPPORTUNITY_THEMES = [
   "STEM",
   "SPORTS",
   "ADVOCACY",
+  "ANIMAL_WELFARE",
+  "FOOD_SECURITY",
+  "ECONOMIC_EMPOWERMENT",
+  "EMERGENCY_RESPONSE",
+  "SOCIAL_JUSTICE",
+  "WORKFORCE_DEVELOPMENT",
 ] as const;
 
 export type OpportunityTheme = (typeof OPPORTUNITY_THEMES)[number];
@@ -37,6 +43,12 @@ export const OPPORTUNITY_THEME_LABELS: Record<OpportunityTheme, string> = {
   STEM: "STEM",
   SPORTS: "Sports",
   ADVOCACY: "Advocacy",
+  ANIMAL_WELFARE: "Animal Welfare",
+  FOOD_SECURITY: "Food Security",
+  ECONOMIC_EMPOWERMENT: "Economic Empowerment",
+  EMERGENCY_RESPONSE: "Emergency Response",
+  SOCIAL_JUSTICE: "Social Justice",
+  WORKFORCE_DEVELOPMENT: "Workforce Development",
 };
 
 export const OPPORTUNITY_SORT_FIELDS = ["updated_at", "created_at"] as const;

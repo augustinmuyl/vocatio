@@ -5,7 +5,7 @@ import secrets
 import sys
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, Optional, Tuple
 from uuid import UUID
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
@@ -27,7 +27,17 @@ from app.services.opportunity_service import (  # type: ignore  # noqa: E402
     slugify_title,
 )
 
-ZIP_RE = __import__("re").compile(r"\b\d{5}(?:-\d{4})?\b")
+ZIP_RE = re.compile(r"\b\d{5}(?:-\d{4})?\b")
+DATE_FORMATS = [
+    "%Y-%m-%d",
+    "%m/%d/%Y",
+    "%m/%d/%y",
+    "%B %d, %Y",
+    "%b %d, %Y",
+    "%A, %B %d, %Y",
+    "%A, %b %d, %Y",
+]
+TIME_FORMATS = ["%I:%M %p", "%I %p"]
 
 ISSUE_AREA_THEME_MAP: Dict[str, list[Theme]] = {
     "animals": [Theme.ANIMAL_WELFARE],
@@ -179,6 +189,17 @@ class OpportunityPipeline:
         start_at = self._parse_datetime(adapter.get("start_datetime"), timezone_obj)
         end_at = self._parse_datetime(adapter.get("end_datetime"), timezone_obj)
 
+        occ_start, occ_end = self._parse_occurrence_schedule(
+            adapter.get("occurrence_day"),
+            adapter.get("occurrence_time"),
+            adapter.get("occurrence_end_date"),
+            timezone_obj,
+        )
+        if occ_start:
+            start_at = occ_start
+        if occ_end:
+            end_at = occ_end
+
         if start_at is None:
             tz = timezone_obj or self._safe_zoneinfo(self.default_timezone)
             start_at = datetime.now(tz or UTC)
@@ -187,17 +208,18 @@ class OpportunityPipeline:
 
         location_enum, address, zip_code = self._resolve_location_fields(adapter)
 
-        description = (
-            adapter.get("description")
-            or (adapter.get("raw_listing") or {}).get("Description")
-            or adapter.get("title")
-            or "Opportunity description unavailable."
-        )
+        description = adapter.get("description_html") or adapter.get("description")
+        if not description:
+            description = (
+                (adapter.get("raw_listing") or {}).get("Description")
+                or adapter.get("title")
+                or "Opportunity description unavailable."
+            )
 
         payload = OpportunityCreate(
             org_id=org_id,
             title=adapter.get("title") or "Untitled Opportunity",
-            description=description[:4000],
+            description=self._truncate_description(description),
             start_at=start_at,
             end_at=end_at,
             timezone=timezone_name,
@@ -263,6 +285,77 @@ class OpportunityPipeline:
                     themes.append(theme)
 
         return themes or None
+
+    def _parse_occurrence_schedule(
+        self,
+        day_label: Optional[str],
+        time_label: Optional[str],
+        end_label: Optional[str],
+        timezone: ZoneInfo | None,
+    ) -> Tuple[Optional[datetime], Optional[datetime]]:
+        start_date = self._parse_date_label(day_label)
+        end_date = self._parse_date_label(end_label)
+
+        start_dt = None
+        end_dt = None
+
+        if start_date and time_label:
+            start_time_str, _, end_time_str = time_label.partition("-")
+            start_dt = self._combine_date_time(start_date, start_time_str.strip(), timezone)
+            if end_time_str:
+                end_dt = self._combine_date_time(start_date, end_time_str.strip(), timezone)
+        elif start_date:
+            start_dt = self._combine_date_time(start_date, None, timezone)
+
+        if end_date and end_dt is None:
+            end_dt = self._combine_date_time(end_date, None, timezone)
+
+        return start_dt, end_dt
+
+    def _parse_date_label(self, value: Optional[str]) -> Optional[datetime]:
+        if not value:
+            return None
+        text = value.strip()
+        for fmt in DATE_FORMATS:
+            try:
+                parsed = datetime.strptime(text, fmt)
+                return parsed
+            except ValueError:
+                continue
+        return None
+
+    def _combine_date_time(
+        self, date_obj: datetime, time_str: Optional[str], timezone: ZoneInfo | None
+    ) -> Optional[datetime]:
+        tz = timezone or self._safe_zoneinfo(self.default_timezone) or UTC
+        if time_str:
+            cleaned = time_str.replace("ET", "").strip()
+            for fmt in TIME_FORMATS:
+                try:
+                    time_obj = datetime.strptime(cleaned, fmt)
+                    combined = datetime(
+                        year=date_obj.year,
+                        month=date_obj.month,
+                        day=date_obj.day,
+                        hour=time_obj.hour,
+                        minute=time_obj.minute,
+                        tzinfo=tz,
+                    )
+                    return combined
+                except ValueError:
+                    continue
+        return datetime(
+            year=date_obj.year,
+            month=date_obj.month,
+            day=date_obj.day,
+            hour=0,
+            minute=0,
+            tzinfo=tz,
+        )
+
+    def _truncate_description(self, description: str) -> str:
+        trimmed = description.strip()
+        return trimmed[:4000]
 
     def _parse_datetime(
         self, value: Optional[str], timezone: ZoneInfo | None

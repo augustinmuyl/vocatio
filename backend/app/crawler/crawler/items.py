@@ -25,9 +25,13 @@ class OpportunityItem(scrapy.Item):
     timezone = scrapy.Field()
 
     description = scrapy.Field()
+    description_html = scrapy.Field()
     detail_location = scrapy.Field()
     issue_areas = scrapy.Field()
     population_served = scrapy.Field()
     requirements = scrapy.Field()
+    occurrence_day = scrapy.Field()
+    occurrence_time = scrapy.Field()
+    occurrence_end_date = scrapy.Field()
 
     raw_listing = scrapy.Field()
