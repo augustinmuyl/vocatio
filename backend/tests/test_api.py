@@ -66,6 +66,9 @@ def test_opportunity_crud():
     assert data["title"] == opp_payload["title"]
     assert data["community_hours"] == 5
     assert data["location"] == "MIAMI"
+    assert data["organization"] is not None
+    assert data["organization"]["id"] == org_id
+    assert data["organization"]["name"] == "Org"
 
 
 def test_opportunity_requires_address_for_non_remote():

@@ -7,6 +7,17 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 from app.models.opportunity import Location, Theme
 
 
+class OpportunityOrganization(BaseModel):
+    id: UUID
+    name: str
+    slug: str
+    contact_email: str | None
+    contact_phone: str | None
+    logo_url: str | None
+
+    model_config = {"from_attributes": True}
+
+
 class OpportunityCreate(BaseModel):
     org_id: UUID
     title: str = Field(..., max_length=200)
@@ -66,6 +77,7 @@ class OpportunityRead(BaseModel):
     created_at: datetime
     updated_at: datetime
     is_active: bool
+    organization: OpportunityOrganization | None = None
 
     model_config = {"from_attributes": True}
 

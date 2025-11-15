@@ -89,6 +89,24 @@ export type OpportunityListItem = {
   approved: boolean;
 };
 
+export type OpportunityOrganizationResponse = {
+  id: string;
+  name: string;
+  slug: string;
+  contact_email: string | null;
+  contact_phone: string | null;
+  logo_url: string | null;
+};
+
+export type OpportunityOrganization = {
+  id: string;
+  name: string;
+  slug: string;
+  contactEmail: string | null;
+  contactPhone: string | null;
+  logoUrl: string | null;
+};
+
 export type OpportunityDetailResponse = {
   id: string;
   org_id: string;
@@ -107,6 +125,7 @@ export type OpportunityDetailResponse = {
   created_at: string;
   updated_at: string;
   is_active: boolean;
+  organization?: OpportunityOrganizationResponse | null;
 };
 
 export type OpportunityDetail = {
@@ -127,6 +146,7 @@ export type OpportunityDetail = {
   createdAt: string;
   updatedAt: string;
   isActive: boolean;
+  organization: OpportunityOrganization | null;
 };
 
 export type OpportunityFilters = {
