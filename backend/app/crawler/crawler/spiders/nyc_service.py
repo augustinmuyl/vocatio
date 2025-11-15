@@ -3,6 +3,8 @@ from typing import Dict, Iterable, List, Optional, Set
 
 import scrapy
 
+from crawler.items import OpportunityItem
+
 
 class NycServiceSpider(scrapy.Spider):
     name = "nyc_service"
@@ -89,17 +91,6 @@ class NycServiceSpider(scrapy.Spider):
                 continue
             self._seen_sids.add(sid)
 
-            summary = {
-                "sid": sid,
-                "title": opp.get("Title"),
-                "organization": opp.get("OrganizationName"),
-                "organization_url": opp.get("OrganizationUrl"),
-                "location": opp.get("Location"),
-                "occurrence_url": opp.get("OccurrenceUrl"),
-                "time": opp.get("TimeColumnData"),
-                "distance": opp.get("Distance"),
-            }
-
             occurrence_url = opp.get("OccurrenceUrl")
             if not occurrence_url:
                 continue
@@ -107,10 +98,10 @@ class NycServiceSpider(scrapy.Spider):
             yield scrapy.Request(
                 url=occurrence_url,
                 callback=self.parse_occurrence,
-                cb_kwargs={"summary": summary},
+                cb_kwargs={"listing": opp},
             )
 
-    def parse_occurrence(self, response, summary: Dict[str, str]):
+    def parse_occurrence(self, response, listing: Dict[str, str]):
         def clean_text(texts: List[str]) -> Optional[str]:
             cleaned = " ".join(t.strip() for t in texts if t and t.strip())
             return cleaned or None
@@ -127,15 +118,31 @@ class NycServiceSpider(scrapy.Spider):
             ".opportunity-detail-content input.occurrence-location-name::attr(value)"
         ).get()
 
-        yield {
-            **summary,
-            "detail_url": response.url,
-            "description": description,
-            "issue_areas": issue_areas,
-            "population_served": population_served,
-            "requirements": requirements,
-            "detail_location": location_hidden or summary.get("location"),
-        }
+        item = OpportunityItem()
+        item["sid"] = listing.get("SID")
+        item["title"] = listing.get("Title")
+        item["organization_name"] = listing.get("OrganizationName")
+        item["organization_url"] = response.urljoin(listing.get("OrganizationUrl") or "")
+        item["occurrence_url"] = listing.get("OccurrenceUrl")
+
+        item["location_text"] = location_hidden or listing.get("Location")
+        item["location_type"] = listing.get("LocationType")
+        item["distance_label"] = listing.get("Distance")
+        item["time_label"] = listing.get("TimeColumnData")
+
+        item["start_datetime"] = listing.get("StartDateTimeValue")
+        item["end_datetime"] = listing.get("endDate")
+        item["timezone"] = listing.get("TimeZone") or "America/New_York"
+
+        item["description"] = description
+        item["detail_location"] = location_hidden or listing.get("Location")
+        item["issue_areas"] = issue_areas
+        item["population_served"] = population_served
+        item["requirements"] = requirements
+
+        item["raw_listing"] = listing
+
+        yield item
 
     def _extract_form_parameters(self, response) -> Dict[str, str]:
         form = response.css("form#opportunities-search-block")
