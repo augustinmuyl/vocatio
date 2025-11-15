@@ -147,6 +147,7 @@ class OpportunityPipeline:
 
         name = adapter.get("organization_name") or "Imported Organization"
         slug = slugify_title(name) or f"org-{adapter.get('sid') or 'unknown'}"
+        preferred_email = self._sanitize_email(adapter.get("org_contact_email"))
 
         cached = self._org_cache.get(slug)
         if cached:
@@ -158,8 +159,9 @@ class OpportunityPipeline:
             self._org_cache[slug] = organization.account_id
             return organization.account_id
 
+        account_email = self._resolve_org_email(slug, preferred_email)
         account = Account(
-            email=self._build_org_email(slug),
+            email=account_email,
             hashed_password=self._generate_placeholder_hash(),
             kind=AccountKind.ORG,
             is_active=False,
@@ -171,7 +173,7 @@ class OpportunityPipeline:
             account_id=account.id,
             name=name,
             slug=slug,
-            contact_email=account.email,
+            contact_email=preferred_email or account.email,
         )
         self.session.add(organization)
         self.session.flush()
@@ -189,11 +191,13 @@ class OpportunityPipeline:
         start_at = self._parse_datetime(adapter.get("start_datetime"), timezone_obj)
         end_at = self._parse_datetime(adapter.get("end_datetime"), timezone_obj)
 
-        occ_start, occ_end = self._parse_occurrence_schedule(
+        occ_start, occ_end, has_precise_hours = self._parse_occurrence_schedule(
             adapter.get("occurrence_day"),
             adapter.get("occurrence_time"),
             adapter.get("occurrence_end_date"),
             timezone_obj,
+            adapter.get("occurrence_start_iso"),
+            adapter.get("occurrence_end_iso"),
         )
         if occ_start:
             start_at = occ_start
@@ -216,6 +220,13 @@ class OpportunityPipeline:
                 or "Opportunity description unavailable."
             )
 
+        community_hours = (
+            self._calculate_hours(occ_start, occ_end) if has_precise_hours else None
+        )
+
+        if community_hours is None:
+            community_hours = 1
+
         payload = OpportunityCreate(
             org_id=org_id,
             title=adapter.get("title") or "Untitled Opportunity",
@@ -228,6 +239,7 @@ class OpportunityPipeline:
             zip_code=zip_code,
             themes=self._map_issue_areas(adapter.get("issue_areas")),
             signup_url=adapter.get("occurrence_url"),
+            community_hours=community_hours,
             is_active=True,
         )
 
@@ -292,25 +304,50 @@ class OpportunityPipeline:
         time_label: Optional[str],
         end_label: Optional[str],
         timezone: ZoneInfo | None,
-    ) -> Tuple[Optional[datetime], Optional[datetime]]:
+        iso_start: Optional[str] = None,
+        iso_end: Optional[str] = None,
+    ) -> Tuple[Optional[datetime], Optional[datetime], bool]:
+        precise = False
+
+        if iso_start:
+            try:
+                start_dt = datetime.fromisoformat(iso_start.replace("Z", "+00:00"))
+                if timezone and start_dt.tzinfo is not None:
+                    start_dt = start_dt.astimezone(timezone)
+            except ValueError:
+                start_dt = None
+        else:
+            start_dt = None
+
+        if iso_end:
+            try:
+                end_dt = datetime.fromisoformat(iso_end.replace("Z", "+00:00"))
+                if timezone and end_dt.tzinfo is not None:
+                    end_dt = end_dt.astimezone(timezone)
+            except ValueError:
+                end_dt = None
+        else:
+            end_dt = None
+
+        if start_dt and end_dt:
+            return start_dt, end_dt, True
+
         start_date = self._parse_date_label(day_label)
         end_date = self._parse_date_label(end_label)
-
-        start_dt = None
-        end_dt = None
 
         if start_date and time_label:
             start_time_str, _, end_time_str = time_label.partition("-")
             start_dt = self._combine_date_time(start_date, start_time_str.strip(), timezone)
-            if end_time_str:
+            if end_time_str.strip():
                 end_dt = self._combine_date_time(start_date, end_time_str.strip(), timezone)
+                precise = start_dt is not None and end_dt is not None
         elif start_date:
             start_dt = self._combine_date_time(start_date, None, timezone)
 
-        if end_date and end_dt is None:
+        if end_date and (end_dt is None or (start_dt and end_dt < start_dt)):
             end_dt = self._combine_date_time(end_date, None, timezone)
 
-        return start_dt, end_dt
+        return start_dt, end_dt, precise
 
     def _parse_date_label(self, value: Optional[str]) -> Optional[datetime]:
         if not value:
@@ -353,9 +390,24 @@ class OpportunityPipeline:
             tzinfo=tz,
         )
 
+    def _calculate_hours(
+        self, start_at: Optional[datetime], end_at: Optional[datetime]
+    ) -> Optional[int]:
+        if not start_at or not end_at:
+            return None
+        delta = end_at - start_at
+        hours = int(delta.total_seconds() // 3600)
+        return max(hours, 1) if hours > 0 else 1
+
     def _truncate_description(self, description: str) -> str:
         trimmed = description.strip()
         return trimmed[:4000]
+
+    def _sanitize_email(self, value: Optional[str]) -> Optional[str]:
+        if not value:
+            return None
+        candidate = value.strip()
+        return candidate if candidate and "@" in candidate else None
 
     def _parse_datetime(
         self, value: Optional[str], timezone: ZoneInfo | None
@@ -385,18 +437,26 @@ class OpportunityPipeline:
             except ZoneInfoNotFoundError:
                 return None
 
-    def _build_org_email(self, slug: str) -> str:
+    def _resolve_org_email(self, slug: str, preferred: Optional[str]) -> str:
+        if self.session is None:
+            return preferred or f"{slug}@{self.org_email_domain}"
+
+        if preferred and not self._email_exists(preferred):
+            return preferred
+
         base_email = f"{slug}@{self.org_email_domain}"
         email = base_email
         counter = 1
-
-        if self.session is None:
-            return email
-
-        while self.session.exec(select(Account).where(Account.email == email)).first():
+        while self._email_exists(email):
             email = f"{slug}-{counter}@{self.org_email_domain}"
             counter += 1
         return email
+
+    def _email_exists(self, email: str) -> bool:
+        if self.session is None:
+            return False
+        stmt = select(Account).where(Account.email == email)
+        return self.session.exec(stmt).first() is not None
 
     def _generate_placeholder_hash(self) -> str:
         token = secrets.token_hex(16)

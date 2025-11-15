@@ -33,5 +33,8 @@ class OpportunityItem(scrapy.Item):
     occurrence_day = scrapy.Field()
     occurrence_time = scrapy.Field()
     occurrence_end_date = scrapy.Field()
+    occurrence_start_iso = scrapy.Field()
+    occurrence_end_iso = scrapy.Field()
+    org_contact_email = scrapy.Field()
 
     raw_listing = scrapy.Field()

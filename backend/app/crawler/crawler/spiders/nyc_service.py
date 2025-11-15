@@ -151,6 +151,15 @@ class NycServiceSpider(scrapy.Spider):
                 "input.occurrence-time-name::attr(value)"
             ).get()
             item["occurrence_end_date"] = first_occurrence.css(".title-IO-date::text").get()
+            item["occurrence_start_iso"] = first_occurrence.css(
+                "a.opportunity-leader-email::attr(data-occ-start-date-time)"
+            ).get()
+            item["occurrence_end_iso"] = first_occurrence.css(
+                "a.opportunity-leader-email::attr(data-occ-end-date-time)"
+            ).get()
+            item["org_contact_email"] = first_occurrence.css(
+                "a.opportunity-leader-email::attr(data-attr-email)"
+            ).get()
 
         item["raw_listing"] = listing
 
