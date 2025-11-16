@@ -2,6 +2,7 @@ import json
 from typing import Dict, Iterable, List, Optional, Set
 
 import scrapy
+from scrapy.http import Response
 
 from crawler.items import OpportunityItem
 
@@ -102,11 +103,15 @@ class NycServiceSpider(scrapy.Spider):
             )
 
     def parse_occurrence(self, response, listing: Dict[str, str]):
+        organization_url = self._extract_organization_url(response)
+
         def clean_text(texts: List[str]) -> Optional[str]:
             cleaned = " ".join(t.strip() for t in texts if t and t.strip())
             return cleaned or None
 
-        description_text = clean_text(response.css("#opportunity-detail-description ::text").getall())
+        description_text = clean_text(
+            response.css("#opportunity-detail-description ::text").getall()
+        )
         description_html = response.css("#opportunity-detail-description").get()
         issue_areas = response.css(".issueAreasSOppDetatils span.issue-areas::text").get()
         population_served = response.css(
@@ -123,7 +128,7 @@ class NycServiceSpider(scrapy.Spider):
         item["sid"] = listing.get("SID")
         item["title"] = listing.get("Title")
         item["organization_name"] = listing.get("OrganizationName")
-        item["organization_url"] = response.urljoin(listing.get("OrganizationUrl") or "")
+        item["organization_url"] = organization_url
         item["occurrence_url"] = listing.get("OccurrenceUrl")
 
         item["location_text"] = location_hidden or listing.get("Location")
@@ -142,7 +147,9 @@ class NycServiceSpider(scrapy.Spider):
         item["population_served"] = population_served
         item["requirements"] = requirements
 
-        first_occurrence = response.css(".item-occ").xpath("(//div[contains(@class,'item-occ')])[1]")
+        first_occurrence = response.css(".item-occ").xpath(
+            "(//div[contains(@class,'item-occ')])[1]"
+        )
         if first_occurrence:
             item["occurrence_day"] = first_occurrence.css(
                 "input.occurrence-day-name::attr(value)"
@@ -164,6 +171,23 @@ class NycServiceSpider(scrapy.Spider):
         item["raw_listing"] = listing
 
         yield item
+
+    def _extract_organization_url(self, response: Response) -> Optional[str]:
+        """Return the external organization URL, if the opportunity lists one."""
+        aria_label_value = response.css("[aria-label^='Organization Url:']::attr(aria-label)").get()
+        if aria_label_value:
+            _, _, url = aria_label_value.partition("Organization Url:")
+            url = url.strip()
+            if url:
+                return url
+
+        href_value = response.css("[aria-label^='Organization Url:']::attr(href)").get()
+        if href_value:
+            href_value = href_value.strip()
+            if href_value:
+                return response.urljoin(href_value)
+
+        return None
 
     def _extract_form_parameters(self, response) -> Dict[str, str]:
         form = response.css("form#opportunities-search-block")
