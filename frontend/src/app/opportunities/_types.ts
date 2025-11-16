@@ -24,6 +24,12 @@ export const OPPORTUNITY_THEMES = [
   "STEM",
   "SPORTS",
   "ADVOCACY",
+  "ANIMAL_WELFARE",
+  "FOOD_SECURITY",
+  "ECONOMIC_EMPOWERMENT",
+  "EMERGENCY_RESPONSE",
+  "SOCIAL_JUSTICE",
+  "WORKFORCE_DEVELOPMENT",
 ] as const;
 
 export type OpportunityTheme = (typeof OPPORTUNITY_THEMES)[number];
@@ -37,6 +43,12 @@ export const OPPORTUNITY_THEME_LABELS: Record<OpportunityTheme, string> = {
   STEM: "STEM",
   SPORTS: "Sports",
   ADVOCACY: "Advocacy",
+  ANIMAL_WELFARE: "Animal Welfare",
+  FOOD_SECURITY: "Food Security",
+  ECONOMIC_EMPOWERMENT: "Economic Empowerment",
+  EMERGENCY_RESPONSE: "Emergency Response",
+  SOCIAL_JUSTICE: "Social Justice",
+  WORKFORCE_DEVELOPMENT: "Workforce Development",
 };
 
 export const OPPORTUNITY_SORT_FIELDS = ["updated_at", "created_at"] as const;
@@ -77,6 +89,24 @@ export type OpportunityListItem = {
   approved: boolean;
 };
 
+export type OpportunityOrganizationResponse = {
+  id: string;
+  name: string;
+  slug: string;
+  contact_email: string | null;
+  contact_phone: string | null;
+  logo_url: string | null;
+};
+
+export type OpportunityOrganization = {
+  id: string;
+  name: string;
+  slug: string;
+  contactEmail: string | null;
+  contactPhone: string | null;
+  logoUrl: string | null;
+};
+
 export type OpportunityDetailResponse = {
   id: string;
   org_id: string;
@@ -95,6 +125,7 @@ export type OpportunityDetailResponse = {
   created_at: string;
   updated_at: string;
   is_active: boolean;
+  organization?: OpportunityOrganizationResponse | null;
 };
 
 export type OpportunityDetail = {
@@ -115,6 +146,7 @@ export type OpportunityDetail = {
   createdAt: string;
   updatedAt: string;
   isActive: boolean;
+  organization: OpportunityOrganization | null;
 };
 
 export type OpportunityFilters = {

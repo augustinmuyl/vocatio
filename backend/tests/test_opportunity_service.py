@@ -18,6 +18,7 @@ from app.models import Account, AccountKind, Organization
 from app.models.opportunity import Location, Theme
 from app.schemas.opportunity_schema import OpportunityCreate, OpportunityUpdate
 from app.services.opportunity_service import (
+    build_description_preview,
     create_opportunity,
     list_opportunities,
     update_opportunity,
@@ -214,3 +215,10 @@ def test_list_opportunities_filters_by_search():
         assert len(items) == 1
         assert items[0].id == families.id
 
+
+def test_build_description_preview_strips_html_and_entities():
+    result = build_description_preview(
+        "<p>Hello <strong>world</strong> &amp; <em>friends</em></p><br>Join us!"
+    )
+
+    assert result == "Hello world & friends Join us!"

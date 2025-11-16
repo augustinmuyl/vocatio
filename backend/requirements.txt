@@ -11,3 +11,4 @@ typer
 ruff
 pytest
 httpx
+scrapy

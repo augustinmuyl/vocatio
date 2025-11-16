@@ -1,7 +1,6 @@
 "use client"
 import Link from "next/link";
 
-import Logo from "../../../../../public/logo.png";
 import Volunteering_Mock from "../../../../../public/volunteering.webp";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -145,6 +144,24 @@ function formatDescription(description: string): string[] {
     .filter(Boolean);
 }
 
+function containsHtmlContent(value: string): boolean {
+  return /<\/?[a-z][^>]*>/i.test(value);
+}
+
+function sanitizeHtmlContent(content: string): string {
+  if (typeof window === "undefined" || typeof DOMParser === "undefined") {
+    return content;
+  }
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(content, "text/html");
+  doc.querySelectorAll("script, style, iframe, object, embed").forEach((node) => {
+    node.remove();
+  });
+
+  return doc.body?.innerHTML ?? "";
+}
+
 function OpportunityDetails({
   opportunity,
 }: {
@@ -187,13 +204,21 @@ function OpportunityDetails({
 }
 
 function OpportunityDescription({ description }: { description: string }) {
-  const paragraphs = formatDescription(description);
+  const isHtml = containsHtmlContent(description);
+  const htmlDescription = isHtml ? sanitizeHtmlContent(description) : "";
+  const paragraphs = isHtml ? [] : formatDescription(description);
 
   return (
     <section className="flex flex-col">
       <h2 className="text-xl font-semibold text-text mb-2">Description</h2>
       <div className="space-y-4 text-base leading-relaxed text-text-mute">
-        {paragraphs.length > 0 ? (
+        {isHtml ? (
+          htmlDescription ? (
+            <div dangerouslySetInnerHTML={{ __html: htmlDescription }} />
+          ) : (
+            <p>Details coming soon.</p>
+          )
+        ) : paragraphs.length > 0 ? (
           paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)
         ) : (
           <p>Details coming soon.</p>
@@ -213,20 +238,63 @@ function OpportunityOrganizer({
 }: {
   opportunity: OpportunityDetail;
 }) {
-  const initial = getTitleInitial(opportunity.title);
-  console.log(initial);
+  const organization = opportunity.organization;
+  const initial = getTitleInitial(organization?.name ?? opportunity.title);
+  const contactEmail = organization?.contactEmail ?? null;
+  const contactPhone = organization?.contactPhone ?? null;
+  const logoUrl = organization?.logoUrl ?? null;
+  const hasContactInfo = Boolean(contactEmail || contactPhone);
 
   return (
     <section className="pt-6 border-t border-border">
       <h2 className="text-xl font-semibold text-text mb-3">Organizer</h2>
       <div className="flex items-center gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-gray-100 text-text-mute font-semibold overflow-hidden">
-          <Image src={Logo} alt="icon" />
+        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-gray-100 text-text font-semibold overflow-hidden">
+          {logoUrl ? (
+            <Image
+              src={logoUrl}
+              alt={`${organization?.name ?? "Organizer"} logo`}
+              width={48}
+              height={48}
+              className="h-full w-full object-cover"
+              unoptimized
+            />
+          ) : (
+            <span aria-hidden className="text-gray-800">{initial}</span>
+          )}
         </div>
         <div className="space-y-1 text-sm text-text-mute">
-          <p className="text-base font-medium text-text">Vocatio</p>
-          <p>Contact: Mihir Ganesan</p>
-          <p className="text-text-mute">📧 hi@vocatio.app</p>
+          <p className="text-base font-medium text-text">
+            {organization?.name ?? "Organizer coming soon"}
+          </p>
+          {hasContactInfo ? (
+            <>
+              {contactEmail ? (
+                <p className="text-text-mute">
+                  📧{" "}
+                  <a
+                    className="underline decoration-dotted underline-offset-2 hover:text-text"
+                    href={`mailto:${contactEmail}`}
+                  >
+                    {contactEmail}
+                  </a>
+                </p>
+              ) : null}
+              {contactPhone ? (
+                <p className="text-text-mute">
+                  📞{" "}
+                  <a
+                    className="underline decoration-dotted underline-offset-2 hover:text-text"
+                    href={`tel:${contactPhone}`}
+                  >
+                    {contactPhone}
+                  </a>
+                </p>
+              ) : null}
+            </>
+          ) : (
+            <p className="text-text-mute">Contact info coming soon.</p>
+          )}
         </div>
       </div>
     </section>

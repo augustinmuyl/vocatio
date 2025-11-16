@@ -7,10 +7,12 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 
 from app.db.session import get_session
 from app.models.opportunity import Location, Opportunity, Theme
+from app.models.organization import Organization
 from app.schemas.opportunity_schema import (
     OpportunityCreate,
     OpportunityListItem,
     OpportunityListResponse,
+    OpportunityOrganization,
     OpportunityRead,
 )
 from app.services.opportunity_service import (
@@ -29,6 +31,26 @@ else:
 router = APIRouter()
 
 
+def _build_opportunity_response(
+    session: Session, opportunity: Opportunity
+) -> OpportunityRead:
+    org = session.get(Organization, opportunity.org_id)
+    organization = (
+        OpportunityOrganization(
+            id=org.account_id,
+            name=org.name,
+            slug=org.slug,
+            contact_email=org.contact_email,
+            contact_phone=org.contact_phone,
+            logo_url=org.logo_url,
+        )
+        if org
+        else None
+    )
+    base = OpportunityRead.model_validate(opportunity, from_attributes=True)
+    return base.model_copy(update={"organization": organization})
+
+
 @router.post("/opportunities", response_model=OpportunityRead)
 def create_opportunity(
     payload: OpportunityCreate, session: Session = Depends(get_session)
@@ -40,7 +62,7 @@ def create_opportunity(
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
-    return opportunity
+    return _build_opportunity_response(session, opportunity)
 
 
 @router.get("/opportunities/{opportunity_id}", response_model=OpportunityRead)
@@ -51,7 +73,7 @@ def read_opportunity(
     opportunity = session.get(Opportunity, opportunity_uuid)
     if not opportunity or not opportunity.is_active:
         raise HTTPException(status_code=404, detail="Opportunity not found")
-    return opportunity
+    return _build_opportunity_response(session, opportunity)
 
 
 @router.get("/opportunities", response_model=OpportunityListResponse)
@@ -104,4 +126,4 @@ def read_opportunity_by_slug(
     opportunity = get_opportunity_by_slug(session, slug)
     if not opportunity or not opportunity.is_active:
         raise HTTPException(status_code=404, detail="Opportunity not found")
-    return opportunity
+    return _build_opportunity_response(session, opportunity)

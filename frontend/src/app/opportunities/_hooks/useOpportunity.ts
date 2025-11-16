@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import {
   type OpportunityDetail,
   type OpportunityDetailResponse,
+  type OpportunityOrganization,
+  type OpportunityOrganizationResponse,
 } from "@/app/opportunities/_types";
 
 function assertBackendConfigured(baseUrl: string | undefined): string {
@@ -11,6 +13,23 @@ function assertBackendConfigured(baseUrl: string | undefined): string {
     throw new Error("NEXT_PUBLIC_BACKEND_URL is not configured");
   }
   return baseUrl.replace(/\/$/, "");
+}
+
+function mapOrganization(
+  organization: OpportunityOrganizationResponse | null | undefined,
+): OpportunityOrganization | null {
+  if (!organization) {
+    return null;
+  }
+
+  return {
+    id: organization.id,
+    name: organization.name,
+    slug: organization.slug,
+    contactEmail: organization.contact_email,
+    contactPhone: organization.contact_phone,
+    logoUrl: organization.logo_url,
+  };
 }
 
 function mapOpportunity(data: OpportunityDetailResponse): OpportunityDetail {
@@ -32,6 +51,7 @@ function mapOpportunity(data: OpportunityDetailResponse): OpportunityDetail {
     createdAt: data.created_at,
     updatedAt: data.updated_at,
     isActive: data.is_active,
+    organization: mapOrganization(data.organization),
   };
 }
 
