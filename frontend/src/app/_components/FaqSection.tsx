@@ -155,7 +155,7 @@ export default function FaqSection({
                 <AccordionTrigger className="text-left text-base font-semibold text-text sm:text-lg hover:cursor-pointer">
                   {item.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-base leading-relaxed text-text-mute hover:cursor-pointer">
+                <AccordionContent className="text-base leading-relaxed text-text-mute">
                   {item.answer}
                 </AccordionContent>
               </MotionAccordionItem>

@@ -15,7 +15,8 @@ export default function Home() {
       <ReactLenis
         root
         options={{
-          anchors: true
+          anchors: true,
+          lerp: 0.12,
         }}
       />
       <div className="flex flex-col">
