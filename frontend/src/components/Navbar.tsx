@@ -36,6 +36,7 @@ export default function Navbar() {
         </div>
 
         <nav className="relative hidden md:flex text-text-mute z-20">
+          {/*
           <Link
             href="/about-us"
             className="inline-flex items-center font-medium tracking-tight transition-colors duration-300 [&_svg]:shrink-0 relative gap-x-1.5 rounded-md px-3.75 py-4 text-text-mute hover:text-text"
@@ -44,6 +45,7 @@ export default function Navbar() {
               About Us
             </span>
           </Link>
+          */}
           <Link
             href="/opportunities"
             className="inline-flex items-center font-medium tracking-tight transition-colors duration-300 [&_svg]:shrink-0 relative gap-x-1.5 rounded-md px-3.75 py-4 text-text-mute hover:text-text"
@@ -91,8 +93,8 @@ export default function Navbar() {
             animate="visible"
             exit="exit"
           >
+            {/*{ href: "/about-us", label: "About Us" },*/}
             {[
-              { href: "/about-us", label: "About Us" },
               { href: "/opportunities", label: "Browse Now" },
               { href: "/#waitlist", label: "Join Waitlist" },
             ].map((link, idx) => (
